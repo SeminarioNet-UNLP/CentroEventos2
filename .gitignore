@@ -1,0 +1,51 @@
+# Archivos generados por la compilación
+bin/
+obj/
+
+# Dependencias y paquetes NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Configuración de usuario
+.vscode/
+*.user
+*.suo
+*.rsuser
+*.vs
+
+# Archivos de log y depuración
+*.log
+*.pdb
+
+# Publicaciones y despliegues
+publish/
+wwwroot/
+
+# Datos temporales
+tmp/
+temp/
+
+# Configuración de Rider y Visual Studio Code
+.idea/
+.omnisharp/
+
+# Archivos de configuración específicos de .NET
+appsettings*.json
+launchSettings.json
+
+# Archivos generados por herramientas
+*.VSCode/
+project.lock.json
+global.json
+
+# Archivos de pruebas
+TestResults/
+coverage/
+*.coverage
+*.trx
+
+# Archivos generados por dotnet tools
+.dotnet_tools/
+
