@@ -1,12 +1,3 @@
-public enum Deporte
-{
-    Futbol,
-    Voley,
-    Natacion,
-    Basquet,
-    Tenis,
-    Rugby
-}
 
 public class ActividadDeportiva{
   public int id {get;set;}
