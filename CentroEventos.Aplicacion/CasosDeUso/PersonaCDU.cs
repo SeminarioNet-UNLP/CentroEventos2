@@ -1,3 +1,5 @@
+using CentroEventos.Aplicacion;
+
 public abstract class PersonaCDU
 {
     protected IPersonaRepositorio repositorio {get; set;}
