@@ -1,5 +1,5 @@
 using CentroEventos.Aplicacion;
-using CentroEventos.Aplicacion.Entidades;
+using CentroEventos.Aplicacion.Entidades; // Pablo 7/5: esto es innecesario, entidades ya forma parte de aplicacion
 
 public class DocenteAltaCDU : PersonaCDU
 {
