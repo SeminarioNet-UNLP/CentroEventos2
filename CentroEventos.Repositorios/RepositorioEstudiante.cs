@@ -20,7 +20,7 @@ public class RepositorioEstudiante : IPersonaRepositorio
         }
     }
 
-    public void EliminiarPersona(int id)
+    public void EliminarPersona(int id)
     {
         throw new NotImplementedException();
     }

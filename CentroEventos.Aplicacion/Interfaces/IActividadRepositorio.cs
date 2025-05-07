@@ -1,0 +1,8 @@
+public interface IActividadRepositorio {
+  public void CrearActividad (ActividadDeportiva actividad);
+  public void EliminarActividad (ActividadDeportiva actividad);
+  public void ModificarActividad (ActividadDeportiva actividad);
+  public List <ActividadDeportiva> listarTodos ();
+
+  // List <ActividadDeportiva> listaNueva = sjajhjd.listarTodos()
+}
