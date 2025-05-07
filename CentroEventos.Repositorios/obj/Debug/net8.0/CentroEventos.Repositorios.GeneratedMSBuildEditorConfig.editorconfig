@@ -8,10 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = CentroEventos.Repositorios
-<<<<<<< HEAD
 build_property.ProjectDir = C:\Users\bvale\ProyectoNET\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\CentroEventos.Repositorios\
-=======
-build_property.ProjectDir = C:\Users\pablo\proyectosDonet\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\CentroEventos.Repositorios\
->>>>>>> b2f7856b33a4ad1debd0aa75d73576948f5afd14
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
