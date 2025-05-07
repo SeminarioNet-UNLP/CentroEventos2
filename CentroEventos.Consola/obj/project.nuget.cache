@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "muQ39ufm5/VbtBciA975C7Q4Vrd74F5ofJ/BynSf3zYB+FkwQ4v0XXQ8m6TkbJLxu6hjpCSJuBDmqvLQEc4Lgg==",
   "success": true,
   "projectFilePath": "C:\\Users\\bvale\\ProyectoNET\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Consola\\CentroEventos.Consola.csproj",
+=======
+  "dgSpecHash": "o/Ik4lzBqTM=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Usuario\\proyectos\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Consola\\CentroEventos.Consola.csproj",
+>>>>>>> b2f7856b33a4ad1debd0aa75d73576948f5afd14
   "expectedPackageFiles": [],
   "logs": []
 }

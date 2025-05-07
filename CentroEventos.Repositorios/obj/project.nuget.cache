@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "4Amcu6wtxF0JGqWYS/XqGKJyGRrUsgOSq26T1TN52m0/+amV2exrJkHLevj2KQfekJEzmTOXjpk5R5hCHwryUw==",
   "success": true,
   "projectFilePath": "C:\\Users\\bvale\\ProyectoNET\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Repositorios\\CentroEventos.Repositorios.csproj",
+=======
+  "dgSpecHash": "Jv55PXbVWUU=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Usuario\\proyectos\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Repositorios\\CentroEventos.Repositorios.csproj",
+>>>>>>> b2f7856b33a4ad1debd0aa75d73576948f5afd14
   "expectedPackageFiles": [],
   "logs": []
 }

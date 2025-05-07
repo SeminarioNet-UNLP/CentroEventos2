@@ -1,4 +1,5 @@
-﻿using CentroEventos.Aplicacion;
+//test para cargar un estudiante
+using CentroEventos.Aplicacion;
 IPersonaRepositorio repositorio =new RepositorioEstudiante();
 EstudianteAltaCDU cduEstu = new(repositorio);
 

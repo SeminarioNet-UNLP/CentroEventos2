@@ -7,6 +7,7 @@ public class EstudianteAltaCDU : PersonaCDU
     }
     public void Ejecutar(Estudiante e)
     {
+
        try{
           ValidarParticipante.CampoVacio(e.nombre ?? ""); //puse eso de ?? xq sino me tiraba linea amarillo diciendo que quizas era null
           ValidarParticipante.DNINoSeRepite(e.numCarnet);
@@ -16,6 +17,9 @@ public class EstudianteAltaCDU : PersonaCDU
         {
             throw new Exception ($"Se produjo un error {a.Message}");
         }  
+
+        repositorio.AgregarPersona(e);
+
     }
     
 }
