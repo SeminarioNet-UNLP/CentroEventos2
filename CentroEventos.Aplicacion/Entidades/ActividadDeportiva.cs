@@ -11,5 +11,9 @@ public class ActividadDeportiva{
    diasDisponibles=dias;
    this.cupoMax=Max;
  }
+  public override string ToString()
+        {
+            return $"{id} {deporte} {cupoMax}";
+        }
+ }
 
-}
