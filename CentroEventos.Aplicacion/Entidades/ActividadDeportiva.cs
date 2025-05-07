@@ -1,24 +1,20 @@
-public enum Deporte
-{
-    Futbol,
-    Voley,
-    Natacion,
-    Basquet,
-    Tenis,
-    Rugby
-}
-
 public class ActividadDeportiva{
   public int id {get;set;}
   public Deporte deporte {get;set;}
   public List<DayOfWeek> diasDisponibles { get; set; } = new List<DayOfWeek>();
   public int cupoMax {get;set;}
-
-  public ActividadDeportiva (int ElId, Deporte Depor,  List<DayOfWeek> dias, int Max){
-    this.id=ElId;
-    this.deporte=Depor;
-    diasDisponibles=dias;
-    this.cupoMax=Max;
+  public int cantActual {get; set;}=0; //get disponible para todos, el set en cambio no. Se hace uno nuevo al hacer constructor
+  public ActividadDeportiva (int elId, Deporte depor,  List<DayOfWeek> dias, int max){
+    this.id=elId;
+    this.deporte=depor;
+    this.diasDisponibles=dias;
+    this.cupoMax=max;
 
   }
+
+  public override string ToString()
+  {
+    return $"{id} {cupoMax} {deporte} {diasDisponibles}";
+  }
+
 }

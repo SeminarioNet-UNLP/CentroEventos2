@@ -8,19 +8,19 @@
     "net8.0": []
   },
   "packageFolders": {
-    "C:\\Users\\pablo\\.nuget\\packages\\": {}
+    "C:\\Users\\bvale\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pablo\\proyectosDonet\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Aplicacion\\CentroEventos.Aplicacion.csproj",
+      "projectUniqueName": "C:\\Users\\bvale\\ProyectoNET\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Aplicacion\\CentroEventos.Aplicacion.csproj",
       "projectName": "CentroEventos.Aplicacion",
-      "projectPath": "C:\\Users\\pablo\\proyectosDonet\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Aplicacion\\CentroEventos.Aplicacion.csproj",
-      "packagesPath": "C:\\Users\\pablo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pablo\\proyectosDonet\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Aplicacion\\obj\\",
+      "projectPath": "C:\\Users\\bvale\\ProyectoNET\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Aplicacion\\CentroEventos.Aplicacion.csproj",
+      "packagesPath": "C:\\Users\\bvale\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\bvale\\ProyectoNET\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Aplicacion\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\pablo\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\bvale\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -38,11 +38,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -64,7 +59,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.408/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
