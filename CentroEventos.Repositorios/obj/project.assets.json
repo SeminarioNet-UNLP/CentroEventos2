@@ -27,62 +27,32 @@
     ]
   },
   "packageFolders": {
-<<<<<<< HEAD
     "C:\\Users\\bvale\\.nuget\\packages\\": {}
-=======
-    "C:\\Users\\Usuario\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
->>>>>>> b2f7856b33a4ad1debd0aa75d73576948f5afd14
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-<<<<<<< HEAD
       "projectUniqueName": "C:\\Users\\bvale\\ProyectoNET\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Repositorios\\CentroEventos.Repositorios.csproj",
       "projectName": "CentroEventos.Repositorios",
       "projectPath": "C:\\Users\\bvale\\ProyectoNET\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Repositorios\\CentroEventos.Repositorios.csproj",
       "packagesPath": "C:\\Users\\bvale\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\bvale\\ProyectoNET\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Repositorios\\obj\\",
-=======
-      "projectUniqueName": "C:\\Users\\Usuario\\proyectos\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Repositorios\\CentroEventos.Repositorios.csproj",
-      "projectName": "CentroEventos.Repositorios",
-      "projectPath": "C:\\Users\\Usuario\\proyectos\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Repositorios\\CentroEventos.Repositorios.csproj",
-      "packagesPath": "C:\\Users\\Usuario\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Usuario\\proyectos\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Repositorios\\obj\\",
->>>>>>> b2f7856b33a4ad1debd0aa75d73576948f5afd14
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-<<<<<<< HEAD
         "C:\\Users\\bvale\\AppData\\Roaming\\NuGet\\NuGet.Config"
-=======
-        "C:\\Users\\Usuario\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
->>>>>>> b2f7856b33a4ad1debd0aa75d73576948f5afd14
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-<<<<<<< HEAD
             "C:\\Users\\bvale\\ProyectoNET\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Aplicacion\\CentroEventos.Aplicacion.csproj": {
               "projectPath": "C:\\Users\\bvale\\ProyectoNET\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Aplicacion\\CentroEventos.Aplicacion.csproj"
-=======
-            "C:\\Users\\Usuario\\proyectos\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Aplicacion\\CentroEventos.Aplicacion.csproj": {
-              "projectPath": "C:\\Users\\Usuario\\proyectos\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Aplicacion\\CentroEventos.Aplicacion.csproj"
->>>>>>> b2f7856b33a4ad1debd0aa75d73576948f5afd14
             }
           }
         }
@@ -91,17 +61,7 @@
         "warnAsError": [
           "NU1605"
         ]
-<<<<<<< HEAD
       }
-=======
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
-      },
-      "SdkAnalysisLevel": "9.0.100"
->>>>>>> b2f7856b33a4ad1debd0aa75d73576948f5afd14
     },
     "frameworks": {
       "net8.0": {
@@ -122,12 +82,16 @@
             "privateAssets": "all"
           }
         },
-<<<<<<< HEAD
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
-=======
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
->>>>>>> b2f7856b33a4ad1debd0aa75d73576948f5afd14
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file C:\\Users\\bvale\\ProyectoNET\\Sistema-de-Gestion-del-Centro-Deportivo-Universitario\\CentroEventos.Repositorios\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }
