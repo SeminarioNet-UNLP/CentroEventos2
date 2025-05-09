@@ -15,7 +15,7 @@ public static class BusquedaId
         }
         return aux;
     }
-    public static void ActualziarArchivoid(string ruta, int id)
+    public static void ActualizarArchivoId(string ruta, int id)
     {
         
             try

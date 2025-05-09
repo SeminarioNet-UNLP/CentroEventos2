@@ -30,7 +30,7 @@ private readonly string archivoPersonas = Path.Combine("C:", "Users", "Usuario",
                
                throw new Exception($"No se pudo cargar el archivo: {e.Message}");
            } 
-           BusquedaId.ActualziarArchivoid(rutaIDs,persona.Id);
+           BusquedaId.ActualizarArchivoId(rutaIDs,persona.Id);
        }
     }
 
