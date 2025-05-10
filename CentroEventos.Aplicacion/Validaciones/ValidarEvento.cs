@@ -18,26 +18,26 @@ public class ValidarEvento
 
     public bool VerFecha (DateTime fechaHoraInicio)
     {
-    if (fechaHoraInicio <= DateTime.Now) // Más fácil, para no crear una variable de fechaActual
-        throw new ValidacionException ("Error. La fecha de la actividad debe ser mayor a la fecha actual.");
-    
-    return true;   
+        if (fechaHoraInicio <= DateTime.Now) // Más fácil, para no crear una variable de fechaActual
+            throw new ValidacionException ("Error. La fecha de la actividad debe ser mayor a la fecha actual.");
+
+        return true;   
     }
 
     public bool VerCupo (int cupoMaximo)
     {
-    if (cupoMaximo<1)
-        throw new ValidacionException ("Error. El cupo maximo debe ser mayor a cero.");
-    
-    return true;    
+        if (cupoMaximo<1)
+            throw new ValidacionException ("Error. El cupo maximo debe ser mayor a cero.");
+        
+        return true;    
     }
 
     public bool VerHoras (double duracionHoras)
     {
-    if (duracionHoras<1)
-        throw new ValidacionException ("Error. La duracion de las horas debe ser mayor a cero.");
-    
-    return true; 
+        if (duracionHoras<1)
+            throw new ValidacionException ("Error. La duracion de las horas debe ser mayor a cero.");
+        
+        return true; 
     }
 
     private readonly IRepositorioPersona _repoPersona;
