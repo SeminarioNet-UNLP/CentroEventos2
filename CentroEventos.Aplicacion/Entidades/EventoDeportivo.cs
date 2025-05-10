@@ -2,7 +2,7 @@
 public class EventoDeportivo
 {
     public EventoDeportivo(string? nombre, string? descripcion, DateTime fechaHoraInicio,
-                          double duracionHoras, int cupoMaximo, int responsableId )
+                          double duracionHoras, int cupoMaximo, int responsableId)
     {
         Nombre = nombre;
         Descripcion = descripcion;
@@ -19,4 +19,9 @@ public class EventoDeportivo
     public double DuracionHoras { get; set; }
     public int CupoMaximo { get; set; }
     public int ResponsableId { get; set; }
+
+    public override string ToString()
+    {
+        return $"{Id} {Nombre} {Descripcion} {FechaHoraInicio} {DuracionHoras} {CupoMaximo} {ResponsableId}";
+    }
 }
