@@ -5,63 +5,61 @@ public class ValidarEvento
 
 {
 
-public bool VerNombreYDescripcion(string nombre, string descripcion)
-{
-    if (string.IsNullOrWhiteSpace(nombre))
-        throw new ValidacionException("Error. El nombre no puede estar vacio.");
-
-    if (string.IsNullOrWhiteSpace(descripcion))
-        throw new ValidacionException("Error. La descripcion no puede estar vacia.");
-
-    return true;
-}
-
-public static readonly DateTime fechaAct = new DateTime(2025, 5, 22); //Elegi ese dia como referencia, si quieren la cambiamos
-
-public bool VerFecha (DateTime fechaHoraInicio)
-{
-   if (fechaHoraInicio<=fechaAct)
-      throw new ValidacionException ("Error. La fecha de la actividad debe ser mayor a la fecha actual.");
-   
-   return true;   
-}
-
-public bool VerCupo (int cupoMaximo)
-{
-  if (cupoMaximo<1)
-     throw new ValidacionException ("Error. El cupo maximo debe ser mayor a cero.");
-  
-  return true;    
-}
-
-public bool VerHoras (double duracionHoras)
-{
-  if (duracionHoras<1)
-     throw new ValidacionException ("Error. La duracion de las horas debe ser mayor a cero.");
-  
-  return true; 
-}
-
-private readonly IRepositorioPersona _repoPersona;
-
-    public ValidarEvento(IRepositorioPersona repoPersona)
+    public bool VerNombreYDescripcion(string nombre, string descripcion)
     {
-        _repoPersona = repoPersona;
+        if (string.IsNullOrWhiteSpace(nombre))
+            throw new ValidacionException("Error. El nombre no puede estar vacio.");
+
+        if (string.IsNullOrWhiteSpace(descripcion))
+            throw new ValidacionException("Error. La descripcion no puede estar vacia.");
+
+        return true;
     }
 
-public bool VerResponsable(int responsableId)
-{
-    List<Persona> personas = _repoPersona.ListadoPersona();
-
-    foreach (var persona in personas)
+    public bool VerFecha (DateTime fechaHoraInicio)
     {
-        if (persona.Id == responsableId)
+    if (fechaHoraInicio <= DateTime.Now) // Más fácil, para no crear una variable de fechaActual
+        throw new ValidacionException ("Error. La fecha de la actividad debe ser mayor a la fecha actual.");
+    
+    return true;   
+    }
+
+    public bool VerCupo (int cupoMaximo)
+    {
+    if (cupoMaximo<1)
+        throw new ValidacionException ("Error. El cupo maximo debe ser mayor a cero.");
+    
+    return true;    
+    }
+
+    public bool VerHoras (double duracionHoras)
+    {
+    if (duracionHoras<1)
+        throw new ValidacionException ("Error. La duracion de las horas debe ser mayor a cero.");
+    
+    return true; 
+    }
+
+    private readonly IRepositorioPersona _repoPersona;
+
+        public ValidarEvento(IRepositorioPersona repoPersona)
         {
-            return true;
+            _repoPersona = repoPersona;
         }
-    }
 
-    throw new EntidadNotFoundException("Error. El ID del responsable no corresponde a ninguna persona registrada.");
-}
+    public bool VerResponsable(int responsableId)
+    {
+        List<Persona> personas = _repoPersona.ListadoPersona();
+
+        foreach (var persona in personas)
+        {
+            if (persona.Id == responsableId)
+            {
+                return true;
+            }
+        }
+
+        throw new EntidadNotFoundException("Error. El ID del responsable no corresponde a ninguna persona registrada.");
+    }
 
 }
