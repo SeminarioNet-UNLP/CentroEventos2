@@ -1,8 +1,8 @@
 
 public class EventoDeportivo
 {
-    public EventoDeportivo(string? nombre,string? descripcion,DateTime fechaHoraInicio,
-                          double duracionHoras,int cupoMaximo,int responsableId )
+    public EventoDeportivo(string? nombre, string? descripcion, DateTime fechaHoraInicio,
+                          double duracionHoras, int cupoMaximo, int responsableId )
     {
         Nombre = nombre;
         Descripcion = descripcion;

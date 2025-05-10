@@ -2,7 +2,7 @@ public class Persona
 {
     // propiedades arrancan con mayusculas  y en el constructor conminusculas
      
-     public Persona(string dni,string? nombre,string? apellido,string? email,string? telefono)
+     public Persona(string dni, string? nombre, string? apellido, string? email, string? telefono)
      {
         Dni = dni;
         Nombre = nombre;
@@ -10,6 +10,7 @@ public class Persona
         Email = email;
         Telefono = telefono;
      }
+     
      public int Id { get; set; } // gestionado por el repositorio
      public string Dni { get; set; }
      public string? Nombre { get; set; }
