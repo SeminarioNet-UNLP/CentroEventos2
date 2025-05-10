@@ -1,8 +1,7 @@
 public class Reserva
 {
-    public Reserva (int id, int personaId, int eventoDeportivoId, DateTime fechaAltaReserva, EstadosAsistencia estadoAsistencia)
+    public Reserva (int personaId, int eventoDeportivoId, DateTime fechaAltaReserva, EstadosAsistencia estadoAsistencia)
     {
-        Id = id;
         PersonaId = personaId;
         EventoDeportivoId = eventoDeportivoId;
         FechaAltaReserva = fechaAltaReserva;
