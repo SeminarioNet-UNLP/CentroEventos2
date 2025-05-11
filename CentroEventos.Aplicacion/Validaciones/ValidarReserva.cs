@@ -14,12 +14,12 @@ public class ValidarReserva
         _repoReserva = repoReserva;
 
     }
-    public bool ExistenPersonaYEvento(int IdPersona, int IdEvento, out string error)
+    public bool ExistenPersonaYEvento(int IdPersona, int IdEvento, out string mensajeError)
     {
-        error ="";
+        mensajeError = "";
         List<Persona> personas = _repoPersona.ListadoPersona();
         List<EventoDeportivo> eventos = _repoEventoDeportivo.ListadoEventoDeportivo();
-        bool condiP= false;
+        bool condiP = false;
         bool condiE = false;
         for (int i = 0; i < personas.Count() && !condiP ; i++)
         {
@@ -35,78 +35,77 @@ public class ValidarReserva
                 condiE = true;
             }
         }
-        if(condiP && condiE)
+        if (!condiP)
         {
-            return true;
+            mensajeError += "Error. Persona no encontrada.";
+        }
+        if(!condiE)
+        {
+            mensajeError += "Error. Evento no encontrado";
+        }
+        return mensajeError == ""; // Corregido, identico a la forma de ValidadPersona
+    }
+
+    public bool VerificarReservaExistente(Reserva reserva, out string mensajeError)
+    {
+        mensajeError = "";
+        List<Reserva> reservas = _repoReserva.ListadoReserva();
+        bool reservaEncontrada = false;
+        if(reservas != null)
+        {
+            int i = 0;
+            for (; i < reservas.Count() && !reservaEncontrada; i++)
+            {
+                reservaEncontrada = (reservas[i].PersonaId == reserva.PersonaId) &&
+                                    (reservas[i].EventoDeportivoId == reserva.EventoDeportivoId);    
+            }
+            if (reservaEncontrada)
+            {   
+                mensajeError = "No se puede reservar dos veces el mismo evento.";
+            }
         }
         else
-            throw new EntidadNotFoundException("Entidad encontrada");
-    }
-    public bool YaReservado(Reserva reserva, out string error)
-{
-    error = "";
-    List<Reserva> reservas = _repoReserva.ListadoReserva();
-    bool Condi = false;
-    if(reservas != null)
-    {
-        int i = 0;
-        for (; i < reservas.Count() && !Condi; i++)
         {
-            Condi = (reservas[i].PersonaId == reserva.PersonaId) &&
-                    (reservas[i].EventoDeportivoId == reserva.EventoDeportivoId);    
+            mensajeError = "No se encuentran reservas.";
+            throw new Exception(mensajeError);
         }
-        if (Condi)
-        {   
-            error = "No se puede reservar dos veces el mismo evento.";
-            throw new OperacionInvalidaException(error);
+        return mensajeError == "";
+    }
+
+    public bool VerificarCupoDisponible(int eventoId, out string mensajeError) // 
+    {
+        mensajeError = "";
+        EventoDeportivo? eventoEncontrado = null;
+
+        foreach (var evento in _repoEventoDeportivo.ListadoEventoDeportivo())
+        {
+            if (evento.Id == eventoId)
+            {
+                eventoEncontrado = evento;
+                break;
+            }
+        }
+
+        if (eventoEncontrado == null)
+        {
+            mensajeError = "Error. El evento no existe.";
         }
         else
         {
-            return false;
+            int cantidadReservas = 0;
+            foreach (var reserva in _repoReserva.ListadoReserva())
+            {
+                if (reserva.EventoDeportivoId == eventoId)
+                {
+                    cantidadReservas++;
+                }
+            }
+            if (cantidadReservas >= eventoEncontrado.CupoMaximo)
+            {
+                mensajeError = "Error. No hay cupo disponible para este evento.";
+            }
         }
+
+        return mensajeError == "";
     }
-    else
-    {
-        error = "No se encuentran reservas.";
-        throw new Exception(error);
-    }    
-}
-
-    public bool VerificarCupoDisponible(int eventoId, out string error)
-{
-    error = "";
-    EventoDeportivo? eventoEncontrado = null;
-
-    foreach (var evento in _repoEventoDeportivo.ListadoEventoDeportivo())
-    {
-        if (evento.Id == eventoId)
-        {
-            eventoEncontrado = evento;
-            break;
-        }
-    }
-
-    if (eventoEncontrado == null)
-    {
-        error = "El evento no existe.";
-        return false;
-    }
-
-    int cantidadReservas = 0;
-    foreach (var reserva in _repoReserva.ListadoReserva())
-    {
-        if (reserva.EventoDeportivoId == eventoId)
-        {
-            cantidadReservas++;
-        }
-    }
-
-    if (cantidadReservas >= eventoEncontrado.CupoMaximo)
-    {
-        error = "No hay cupo disponible para este evento.";
-        return false;
-    }
-
-    return true;
-}
 }

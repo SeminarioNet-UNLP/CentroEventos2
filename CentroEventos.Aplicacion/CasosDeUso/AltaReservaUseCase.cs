@@ -23,41 +23,48 @@ public class AltaReservaUseCase
     {
         try
         {
-            string error;
+            string mensajeError;
+            ValidarReserva validador = new ValidarReserva(_repoPersona, _repoEventoDeportivo, _repoReserva);
             if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaAlta))
             {
                 throw new FalloAutorizacionException();
             }
-
-            ValidarReserva validador = new ValidarReserva(_repoPersona, _repoEventoDeportivo, _repoReserva);
-            if (!validador.ExistenPersonaYEvento(reserva.PersonaId, reserva.EventoDeportivoId, out error))
+            
+            if (!validador.ExistenPersonaYEvento(reserva.PersonaId, reserva.EventoDeportivoId, out mensajeError))
             {
-                throw new EntidadNotFoundException();
+                throw new EntidadNotFoundException(mensajeError);
             }
 
+            if (!validador.VerificarReservaExistente(reserva, out mensajeError))
+            {
+                throw new CupoExcedidoException(mensajeError);
+            }
+
+            if (!validador.VerificarCupoDisponible(reserva.EventoDeportivoId, out mensajeError))
+            {
+                throw new DuplicadoException(mensajeError);
+            }
         }
-        catch (Exception error)
+        catch (FalloAutorizacionException e)
         {
-            Console.WriteLine(error); // o Console.WriteLine(error.Message); 
+            Console.WriteLine(e.Message);
         }
+        catch (EntidadNotFoundException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        catch (CupoExcedidoException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        catch (DuplicadoException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        
 
 
         /*
-        if (!validador.ExistenPersonaYEvento(reserva.PersonaId, reserva.EventoDeportivoId, out error))
-        {
-        throw new EntidadNotFoundException($"Error: {error}");
-        }
-
-        if (validador.YaReservado(reserva, out error))
-        {
-        throw new DuplicadoException($"Error: {error}");
-        }
-
-        if (!validador.VerificarCupoDisponible(reserva.EventoDeportivoId, out error))
-        {
-        throw new CupoExcedidoException($"Error: {error}");
-        }
-
         try
         {
         _repoReserva.AltaReserva(reserva);

@@ -35,6 +35,7 @@ private readonly string archivoReservas = Path.Combine("C:", "Users", "Usuario",
        }
     }
 
+    // Ver si las bajas deberian ser un bool
     public void BajaReserva(int id)
     {
         if (id<0)
