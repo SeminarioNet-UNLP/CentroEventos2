@@ -1,4 +1,4 @@
-public enum Permisos {
+public enum Permiso {
     EventoAlta,
     EventoModificacion,
     EventoBaja,
