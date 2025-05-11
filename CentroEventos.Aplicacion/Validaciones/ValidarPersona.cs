@@ -10,46 +10,52 @@ public class ValidarPersona
         _repoPersona = repoPersona;
     }
 
-    public bool VerDatos(string nombre, string apellido , string Dni, string email)
+    public bool CamposVacios(string nombre, string apellido , string Dni, string email, out string mensajeError)
     {
+        mensajeError = "";
         if (string.IsNullOrWhiteSpace(nombre))
-            throw new ValidacionException("Error. El nombre no puede estar vacio.");
+            mensajeError = "Error. El nombre no puede estar vacio.";         
 
         if (string.IsNullOrWhiteSpace(apellido))
-            throw new ValidacionException("Error. El apellido no puede estar vacia.");
+           mensajeError = "Error. El apellido no puede estar vacia.";
 
         if (string.IsNullOrWhiteSpace(Dni))
-            throw new ValidacionException ("Error. El DNI no puede estar vacio.");
+            mensajeError = "Error. El DNI no puede estar vacio.";
 
         if (string.IsNullOrWhiteSpace(email))
-            throw new ValidacionException ("Error. El email no puede estar vacio");     
-        return true;
+            mensajeError ="Error. El email no puede estar vacio";     
+        return mensajeError == "";
     }
 
-    public bool DNINoSeRepite (string Dni)
+    public bool DNINoSeRepite (string Dni, out string mensajeError)
     {
+        mensajeError = "";
         List<Persona> personas = _repoPersona.ListadoPersona();
         foreach (var persona in personas)
         {
             if (persona.Dni == Dni)
             {
-                throw new DuplicadoException ("Error. Ya existe el DNI.");
+                mensajeError = "Error. Ya existe el DNI.";
             }
         }
-        return true;
+        return mensajeError == "";
     }
 
-    public bool EmailNoSeRepite (string Email)
+    public bool EmailNoSeRepite (string Email,out string mensajeError)
     {
+        mensajeError = ""; 
+        bool corte = false;
         List<Persona> personas = _repoPersona.ListadoPersona();
-        foreach (var persona in personas)
+
+        for (int i = 0; i< personas.Count() && !corte; i++)
         {
-            if (persona.Email == Email)
+            if (personas[i].Email == Email)
             {
-                throw new DuplicadoException ("Error. Ya existe el Email.");
+                mensajeError= "Error. Ya existe el Email.";
+                corte  = true;
             }
         }
-        return true;
+        return mensajeError == "";
     }
 
 }

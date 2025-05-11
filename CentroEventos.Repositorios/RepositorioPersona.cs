@@ -1,20 +1,24 @@
 
+using CentroEventos.Aplicaciones.Excepciones;
+using CentroEventos.Aplicaciones.Validaciones;
+using Microsoft.Win32.SafeHandles;
+
 public class RepositorioPersona : IRepositorioPersona
 {
-   
-
-private readonly string rutaIDs = Path.Combine("C:", "Users", "Usuario", "proyectos", 
+    private const int CantPropsPersona = 6;
+    private readonly string rutaIDs = Path.Combine("C:", "Users", "Usuario", "proyectos", 
     "Sistema-de-Gestion-del-Centro-Deportivo-Universitario", "CentroEventos.Repositorios", 
     "ArchivosPersistencia", "IdPersona.txt");
 
-private readonly string archivoPersonas = Path.Combine("C:", "Users", "Usuario", "proyectos", 
+    private readonly string archivoPersonas = Path.Combine("C:", "Users", "Usuario", "proyectos", 
     "Sistema-de-Gestion-del-Centro-Deportivo-Universitario", "CentroEventos.Repositorios", 
     "ArchivosPersistencia", "PersonasPersistencia.txt");
 
 
     public void AltaPersona(Persona persona)
     {
-       int ultimoId= BusquedaId.BuscarUltimoId(rutaIDs);
+       string mensajeError;
+       int ultimoId= BusquedaId.BuscarUltimoId(rutaIDs,out mensajeError);
        if(ultimoId >= 0)
        {
            persona.Id = ultimoId+1;
@@ -27,10 +31,13 @@ private readonly string archivoPersonas = Path.Combine("C:", "Users", "Usuario",
            }
            catch (Exception e)
            {
-               
                throw new Exception($"No se pudo cargar el archivo: {e.Message}");
            } 
            BusquedaId.ActualizarArchivoId(rutaIDs,persona.Id);
+       }
+       else
+       {
+           throw new Exception($"Error: {mensajeError}");
        }
     }
 
@@ -41,7 +48,36 @@ private readonly string archivoPersonas = Path.Combine("C:", "Users", "Usuario",
 
     public List<Persona> ListadoPersona()
     {
-        throw new NotImplementedException();
+       
+        List<Persona> personas = new List<Persona>();
+        try
+        {
+            using (StreamReader sr = new StreamReader(archivoPersonas))
+            {
+                string? lineaP;
+                while((lineaP = sr.ReadLine()) != null)
+                {
+                    string[]campos = lineaP.Split(" ");
+                    if(campos.Length == CantPropsPersona)
+                    {
+                        Persona per = new Persona(
+                            campos[1], 
+                            campos[2],
+                            campos[3],
+                            campos[4],
+                            campos[5]
+                        );
+                        per.Id = int.Parse(campos[0]);
+                        personas.Add(per);
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"No se pudo acceder al archivo. {e.Message}");
+        }
+        return personas;
     }
 
     public void ModificarPersona(Persona persona)
