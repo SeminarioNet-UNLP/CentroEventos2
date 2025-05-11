@@ -19,31 +19,31 @@ public class ValidarReserva
         mensajeError = "";
         List<Persona> personas = _repoPersona.ListadoPersona();
         List<EventoDeportivo> eventos = _repoEventoDeportivo.ListadoEventoDeportivo();
-        bool condiP = false;
-        bool condiE = false;
-        for (int i = 0; i < personas.Count() && !condiP ; i++)
+        bool existePersona = false;
+        bool existeEvento = false;
+        for (int i = 0; i < personas.Count() && !existePersona ; i++)
         {
             if(personas[i].Id == IdPersona)
             {   
-                condiP = true;
+                existePersona = true;
             }
         }
-        for (int i = 0; i < eventos.Count() && !condiE ; i++)
+        for (int i = 0; i < eventos.Count() && !existeEvento ; i++)
         {
             if(eventos[i].Id == IdEvento)
             {   
-                condiE = true;
+                existeEvento = true;
             }
         }
-        if (!condiP)
+        if (!existePersona)
         {
             mensajeError += "Error. Persona no encontrada.";
         }
-        if(!condiE)
+        if(!existeEvento)
         {
             mensajeError += "Error. Evento no encontrado";
         }
-        return mensajeError == ""; // Corregido, identico a la forma de ValidadPersona
+        return mensajeError == "";
     }
 
     public bool VerificarReservaExistente(Reserva reserva, out string mensajeError)
@@ -53,8 +53,7 @@ public class ValidarReserva
         bool reservaEncontrada = false;
         if(reservas != null)
         {
-            int i = 0;
-            for (; i < reservas.Count() && !reservaEncontrada; i++)
+            for (int i=0; i < reservas.Count() && !reservaEncontrada; i++)
             {
                 reservaEncontrada = (reservas[i].PersonaId == reserva.PersonaId) &&
                                     (reservas[i].EventoDeportivoId == reserva.EventoDeportivoId);    
@@ -67,7 +66,6 @@ public class ValidarReserva
         else
         {
             mensajeError = "No se encuentran reservas.";
-            throw new Exception(mensajeError);
         }
         return mensajeError == "";
     }

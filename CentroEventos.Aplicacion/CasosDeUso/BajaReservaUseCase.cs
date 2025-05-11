@@ -26,7 +26,7 @@ public class BajaReservaUseCase
         throw new EntidadNotFoundException($"Error: {error}");
     }
 
-    if (!validador.YaReservado(reserva, out error))
+    if (!validador.VerificarReservaExistente(reserva, out error))
     {
        throw new EntidadNotFoundException($"Error: {error}"); 
     } 
