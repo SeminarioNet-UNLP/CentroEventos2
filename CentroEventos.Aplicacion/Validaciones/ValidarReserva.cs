@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using CentroEventos.Aplicaciones.Excepciones;  // Este using es importante
 
 namespace CentroEventos.Aplicaciones.Validaciones;
@@ -13,7 +14,7 @@ public class ValidarReserva
         _repoReserva = repoReserva;
 
     }
-    public bool ExistenPersonaEvento(int IdPersona, int IdEvento)
+    public bool ExistenPersonaYEvento(int IdPersona, int IdEvento)
     {
         List<Persona> personas = _repoPersona.ListadoPersona();
         List<EventoDeportivo> eventos = _repoEventoDeportivo.ListadoEventoDeportivo();
@@ -33,21 +34,38 @@ public class ValidarReserva
                 condiE = true;
             }
         }
-        return (condiP && condiE);
+        if(condiP && condiE)
+        {
+            return true;
+        }
+        else
+            throw new EntidadNotFoundException("Entidad encontrada");
     }
-    public bool YaReservado(EventoDeportivo evento, Persona persona)
+    public bool YaReservado(Reserva reserva)
     {
         List<Reserva> reservas = _repoReserva.ListadoReserva();
+        bool Condi = false;
         if(reservas != null)
         {
-            for (int i = 0; i < reservas.Count() ; i++)
+            int i = 0;
+            for ( ;i < reservas.Count() && !Condi ; i++)
             {
-                if(reservas[i].PersonaId == persona.Id)
-                {
-                
-                }
+                Condi = (reservas[i].PersonaId == reserva.PersonaId) && 
+                    (reservas[i].EventoDeportivoId == reserva.EventoDeportivoId);    
             }
+            if(Condi)
+            {   
+               throw new OperacionInvalidaException("no se puede reservar dos veces el mismo eventos deportivo");
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            throw new Exception("No se encuentran reservas");
         }    
-        return true;
+        
     }
 }
