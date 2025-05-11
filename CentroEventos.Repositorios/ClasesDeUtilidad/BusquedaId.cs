@@ -14,16 +14,13 @@ public static class BusquedaId
               }
             }
         }
-<<<<<<< HEAD
-        return aux; //0 sino encuentra nada o esta vacio
-=======
         else
         {
           aux = -1;
           mensajeError = "no existe el archivo actual";
         }
         return aux;
->>>>>>> ddb4737 (- Agrege cambios en la clase de utilidad)
+
     }
     public static void ActualizarArchivoId(string ruta, int id)
     {
