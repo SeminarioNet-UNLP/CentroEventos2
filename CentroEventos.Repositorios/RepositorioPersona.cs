@@ -43,7 +43,30 @@ public class RepositorioPersona : IRepositorioPersona
 
     public void BajaPersona(int id)
     {
-        throw new NotImplementedException();
+        bool encontrePersona= false;
+        List<Persona> personas = ListadoPersona();
+        for (int i = 0; i < personas.Count() &&  encontrePersona; i++)
+        {
+            if(personas[i].Id == id) 
+            {
+                personas.RemoveAt(i);
+             encontrePersona = true;
+            }  
+        }
+        if (encontrePersona)
+        {
+            using(StreamWriter sw = new StreamWriter(archivoPersonas))
+            {
+                foreach (Persona p in personas)
+                {
+                    sw.WriteLine(p.ToString());
+                }
+            }   
+        }
+        else
+        {
+            throw new EntidadNotFoundException("No se encontro el id correspondiente");
+        }
     }
 
     public List<Persona> ListadoPersona()
@@ -82,6 +105,20 @@ public class RepositorioPersona : IRepositorioPersona
 
     public void ModificarPersona(Persona persona)
     {
-        throw new NotImplementedException();
+        List<Persona> personas = ListadoPersona();
+        bool encontrePersona = false;
+        for (int i = 0; i < personas.Count() &&  encontrePersona; i++)
+        {
+            if(personas[i].Id == persona.Id)
+            {
+                personas[i] = persona;
+                encontrePersona= true;
+            }
+            
+        }
+        if(!encontrePersona)
+        {    
+            throw new EntidadNotFoundException("No se encontro el id correspondiente");
+        }
     }
 }
