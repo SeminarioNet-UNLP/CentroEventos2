@@ -13,7 +13,7 @@ public static class BusquedaId
               }
             }
         }
-        return aux;
+        return aux; //0 sino encuentra nada o esta vacio
     }
     public static void ActualizarArchivoId(string ruta, int id)
     {
