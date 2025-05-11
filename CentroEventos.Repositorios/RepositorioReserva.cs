@@ -15,7 +15,8 @@ private readonly string archivoReservas = Path.Combine("C:", "Users", "Usuario",
 
     public void AltaReserva(Reserva reserva)
     {
-       int ultimoId= BusquedaId.BuscarUltimoId(rutaIDs);
+       string mensajeError = "";
+       int ultimoId= BusquedaId.BuscarUltimoId(rutaIDs, out mensajeError);
        if(ultimoId >= 0)
        {
            reserva.Id = ultimoId+1;
