@@ -10,7 +10,7 @@ public class ValidarPersona
         _repoPersona = repoPersona;
     }
 
-    public bool CamposVacios(string nombre, string apellido , string Dni, string email, out string mensajeError)
+    public bool CamposVacios(string? nombre, string? apellido , string? Dni, string? email, out string mensajeError)
     {
         mensajeError = "";
         if (string.IsNullOrWhiteSpace(nombre))
@@ -27,7 +27,7 @@ public class ValidarPersona
         return mensajeError == "";
     }
 
-    public bool DNINoSeRepite (string Dni, out string mensajeError)
+    public bool DNINoSeRepite (string? Dni, out string mensajeError)
     {
         mensajeError = "";
         List<Persona> personas = _repoPersona.ListadoPersona();
@@ -41,7 +41,7 @@ public class ValidarPersona
         return mensajeError == "";
     }
 
-    public bool EmailNoSeRepite (string Email,out string mensajeError)
+    public bool EmailNoSeRepite (string? Email,out string mensajeError)
     {
         mensajeError = ""; 
         bool corte = false;

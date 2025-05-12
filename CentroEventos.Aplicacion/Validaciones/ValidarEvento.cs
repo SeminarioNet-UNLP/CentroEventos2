@@ -10,42 +10,46 @@ public class ValidarEvento
         _repoPersona = repoPersona;
     }
     
-    public bool VerNombreYDescripcion(string nombre, string descripcion)
+    public bool VerNombreYDescripcion(string? nombre, string? descripcion, out string mensajeError)
     {
+        mensajeError="";
         if (string.IsNullOrWhiteSpace(nombre))
-            throw new ValidacionException("Error. El nombre no puede estar vacio.");
+            mensajeError="Error. El nombre no puede estar vacio.";
 
         if (string.IsNullOrWhiteSpace(descripcion))
-            throw new ValidacionException("Error. La descripcion no puede estar vacia.");
+            mensajeError="Error. La descripcion no puede estar vacia.";
 
-        return true;
+        return mensajeError=="";
     }
 
-    public bool VerFecha (DateTime fechaHoraInicio)
+    public bool VerFecha (DateTime? fechaHoraInicio, out string mensajeError)
     {
+    mensajeError="";
     if (fechaHoraInicio <= DateTime.Now) // Más fácil, para no crear una variable de fechaActual
-        throw new ValidacionException ("Error. La fecha de la actividad debe ser mayor a la fecha actual.");
+        mensajeError="Error. La fecha de la actividad debe ser mayor a la fecha actual.";
     
-    return true;   
+    return mensajeError=="";   
     }
 
-    public bool VerCupo (int cupoMaximo)
+    public bool VerCupo (int? cupoMaximo, out string mensajeError)
     {
-    if (cupoMaximo<1)
-        throw new ValidacionException ("Error. El cupo maximo debe ser mayor a cero.");
+      mensajeError="";
+      if (cupoMaximo<1)
+          mensajeError="Error. El cupo maximo debe ser mayor a cero.";
     
-    return true;    
+      return true;    
     }
 
-    public bool VerHoras (double duracionHoras)
+    public bool VerHoras (double? duracionHoras, out string mensajeError)
     {
-    if (duracionHoras<1)
-        throw new ValidacionException ("Error. La duracion de las horas debe ser mayor a cero.");
+      mensajeError="";
+      if (duracionHoras<1)
+          mensajeError="Error. La duracion de las horas debe ser mayor a cero.";
     
-    return true; 
+      return mensajeError ==""; 
     }
 
-    public bool VerResponsable(int responsableId)
+    public bool VerResponsable(int? responsableId, out string mensajeError)
     {
         List<Persona> personas = _repoPersona.ListadoPersona();
 
@@ -53,11 +57,13 @@ public class ValidarEvento
         {
             if (persona.Id == responsableId)
             {
+                mensajeError="El responsable existe.";
                 return true;
             }
         }
 
-        throw new EntidadNotFoundException("Error. El ID del responsable no corresponde a ninguna persona registrada.");
+        mensajeError="Error. El ID del responsable no corresponde a ninguna persona registrada.";
+        return false;
     }
 
 }

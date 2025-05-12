@@ -1,16 +1,16 @@
 using CentroEventos.Aplicaciones.Excepciones;
 using CentroEventos.Aplicaciones.Validaciones;
 
-public class AltaPersonaUseCase
+public class BajaPersonaUseCase
 {
 
     private readonly IRepositorioPersona _repoPersona;
 
     private readonly IServicioAutorizacion _autorizador;
 
-    public AltaPersonaUseCase(IRepositorioPersona repoPersona, IServicioAutorizacion autorizador)
+    public BajaPersonaUseCase(IRepositorioPersona repoPersona, IServicioAutorizacion autorizador)
     {
-
+       //se le pasa tambien repositorios de evento y/o reserva??? yo los saque, duda para despues
         _repoPersona = repoPersona;
         _autorizador = autorizador;
     }
@@ -21,7 +21,7 @@ public class AltaPersonaUseCase
         {
             string mensajeError;
             ValidarPersona validador = new ValidarPersona(_repoPersona);
-            if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioAlta))
+            if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioBaja))
             {
                 throw new FalloAutorizacionException();
             }
@@ -54,15 +54,14 @@ public class AltaPersonaUseCase
         {
             Console.WriteLine($"Error de duplicacion: {e.Message}");
         }
-      
         // Revisar este último try/catch
         try
         {
-            _repoPersona.AltaPersona(persona);
+            _repoPersona.BajaPersona(persona.Id);
         }
         catch (Exception e)
         {
-            Console.WriteLine($"No se pudo dar de alta al usuario: {e.Message}");
+            Console.WriteLine($"No se pudo dar de baja al usuario: {e.Message}");
         }
     }
 } 

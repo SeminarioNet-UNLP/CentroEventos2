@@ -1,13 +1,13 @@
 using CentroEventos.Aplicaciones.Excepciones;
 using CentroEventos.Aplicaciones.Validaciones;
 
-public class AltaEventoUseCase
+public class   BajaEventoUseCase
 {
 private readonly IRepositorioEventoDeportivo _repoEvento;
 private readonly IRepositorioPersona _repoPersona;
 private readonly IServicioAutorizacion _autorizador;
 
-public AltaEventoUseCase(IRepositorioEventoDeportivo repoEvento,
+public BajaEventoUseCase(IRepositorioEventoDeportivo repoEvento,
                          IRepositorioPersona repoPersona,
                          IServicioAutorizacion autorizador)
 {
@@ -22,7 +22,7 @@ public AltaEventoUseCase(IRepositorioEventoDeportivo repoEvento,
         ValidarEvento validador = new ValidarEvento(_repoPersona);
         try
         {
-            if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoAlta))
+            if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoBaja))
             {
                 throw new FalloAutorizacionException();
             }
@@ -62,11 +62,11 @@ public AltaEventoUseCase(IRepositorioEventoDeportivo repoEvento,
         }
         try
             {
-                _repoEvento.AltaEventoDeportivo(eventoDeportivo);
+                _repoEvento.BajaEventoDeportivo(eventoDeportivo.Id);
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error al dar de alta el evento: {e.Message}");
+                Console.WriteLine($"Error al dar de baja el evento: {e.Message}");
             }
         }
     }

@@ -1,18 +1,18 @@
 using CentroEventos.Aplicaciones.Excepciones;
 using CentroEventos.Aplicaciones.Validaciones;
 
-public class AltaPersonaUseCase
+public class ModificarPersonaUseCase
 {
 
     private readonly IRepositorioPersona _repoPersona;
 
     private readonly IServicioAutorizacion _autorizador;
 
-    public AltaPersonaUseCase(IRepositorioPersona repoPersona, IServicioAutorizacion autorizador)
+    public ModificarPersonaUseCase(IRepositorioPersona repoPersona, IServicioAutorizacion autorizador)
     {
 
         _repoPersona = repoPersona;
-        _autorizador = autorizador;
+        _autorizador = autorizador; //en cuales UseCase hace falta?? los puse en todos por las dudas, veremos en cuales se sacan
     }
 
     public void Ejecutar(Persona persona, int IdUsuario)
@@ -21,7 +21,7 @@ public class AltaPersonaUseCase
         {
             string mensajeError;
             ValidarPersona validador = new ValidarPersona(_repoPersona);
-            if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioAlta))
+            if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioModificacion))
             {
                 throw new FalloAutorizacionException();
             }
@@ -44,25 +44,25 @@ public class AltaPersonaUseCase
         }
         catch (FalloAutorizacionException e)
         {
-            Console.WriteLine($"Error, no tiene permiso para hacer la accion: {e.Message}");
+            Console.WriteLine($"Hubo un error de autorizacion: {e.Message}");
         }
         catch (ValidacionException e)
         {
-            Console.WriteLine($"Error, datos invalidos: {e.Message}");
+            Console.WriteLine($"Hubo un error de validacion: {e.Message}");
         }
         catch (DuplicadoException e)
         {
-            Console.WriteLine($"Error de duplicacion: {e.Message}");
+            Console.WriteLine($"Hubo un error de duplicado: {e.Message}");
         }
       
         // Revisar este último try/catch
         try
         {
-            _repoPersona.AltaPersona(persona);
+            _repoPersona.ModificarPersona(persona);
         }
         catch (Exception e)
         {
-            Console.WriteLine($"No se pudo dar de alta al usuario: {e.Message}");
+            Console.WriteLine($"No se pudo modificar los datos del usuario: {e.Message}");
         }
     }
 } 
