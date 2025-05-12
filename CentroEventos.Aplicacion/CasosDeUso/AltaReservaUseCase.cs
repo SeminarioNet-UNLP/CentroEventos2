@@ -61,18 +61,14 @@ public class AltaReservaUseCase
         {
             Console.WriteLine(e.Message);
         }
-        
-
-
-        /*
+        // Revisar este último try/catch
         try
         {
-        _repoReserva.AltaReserva(reserva);
+            _repoReserva.AltaReserva(reserva);
         }
-        catch (System.Exception)
+        catch (Exception e)
         {
-        throw;
+            Console.WriteLine($"No se pudo cargar el archivo: {e.Message}");
         }
-        */
     }
 }   

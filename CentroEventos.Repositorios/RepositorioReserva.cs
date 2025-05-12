@@ -30,7 +30,7 @@ private readonly string archivoReservas = Path.Combine("C:", "Users", "Usuario",
            catch (Exception e)
            {
                
-               throw new Exception($"No se pudo cargar el archivo: {e.Message}");
+               throw new Exception(e.Message);
            } 
            BusquedaId.ActualizarArchivoId(rutaIDs,reserva.Id);
        }
