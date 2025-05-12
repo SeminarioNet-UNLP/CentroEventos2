@@ -17,8 +17,7 @@ public class AltaPersonaUseCase
 
     public void Ejecutar(Persona persona, int IdUsuario)
     {
-        try
-        {
+        
             string mensajeError;
             ValidarPersona validador = new ValidarPersona(_repoPersona);
             if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioAlta))
@@ -39,30 +38,16 @@ public class AltaPersonaUseCase
             if (!validador.EmailNoSeRepite(persona.Email,out mensajeError))
             {
                 throw new DuplicadoException(mensajeError);
+       
             }
-
-        }
-        catch (FalloAutorizacionException e)
-        {
-            Console.WriteLine($"Error, no tiene permiso para hacer la accion: {e.Message}");
-        }
-        catch (ValidacionException e)
-        {
-            Console.WriteLine($"Error, datos invalidos: {e.Message}");
-        }
-        catch (DuplicadoException e)
-        {
-            Console.WriteLine($"Error de duplicacion: {e.Message}");
-        }
-      
-        // Revisar este último try/catch
+       
         try
         {
             _repoPersona.AltaPersona(persona);
         }
-        catch (Exception e)
+        catch 
         {
-            Console.WriteLine($"No se pudo dar de alta al usuario: {e.Message}");
+            throw; //propaga la excepcion que se genero.
         }
     }
-} 
+}

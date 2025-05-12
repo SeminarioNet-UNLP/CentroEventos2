@@ -1,6 +1,4 @@
 using CentroEventos.Aplicaciones.Excepciones;
-using CentroEventos.Aplicaciones.Validaciones;
-using Microsoft.Win32.SafeHandles;
 
 public class RepositorioPersona : IRepositorioPersona
 {

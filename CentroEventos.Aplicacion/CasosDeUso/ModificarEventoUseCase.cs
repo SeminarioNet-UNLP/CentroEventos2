@@ -21,8 +21,6 @@ public class ModificarEventoUseCase
         string mensajeError;
         ValidarEvento validador = new ValidarEvento(_repoPersona);
         
-        try
-        {
             if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoModificacion))
             {
                 throw new FalloAutorizacionException();
@@ -53,26 +51,13 @@ public class ModificarEventoUseCase
                 throw new EntidadNotFoundException(mensajeError);
             }
 
-        }
-        catch (FalloAutorizacionException e)
-        {
-            Console.WriteLine($"Error de autorización: {e.Message}");
-        }
-        catch (ValidacionException e)
-        {
-            Console.WriteLine($"Error de validación: {e.Message}");
-        }
-        catch (EntidadNotFoundException e)
-        {
-            Console.WriteLine($"Entidad no encontrada: {e.Message}");
-        }
         try
         {
-           _repoEvento.ModificarEventoDeportivo(eventoDeportivo);
+            _repoEvento.ModificarEventoDeportivo(eventoDeportivo);
         }
-            catch (Exception e)
+        catch
         {
-            Console.WriteLine($"Error al modificar el evento: {e.Message}");
+           throw;
         }
     }
 }

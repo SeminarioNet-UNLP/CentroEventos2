@@ -21,8 +21,6 @@ public class ModificarReservaUseCase
 
     public void Ejecutar(Reserva reserva, int IdUsuario)
     {
-        try
-        {
             string mensajeError;
             ValidarReserva validador = new ValidarReserva(_repoPersona, _repoEventoDeportivo, _repoReserva);
             if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaModificacion))
@@ -44,31 +42,13 @@ public class ModificarReservaUseCase
             {
                 throw new DuplicadoException(mensajeError);
             }
-        }
-         catch (FalloAutorizacionException e)
-        {
-            Console.WriteLine($"Error, no tiene permiso para ejecutar la accion :{e.Message}");
-        }
-        catch (EntidadNotFoundException e)
-        {
-            Console.WriteLine($"Hubo un error, no se encontro:{e.Message}");
-        }
-        catch (CupoExcedidoException e)
-        {
-            Console.WriteLine($"Error, cupo excedido: {e.Message}");
-        }
-        catch (DuplicadoException e)
-        {
-            Console.WriteLine($"Hubo un error, datos duplicados:{e.Message}");
-        }
-        // Revisar este último try/catch
-        try
-        {
-            _repoReserva.ModificarReserva(reserva);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"No se pudo modificar la reserva: {e.Message}");
-        }
+      try
+      {
+        _repoReserva.ModificarReserva(reserva);
+      }    
+      catch
+      {
+        throw;
+      }  
     }
-} 
+}

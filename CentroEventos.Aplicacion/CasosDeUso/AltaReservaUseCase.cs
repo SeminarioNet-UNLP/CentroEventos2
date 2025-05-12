@@ -21,8 +21,7 @@ public class AltaReservaUseCase
 
     public void Ejecutar(Reserva reserva, int IdUsuario)
     {
-        try
-        {
+       
             string mensajeError;
             ValidarReserva validador = new ValidarReserva(_repoPersona, _repoEventoDeportivo, _repoReserva);
             if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaAlta))
@@ -44,31 +43,13 @@ public class AltaReservaUseCase
             {
                 throw new DuplicadoException(mensajeError);
             }
-        }
-        catch (FalloAutorizacionException e)
-        {
-            Console.WriteLine($"Error, no tiene permiso para ejecutar la accion :{e.Message}");
-        }
-        catch (EntidadNotFoundException e)
-        {
-            Console.WriteLine($"Hubo un error, no se encontro:{e.Message}");
-        }
-        catch (CupoExcedidoException e)
-        {
-            Console.WriteLine($"Error, cupo excedido: {e.Message}");
-        }
-        catch (DuplicadoException e)
-        {
-            Console.WriteLine($"Hubo un error, datos duplicados:{e.Message}");
-        }
-        // Revisar este último try/catch
-        try
-        {
-            _repoReserva.AltaReserva(reserva);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"No se dar de alta la reserva: {e.Message}");
-        }
+       try
+       {
+          _repoReserva.AltaReserva(reserva);
+       }
+       catch
+       {
+          throw;
+       }
     }
 } 

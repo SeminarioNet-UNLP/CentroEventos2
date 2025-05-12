@@ -17,8 +17,6 @@ public class BajaPersonaUseCase
 
     public void Ejecutar(Persona persona, int IdUsuario)
     {
-        try
-        {
             string mensajeError;
             ValidarPersona validador = new ValidarPersona(_repoPersona);
             if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioBaja))
@@ -41,27 +39,13 @@ public class BajaPersonaUseCase
                 throw new DuplicadoException(mensajeError);
             }
 
-        }
-        catch (FalloAutorizacionException e)
-        {
-            Console.WriteLine($"Error, no tiene permiso para hacer la accion: {e.Message}");
-        }
-        catch (ValidacionException e)
-        {
-            Console.WriteLine($"Error, datos invalidos: {e.Message}");
-        }
-        catch (DuplicadoException e)
-        {
-            Console.WriteLine($"Error de duplicacion: {e.Message}");
-        }
-        // Revisar este último try/catch
-        try
-        {
-            _repoPersona.BajaPersona(persona.Id);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"No se pudo dar de baja al usuario: {e.Message}");
-        }
+       try
+       {
+          _repoPersona.BajaPersona(persona.Id);
+       }
+       catch
+       {
+          throw;
+       }
     }
-} 
+}

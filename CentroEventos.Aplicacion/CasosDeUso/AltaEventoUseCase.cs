@@ -20,8 +20,7 @@ public AltaEventoUseCase(IRepositorioEventoDeportivo repoEvento,
     {
         string mensajeError;
         ValidarEvento validador = new ValidarEvento(_repoPersona);
-        try
-        {
+        
             if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoAlta))
             {
                 throw new FalloAutorizacionException();
@@ -46,27 +45,15 @@ public AltaEventoUseCase(IRepositorioEventoDeportivo repoEvento,
             {
                 throw new EntidadNotFoundException(mensajeError);
             }
-        }
-
-        catch (FalloAutorizacionException e)
-        {
-            Console.WriteLine($"Error de autorización: {e.Message}");
-        }
-        catch (ValidacionException e)
-        {
-            Console.WriteLine($"Error de validación: {e.Message}");
-        }
-        catch (EntidadNotFoundException e)
-        {
-            Console.WriteLine($"Entidad no encontrada: {e.Message}");
-        }
+        
         try
-            {
-                _repoEvento.AltaEventoDeportivo(eventoDeportivo);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Error al dar de alta el evento: {e.Message}");
-            }
+        {
+            _repoEvento.AltaEventoDeportivo(eventoDeportivo);
+        }
+        catch 
+        {
+            throw; //propaga la excepcion que se genero.
         }
     }
+}
+    

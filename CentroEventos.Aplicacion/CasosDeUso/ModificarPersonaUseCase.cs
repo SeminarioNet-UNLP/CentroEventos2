@@ -17,8 +17,6 @@ public class ModificarPersonaUseCase
 
     public void Ejecutar(Persona persona, int IdUsuario)
     {
-        try
-        {
             string mensajeError;
             ValidarPersona validador = new ValidarPersona(_repoPersona);
             if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioModificacion))
@@ -41,28 +39,13 @@ public class ModificarPersonaUseCase
                 throw new DuplicadoException(mensajeError);
             }
 
-        }
-        catch (FalloAutorizacionException e)
-        {
-            Console.WriteLine($"Hubo un error de autorizacion: {e.Message}");
-        }
-        catch (ValidacionException e)
-        {
-            Console.WriteLine($"Hubo un error de validacion: {e.Message}");
-        }
-        catch (DuplicadoException e)
-        {
-            Console.WriteLine($"Hubo un error de duplicado: {e.Message}");
-        }
-      
-        // Revisar este último try/catch
-        try
-        {
-            _repoPersona.ModificarPersona(persona);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"No se pudo modificar los datos del usuario: {e.Message}");
-        }
+       try
+       {
+          _repoPersona.ModificarPersona(persona);
+       }
+       catch
+       {
+          throw;
+       }
     }
-} 
+}
