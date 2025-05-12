@@ -1,6 +1,7 @@
 using CentroEventos.Aplicaciones.Excepciones;
 using CentroEventos.Aplicaciones.Validaciones;
 
+// Falta if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioAlta)) ?
 public class AltaPersonaUseCase(IRepositorioPersona repo)
 {
     private readonly IRepositorioPersona Repo = repo;
