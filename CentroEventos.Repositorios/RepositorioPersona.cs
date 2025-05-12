@@ -17,7 +17,7 @@ public class RepositorioPersona : IRepositorioPersona
     public void AltaPersona(Persona persona)
     {
        string mensajeError;
-       int ultimoId= BusquedaId.BuscarUltimoId(rutaIDs,out mensajeError);
+       int ultimoId= IdManager.BuscarUltimoId(rutaIDs,out mensajeError);
        if(ultimoId >= 0)
        {
            persona.Id = ultimoId+1;
@@ -27,12 +27,13 @@ public class RepositorioPersona : IRepositorioPersona
                {
                    sw.WriteLine(persona.ToString());
                }
+               IdManager.ActualizarArchivoId(rutaIDs,persona.Id);
            }
            catch (Exception e)
            {
-               throw new Exception($"No se pudo cargar el archivo: {e.Message}");
+               throw new Exception(e.Message);
            } 
-           BusquedaId.ActualizarArchivoId(rutaIDs,persona.Id);
+           
        }
        else
        {

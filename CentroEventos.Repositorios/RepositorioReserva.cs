@@ -16,7 +16,7 @@ private readonly string archivoReservas = Path.Combine("C:", "Users", "Usuario",
     public void AltaReserva(Reserva reserva)
     {
        string mensajeError = "";
-       int ultimoId= BusquedaId.BuscarUltimoId(rutaIDs, out mensajeError);
+       int ultimoId= IdManager.BuscarUltimoId(rutaIDs, out mensajeError);
        if(ultimoId >= 0)
        {
            reserva.Id = ultimoId+1;
@@ -26,13 +26,18 @@ private readonly string archivoReservas = Path.Combine("C:", "Users", "Usuario",
                {
                    sw.WriteLine(reserva.ToString());
                }
+               IdManager.ActualizarArchivoId(rutaIDs,reserva.Id);
            }
            catch (Exception e)
            {
                
                throw new Exception(e.Message);
            } 
-           BusquedaId.ActualizarArchivoId(rutaIDs,reserva.Id);
+          
+       }
+       else
+       {
+           throw new Exception($"Error: {mensajeError}");
        }
     }
 

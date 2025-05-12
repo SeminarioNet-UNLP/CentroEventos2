@@ -1,4 +1,4 @@
-public static class BusquedaId
+public static class IdManager
 {
     public static int BuscarUltimoId(string ruta, out string mensajeError)
     {
