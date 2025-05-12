@@ -71,4 +71,4 @@ public class AltaReservaUseCase
             Console.WriteLine($"No se pudo cargar el archivo: {e.Message}");
         }
     }
-}   
+} 
