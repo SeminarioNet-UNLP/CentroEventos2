@@ -2,9 +2,14 @@ using CentroEventos.Aplicaciones.Excepciones;  // Este using es importante
 
 namespace CentroEventos.Aplicaciones.Validaciones;
 public class ValidarEvento
-
 {
+    private readonly IRepositorioPersona _repoPersona;
 
+    public ValidarEvento(IRepositorioPersona repoPersona)
+    {
+        _repoPersona = repoPersona;
+    }
+    
     public bool VerNombreYDescripcion(string nombre, string descripcion)
     {
         if (string.IsNullOrWhiteSpace(nombre))
@@ -39,13 +44,6 @@ public class ValidarEvento
     
     return true; 
     }
-
-    private readonly IRepositorioPersona _repoPersona;
-
-        public ValidarEvento(IRepositorioPersona repoPersona)
-        {
-            _repoPersona = repoPersona;
-        }
 
     public bool VerResponsable(int responsableId)
     {
