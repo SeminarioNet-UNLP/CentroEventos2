@@ -1,31 +1,30 @@
+
 using CentroEventos.Aplicaciones.Excepciones;
 
-public class RepositorioPersona : IRepositorioPersona
+public class RepositorioEventoDeportivo : IRepositorioEventoDeportivo
 {
-    private const int CantPropsPersona = 5;
+     private const int CantPropsPersona = 6;
     private readonly string rutaIDs = Path.Combine("C:", "Users", "Usuario", "proyectos", 
     "Sistema-de-Gestion-del-Centro-Deportivo-Universitario", "CentroEventos.Repositorios", 
     "ArchivosPersistencia", "IdPersona.txt");
 
-    private readonly string archivoPersonas = Path.Combine("C:", "Users", "Usuario", "proyectos", 
+    private readonly string archivoEventos = Path.Combine("C:", "Users", "Usuario", "proyectos", 
     "Sistema-de-Gestion-del-Centro-Deportivo-Universitario", "CentroEventos.Repositorios", 
-    "ArchivosPersistencia", "PersonasPersistencia.txt");
-
-
-    public void AltaPersona(Persona persona)
+    "ArchivosPersistencia", "eventosPersistencia.txt");
+    public void AltaEventoDeportivo(EventoDeportivo evento)
     {
        string mensajeError;
        int ultimoId= IdManager.BuscarUltimoId(rutaIDs,out mensajeError);
        if(ultimoId >= 0)
        {
-           persona.Id = ultimoId+1;
+           evento.Id = ultimoId+1;
            try
            {   
-               using (StreamWriter sw = new StreamWriter(archivoPersonas, true))
+               using (StreamWriter sw = new StreamWriter(archivoEventos, true))
                {
-                   sw.WriteLine(persona.ToString());
+                   sw.WriteLine(evento.ToString());
                }
-               IdManager.ActualizarArchivoId(rutaIDs,persona.Id);
+               IdManager.ActualizarArchivoId(rutaIDs,evento.Id);
            }
            catch (Exception e)
            {
@@ -38,23 +37,23 @@ public class RepositorioPersona : IRepositorioPersona
        }
     }
 
-    public void BajaPersona(int id)
+    public void BajaEventoDeportivo(int id)
     {
         bool encontrePersona= false;
-        List<Persona> personas = ListadoPersona();
-        for (int i = 0; i < personas.Count() &&  encontrePersona; i++)
+        List<EventoDeportivo> eventos = ListadoEventoDeportivo();
+        for (int i = 0; i < eventos.Count() &&  encontrePersona; i++)
         {
-            if(personas[i].Id == id) 
+            if(eventos[i].Id == id) 
             {
-                personas.RemoveAt(i);
+                eventos.RemoveAt(i);
              encontrePersona = true;
             }  
         }
         if (encontrePersona)
         {
-            using(StreamWriter sw = new StreamWriter(archivoPersonas))
+            using(StreamWriter sw = new StreamWriter(archivoEventos))
             {
-                foreach (Persona p in personas)
+                foreach (EventoDeportivo p in eventos)
                 {
                     sw.WriteLine(p.ToString());
                 }
@@ -66,13 +65,12 @@ public class RepositorioPersona : IRepositorioPersona
         }
     }
 
-    public List<Persona> ListadoPersona()
+    public List<EventoDeportivo> ListadoEventoDeportivo()
     {
-       
-        List<Persona> personas = new List<Persona>();
+         List<EventoDeportivo> eventos = new List<EventoDeportivo>();
         try
         {
-            using (StreamReader sr = new StreamReader(archivoPersonas))
+            using (StreamReader sr = new StreamReader(archivoEventos))
             {
                 string? lineaP;
                 while((lineaP = sr.ReadLine()) != null)
@@ -80,15 +78,16 @@ public class RepositorioPersona : IRepositorioPersona
                     string[]campos = lineaP.Split(" ");
                     if(campos.Length == CantPropsPersona)
                     {
-                        Persona per = new Persona(
+                        EventoDeportivo even = new EventoDeportivo(
                             campos[1], 
                             campos[2],
-                            campos[3],
-                            campos[4],
-                            campos[5]
+                            DateTime.Parse(campos[3]),
+                            double.Parse(campos[4]),
+                            int.Parse(campos[5]),
+                            int.Parse(campos[6])
                         );
-                        per.Id = int.Parse(campos[0]);
-                        personas.Add(per);
+                        even.Id = int.Parse(campos[0]);
+                        eventos.Add(even);
                     }
                 }
             }
@@ -97,18 +96,18 @@ public class RepositorioPersona : IRepositorioPersona
         {
             throw new Exception($"No se pudo acceder al archivo. {e.Message}");
         }
-        return personas;
+        return eventos;
     }
 
-    public void ModificarPersona(Persona persona)
+    public void ModificarEventoDeportivo(EventoDeportivo evento)
     {
-        List<Persona> personas = ListadoPersona();
+        List<EventoDeportivo> eventos = ListadoEventoDeportivo();
         bool encontrePersona = false;
-        for (int i = 0; i < personas.Count() &&  encontrePersona; i++)
+        for (int i = 0; i < eventos.Count() &&  encontrePersona; i++)
         {
-            if(personas[i].Id == persona.Id)
+            if(eventos[i].Id == evento.Id)
             {
-                personas[i] = persona;
+                eventos[i] = evento;
                 encontrePersona= true;
             }
             

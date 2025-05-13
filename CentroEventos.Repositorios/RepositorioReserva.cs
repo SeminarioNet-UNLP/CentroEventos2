@@ -87,7 +87,7 @@ private readonly string archivoReservas = Path.Combine("C:", "Users", "Usuario",
                 while((lineaP = sr.ReadLine()) != null)
                 {
                     string[]campos = lineaP.Split(" ");
-                    if(campos.Length == 5)
+                    if(campos.Length == 4)
                     {
                         Reserva reserva = new Reserva(
                             int.Parse(campos[1]), 
