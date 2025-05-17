@@ -3,4 +3,4 @@
 
 *** 
 ***Aclaracion***
-Los archivos se van a generar en ***CentroEventos.Aplicacion\bin\Debug\net8.0***
+Los archivos se van a generar en ***CentroEventos.Consola\bin\Debug\net8.0***
