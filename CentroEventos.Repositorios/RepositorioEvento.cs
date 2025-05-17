@@ -3,7 +3,7 @@ using CentroEventos.Aplicaciones.Excepciones;
 
 public class RepositorioEventoDeportivo : IRepositorioEventoDeportivo
 {
-     private const int CantPropsPersona = 6;
+     private const int CantPropsPersona = 7;
     private readonly string rutaIDs = Path.Combine("C:", "Users", "Usuario", "proyectos", 
     "Sistema-de-Gestion-del-Centro-Deportivo-Universitario", "CentroEventos.Repositorios", 
     "ArchivosPersistencia", "IdPersona.txt");

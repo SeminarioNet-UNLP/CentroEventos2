@@ -3,7 +3,7 @@ using CentroEventos.Aplicaciones.Excepciones;
 public class RepositorioReserva : IRepositorioReserva
 {
    
-
+private const int CantPropsReserva = 6;
 private readonly string rutaIDs = Path.Combine("C:", "Users", "Usuario", "proyectos", 
     "Sistema-de-Gestion-del-Centro-Deportivo-Universitario", "CentroEventos.Repositorios", 
     "ArchivosPersistencia", "IdReservaa.txt");
@@ -87,7 +87,7 @@ private readonly string archivoReservas = Path.Combine("C:", "Users", "Usuario",
                 while((lineaP = sr.ReadLine()) != null)
                 {
                     string[]campos = lineaP.Split(" ");
-                    if(campos.Length == 4)
+                    if(campos.Length == CantPropsReserva)
                     {
                         Reserva reserva = new Reserva(
                             int.Parse(campos[1]), 
