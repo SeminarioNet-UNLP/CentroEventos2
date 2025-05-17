@@ -29,15 +29,15 @@ public class ModificarPersonaUseCase
                 throw new ValidacionException(mensajeError);
             }
             
-            if (!validador.DNINoSeRepite(persona.Dni, out mensajeError))
-            {
-                throw new DuplicadoException(mensajeError);
-            }
+            //if (!validador.DNINoSeRepite(persona.Dni, out mensajeError))
+            //{
+            //    throw new DuplicadoException(mensajeError);
+            //}
             
-            if (!validador.EmailNoSeRepite(persona.Email,out mensajeError))
-            {
-                throw new DuplicadoException(mensajeError);
-            }
+            //if (!validador.EmailNoSeRepite(persona.Email,out mensajeError))
+            //{
+            //    throw new DuplicadoException(mensajeError);
+            //}
 
        try
        {
@@ -45,6 +45,7 @@ public class ModificarPersonaUseCase
        }
        catch
        {
+          System.Console.WriteLine("se rompio en el catch");
           throw;
        }
     }

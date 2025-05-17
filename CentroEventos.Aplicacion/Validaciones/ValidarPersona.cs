@@ -31,13 +31,17 @@ public class ValidarPersona
     {
         mensajeError = "";
         List<Persona> personas = _repoPersona.ListadoPersona();
-        foreach (var persona in personas)
+        if(personas != null)
         {
-            if (persona.Dni == Dni)
+            foreach (Persona per in personas)
             {
-                mensajeError = "Error. Ya existe el DNI.";
-            }
+                if (per.Dni == Dni)
+                {
+                    mensajeError = "Error. Ya existe el DNI.";
+                }
+            }   
         }
+        
         return mensajeError == "";
     }
 
@@ -46,14 +50,16 @@ public class ValidarPersona
         mensajeError = ""; 
         bool corte = false;
         List<Persona> personas = _repoPersona.ListadoPersona();
-
-        for (int i = 0; i< personas.Count() && !corte; i++)
+        if (personas != null)
         {
-            if (personas[i].Email == Email)
-            {
-                mensajeError= "Error. Ya existe el Email.";
-                corte  = true;
-            }
+          for (int i = 0; i< personas.Count() && !corte; i++)
+          {
+              if (personas[i].Email == Email)
+              {
+                  mensajeError= "Error. Ya existe el Email.";
+                  corte  = true;
+              }
+          }
         }
         return mensajeError == "";
     }

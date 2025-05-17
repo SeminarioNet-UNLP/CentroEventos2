@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 public static class IdManager
 {
     public static int BuscarUltimoId(string ruta, out string mensajeError)
@@ -10,7 +12,11 @@ public static class IdManager
             {
               while(!sr.EndOfStream)
               {
-                 aux = sr.Read();
+                string? linea = sr.ReadLine();
+                if (linea != null)
+                {
+                  aux = int.Parse(linea);
+                }
               }
             }
         }

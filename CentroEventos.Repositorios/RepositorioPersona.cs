@@ -3,62 +3,51 @@ using CentroEventos.Aplicaciones.Excepciones;
 public class RepositorioPersona : IRepositorioPersona
 {
     private const int CantPropsPersona = 6;
-    private readonly string rutaIDs = Path.Combine("C:", "Users", "Usuario", "proyectos", 
-    "Sistema-de-Gestion-del-Centro-Deportivo-Universitario", "CentroEventos.Repositorios", 
-    "ArchivosPersistencia", "IdPersona.txt");
-
-    private readonly string archivoPersonas = Path.Combine("C:", "Users", "Usuario", "proyectos", 
-    "Sistema-de-Gestion-del-Centro-Deportivo-Universitario", "CentroEventos.Repositorios", 
-    "ArchivosPersistencia", "PersonasPersistencia.txt");
+    private readonly string rutaIDs = "IdPersona.txt";
+    private readonly string archivoPersonas = "PersonasPersistencia.txt";
 
 
     public void AltaPersona(Persona persona)
     {
-       string mensajeError;
-       int ultimoId= IdManager.BuscarUltimoId(rutaIDs,out mensajeError);
-       if(ultimoId >= 0)
-       {
-           persona.Id = ultimoId+1;
-           try
-           {   
-               using (StreamWriter sw = new StreamWriter(archivoPersonas, true))
-               {
-                   sw.WriteLine(persona.ToString());
-               }
-               IdManager.ActualizarArchivoId(rutaIDs,persona.Id);
-           }
-           catch (Exception e)
-           {
-               throw new Exception(e.Message);
-           }  
-       }
-       else
-       {
-           throw new Exception($"Error: {mensajeError}");
-       }
+        string mensajeError;
+        int ultimoId = IdManager.BuscarUltimoId(rutaIDs, out mensajeError);
+        if (ultimoId >= 0)
+        {
+            persona.Id = ultimoId + 1;
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(archivoPersonas, true))
+                {
+                    sw.WriteLine(persona.ToString());
+                }
+                IdManager.ActualizarArchivoId(rutaIDs, persona.Id);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+        else
+        {
+            throw new Exception($"Error: {mensajeError}");
+        }
     }
 
     public void BajaPersona(int id)
     {
-        bool encontrePersona= false;
+        bool encontrePersona = false;
         List<Persona> personas = ListadoPersona();
-        for (int i = 0; i < personas.Count() &&  encontrePersona; i++)
+        for (int i = 0; i < personas.Count() && !encontrePersona; i++)
         {
-            if(personas[i].Id == id) 
+            if (personas[i].Id == id)
             {
                 personas.RemoveAt(i);
-             encontrePersona = true;
-            }  
+                encontrePersona = true;
+            }
         }
         if (encontrePersona)
         {
-            using(StreamWriter sw = new StreamWriter(archivoPersonas))
-            {
-                foreach (Persona p in personas)
-                {
-                    sw.WriteLine(p.ToString());
-                }
-            }   
+            RemplazarPersonas(personas);
         }
         else
         {
@@ -68,20 +57,20 @@ public class RepositorioPersona : IRepositorioPersona
 
     public List<Persona> ListadoPersona()
     {
-       
+
         List<Persona> personas = new List<Persona>();
         try
         {
             using (StreamReader sr = new StreamReader(archivoPersonas))
             {
                 string? lineaP;
-                while((lineaP = sr.ReadLine()) != null)
+                while (!sr.EndOfStream && ((lineaP = sr.ReadLine()) != null))
                 {
-                    string[]campos = lineaP.Split(" ");
-                    if(campos.Length == CantPropsPersona)
+                    string[] campos = lineaP.Split(" ");
+                    if (campos.Length == CantPropsPersona)
                     {
                         Persona per = new Persona(
-                            campos[1], 
+                            campos[1],
                             campos[2],
                             campos[3],
                             campos[4],
@@ -93,9 +82,9 @@ public class RepositorioPersona : IRepositorioPersona
                 }
             }
         }
-        catch (Exception e)
+        catch
         {
-            throw new Exception($"No se pudo acceder al archivo. {e.Message}");
+            return personas;
         }
         return personas;
     }
@@ -104,18 +93,38 @@ public class RepositorioPersona : IRepositorioPersona
     {
         List<Persona> personas = ListadoPersona();
         bool encontrePersona = false;
-        for (int i = 0; i < personas.Count() &&  encontrePersona; i++)
+        if (personas != null)
         {
-            if(personas[i].Id == persona.Id)
+            for (int i = 0; i < personas.Count() && !encontrePersona; i++)
             {
-                personas[i] = persona;
-                encontrePersona= true;
+                if (personas[i].Dni == persona.Dni)
+                {
+                    persona.Id = personas[i].Id; // la persona que ingresa no tiene id por el momento
+                    personas[i] = persona;
+                    encontrePersona = true;
+                }
             }
-            
+            if (encontrePersona)
+            {
+                RemplazarPersonas(personas);
+            }
+            else
+            {
+                throw new EntidadNotFoundException("No se encontro el id correspondiente");
+            }
         }
-        if(!encontrePersona)
-        {    
-            throw new EntidadNotFoundException("No se encontro el id correspondiente");
+       
+    }
+    private void RemplazarPersonas(List<Persona> persona)
+    {
+        using (StreamWriter sw = new StreamWriter(archivoPersonas))
+        {
+            foreach (Persona per in persona)
+            {
+                sw.WriteLine(per.ToString());
+            }
         }
+        
     }
 }
+
