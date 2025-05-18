@@ -18,41 +18,34 @@ public AltaEventoUseCase(IRepositorioEventoDeportivo repoEvento,
 
     public void Ejecutar(EventoDeportivo eventoDeportivo, int IdUsuario)
     {
-        string mensajeError;
         ValidarEvento validador = new ValidarEvento(_repoPersona);
-        
-            if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoAlta))
-            {
-                throw new FalloAutorizacionException();
-            }
+        List<string> errores = new List<string>();
 
-            if (!validador.VerCupo(eventoDeportivo.CupoMaximo,out mensajeError))
-            {
-                throw new ValidacionException(mensajeError);
-            }
-        
-            if (!validador.VerFecha(eventoDeportivo.FechaHoraInicio,out mensajeError))
-            {
-                throw new ValidacionException(mensajeError);
-            }
-            
-            if (!validador.VerHoras(eventoDeportivo.DuracionHoras, out mensajeError))
-            {
-                throw new ValidacionException(mensajeError);
-            }
-            
-            if (!validador.VerResponsable(eventoDeportivo.ResponsableId, out mensajeError))
-            {
-                throw new EntidadNotFoundException(mensajeError);
-            }
-        
-        try
+        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoBaja))
+            throw new FalloAutorizacionException();
+
+        string mensajeError;
+
+        if (!validador.VerCupo(eventoDeportivo.CupoMaximo, out mensajeError))
+            errores.Add(mensajeError);
+
+        if (!validador.VerFecha(eventoDeportivo.FechaHoraInicio, out mensajeError))
+            errores.Add(mensajeError);
+
+        if (!validador.VerHoras(eventoDeportivo.DuracionHoras, out mensajeError))
+            errores.Add(mensajeError);
+
+        if (!validador.VerResponsable(eventoDeportivo.ResponsableId, out mensajeError))
+            errores.Add(mensajeError);
+
+        if (errores.Count > 0)
         {
-            _repoEvento.AltaEventoDeportivo(eventoDeportivo);
-        }
-        catch 
-        {
-            throw; //propaga la excepcion que se genero.
+            string erroresTotales = "";
+            foreach (string error in errores)
+            {
+                erroresTotales += error + "\n";
+            }
+            throw new ValidacionException(erroresTotales);
         }
     }
 }

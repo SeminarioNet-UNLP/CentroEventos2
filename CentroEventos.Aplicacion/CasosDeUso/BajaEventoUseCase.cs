@@ -18,40 +18,34 @@ public BajaEventoUseCase(IRepositorioEventoDeportivo repoEvento,
 
     public void Ejecutar(EventoDeportivo eventoDeportivo, int IdUsuario)
     {
-        string mensajeError;
         ValidarEvento validador = new ValidarEvento(_repoPersona);
-       
-            if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoBaja))
-            {
-                throw new FalloAutorizacionException();
-            }
+        List<string> errores = new List<string>();
 
-            if (!validador.VerCupo(eventoDeportivo.CupoMaximo,out mensajeError))
+        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoBaja))
+            throw new FalloAutorizacionException();
+
+        string mensajeError;
+
+        if (!validador.VerCupo(eventoDeportivo.CupoMaximo, out mensajeError))
+            errores.Add(mensajeError);
+
+        if (!validador.VerFecha(eventoDeportivo.FechaHoraInicio, out mensajeError))
+            errores.Add(mensajeError);
+
+        if (!validador.VerHoras(eventoDeportivo.DuracionHoras, out mensajeError))
+            errores.Add(mensajeError);
+
+        if (!validador.VerResponsable(eventoDeportivo.ResponsableId, out mensajeError))
+            errores.Add(mensajeError);
+
+        if (errores.Count > 0)
+        {
+            string erroresTotales = "";
+            foreach (string error in errores)
             {
-                throw new ValidacionException(mensajeError);
+                erroresTotales += error + "\n";
             }
-        
-            if (!validador.VerFecha(eventoDeportivo.FechaHoraInicio,out mensajeError))
-            {
-                throw new ValidacionException(mensajeError);
-            }
-            
-            if (!validador.VerHoras(eventoDeportivo.DuracionHoras, out mensajeError))
-            {
-                throw new ValidacionException(mensajeError);
-            }
-            
-            if (!validador.VerResponsable(eventoDeportivo.ResponsableId, out mensajeError))
-            {
-                throw new EntidadNotFoundException(mensajeError);
-            }
-       try
-       {
-           _repoEvento.BajaEventoDeportivo(eventoDeportivo.Id);
-       }
-       catch
-       {
-         throw;
-       }
+            throw new ValidacionException(erroresTotales);
+        }
     }
 }
