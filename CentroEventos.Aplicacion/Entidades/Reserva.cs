@@ -16,6 +16,6 @@ public class Reserva
 
     public override string ToString()
     {
-        return $"{Id} {PersonaId} {EventoDeportivoId} {FechaAltaReserva} {EstadoAsistencia}";
+        return $"{Id}#{PersonaId}#{EventoDeportivoId}#{FechaAltaReserva}#{EstadoAsistencia}";
     }
 }

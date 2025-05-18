@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using CentroEventos.Aplicaciones.Excepciones;
 using CentroEventos.Aplicaciones.Validaciones;
 
@@ -18,34 +19,53 @@ public class ModificarEventoUseCase
 
     public void Ejecutar(EventoDeportivo eventoDeportivo, int IdUsuario)
     {
-        ValidarEvento validador = new ValidarEvento(_repoPersona);
-        List<string> errores = new List<string>();
-
-        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoBaja))
-            throw new FalloAutorizacionException();
-
         string mensajeError;
-
-        if (!validador.VerCupo(eventoDeportivo.CupoMaximo, out mensajeError))
-            errores.Add(mensajeError);
-
-        if (!validador.VerFecha(eventoDeportivo.FechaHoraInicio, out mensajeError))
-            errores.Add(mensajeError);
-
-        if (!validador.VerHoras(eventoDeportivo.DuracionHoras, out mensajeError))
-            errores.Add(mensajeError);
-
-        if (!validador.VerResponsable(eventoDeportivo.ResponsableId, out mensajeError))
-            errores.Add(mensajeError);
-
-        if (errores.Count > 0)
+        ValidarEvento validador = new ValidarEvento(_repoPersona);
+        List<EventoDeportivo> eventos = _repoEvento.ListadoEventoDeportivo();
+        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoModificacion))
         {
-            string erroresTotales = "";
-            foreach (string error in errores)
+            throw new FalloAutorizacionException();
+        }
+        if (eventos != null) // validacion No se puede modificar un envento que ya expiro
+        {
+            bool condi=false;
+            for (int i = 0; i < eventos.Count() && !condi; i++)
             {
-                erroresTotales += error + "\n";
-            }
-            throw new ValidacionException(erroresTotales);
+                if(eventos[i].ResponsableId == eventoDeportivo.ResponsableId && eventos[i].FechaHoraInicio< DateTime.Now)
+                {
+                    throw new OperacionInvalidaException("No se puede modificar un evento. Ya expiro");
+                }
+            }    
+        }
+        if (!validador.VerNombreYDescripcion(eventoDeportivo.Nombre, eventoDeportivo.Descripcion, out mensajeError))
+        {
+            throw new ValidacionException(mensajeError);
+        }
+        if (!validador.VerCupo(eventoDeportivo.CupoMaximo, out mensajeError))
+        {
+            throw new ValidacionException(mensajeError);
+        }
+        if (!validador.VerFecha(eventoDeportivo.FechaHoraInicio, out mensajeError))
+        {
+            throw new ValidacionException(mensajeError);
+        }
+        if (!validador.VerHoras(eventoDeportivo.DuracionHoras, out mensajeError))
+        {
+            throw new ValidacionException(mensajeError);
+        }
+        if (!validador.VerResponsable(eventoDeportivo.ResponsableId, out mensajeError))
+        {
+            throw new EntidadNotFoundException(mensajeError);
+        }
+        
+
+        try
+        {
+            _repoEvento.ModificarEventoDeportivo(eventoDeportivo);
+        }
+        catch
+        {
+            throw;
         }
     }
 }

@@ -81,7 +81,7 @@ public class RepositorioReserva : IRepositorioReserva
                 string? lineaP;
                 while (!sr.EndOfStream && (lineaP = sr.ReadLine()) != null)
                 {
-                    string[] campos = lineaP.Split(" ");
+                    string[] campos = lineaP.Split("#");
                     if (campos.Length == CantPropsReserva)
                     {
                         Reserva reserva = new Reserva(
@@ -115,6 +115,7 @@ public class RepositorioReserva : IRepositorioReserva
             {
             if (listaReservas[i].Id == reserva.Id)
             {
+                reserva.Id = listaReservas[i].Id;
                 listaReservas[i] = reserva;
                 cambie = true;
             }

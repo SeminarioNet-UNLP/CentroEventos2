@@ -66,7 +66,7 @@ public class RepositorioPersona : IRepositorioPersona
                 string? lineaP;
                 while (!sr.EndOfStream && ((lineaP = sr.ReadLine()) != null))
                 {
-                    string[] campos = lineaP.Split(" ");
+                    string[] campos = lineaP.Split("#");
                     if (campos.Length == CantPropsPersona)
                     {
                         Persona per = new Persona(

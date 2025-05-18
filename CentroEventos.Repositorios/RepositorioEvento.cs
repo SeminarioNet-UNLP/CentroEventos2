@@ -35,17 +35,17 @@ public class RepositorioEventoDeportivo : IRepositorioEventoDeportivo
 
     public void BajaEventoDeportivo(int id)
     {
-        bool encontrePersona = false;
+        bool encontreEvento = false;
         List<EventoDeportivo> eventos = ListadoEventoDeportivo();
-        for (int i = 0; i < eventos.Count() && !encontrePersona; i++)
+        for (int i = 0; i < eventos.Count() && !encontreEvento; i++)
         {
             if (eventos[i].Id == id)
             {
                 eventos.RemoveAt(i);
-                encontrePersona = true;
+                encontreEvento = true;
             }
         }
-        if (encontrePersona)
+        if (encontreEvento)
         {
 
             RemplazarEventos(eventos);
@@ -66,7 +66,7 @@ public class RepositorioEventoDeportivo : IRepositorioEventoDeportivo
                 string? lineaP;
                 while (!sr.EndOfStream && (lineaP = sr.ReadLine()) != null)
                 {
-                    string[] campos = lineaP.Split(" ");
+                    string[] campos = lineaP.Split("#");
                     if (campos.Length == CantPropsPersona)
                     {
                         EventoDeportivo even = new EventoDeportivo(
@@ -93,18 +93,20 @@ public class RepositorioEventoDeportivo : IRepositorioEventoDeportivo
     public void ModificarEventoDeportivo(EventoDeportivo evento)
     {
         List<EventoDeportivo> eventos = ListadoEventoDeportivo();
-        bool encontrePersona = false;
+        bool encontreEvento = false;
         if (eventos != null)
         {
-            for (int i = 0; i < eventos.Count() && encontrePersona; i++)
+            for (int i = 0; i < eventos.Count() && !encontreEvento; i++)
             {
-                if (eventos[i].Id == evento.Id)
+                if (eventos[i].ResponsableId == evento.ResponsableId)
                 {
+                    evento.Id = eventos[i].Id;
                     eventos[i] = evento;
-                    encontrePersona = true;
+                    encontreEvento = true;
                 }
             }
-            if (!encontrePersona)
+           
+            if (encontreEvento)
             {
                 RemplazarEventos(eventos);
             }
