@@ -2,6 +2,7 @@ using CentroEventos.Aplicaciones.Excepciones;
 
 public class RepositorioPersona : IRepositorioPersona
 {
+    // Cantidad de propiedades que tiene la clase Persona (Id, Nombre, Apellido, Dni, Email, Rol)
     private const int CantPropsPersona = 6;
     private readonly string rutaIDs = "IdPersona.txt";
     private readonly string archivoPersonas = "PersonasPersistencia.txt";

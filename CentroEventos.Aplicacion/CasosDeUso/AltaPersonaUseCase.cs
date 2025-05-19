@@ -18,28 +18,28 @@ public class AltaPersonaUseCase
     public void Ejecutar(Persona persona, int IdUsuario)
     {
         
-            string mensajeError;
-            ValidarPersona validador = new ValidarPersona(_repoPersona);
-            if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioAlta))
-            {
-                throw new FalloAutorizacionException();
-            }
-            
-            if (!validador.CamposVacios(persona.Nombre, persona.Apellido, persona.Dni,persona.Email,out mensajeError))
-            {
-                throw new ValidacionException(mensajeError);
-            }
-            
-            if (!validador.DNINoSeRepite(persona.Dni, out mensajeError))
-            {
-                throw new DuplicadoException(mensajeError);
-            }
-            
-            if (!validador.EmailNoSeRepite(persona.Email,out mensajeError))
-            {
-                throw new DuplicadoException(mensajeError);
-       
-            }
+        string mensajeError;
+        ValidarPersona validador = new ValidarPersona(_repoPersona);
+        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioAlta))
+        {
+            throw new FalloAutorizacionException();
+        }
+        
+        if (!validador.CamposVacios(persona.Nombre, persona.Apellido, persona.Dni,persona.Email, out mensajeError))
+        {
+            throw new ValidacionException(mensajeError);
+        }
+        
+        if (!validador.DNINoSeRepite(persona.Dni, out mensajeError))
+        {
+            throw new DuplicadoException(mensajeError);
+        }
+        
+        if (!validador.EmailNoSeRepite(persona.Email, out mensajeError))
+        {
+            throw new DuplicadoException(mensajeError);
+    
+        }
        
         try
         {
@@ -47,7 +47,7 @@ public class AltaPersonaUseCase
         }
         catch 
         {
-            throw; //propaga la excepcion que se genero.
+            throw; // Propaga la excepcion que se genero.
         }
     }
 }
