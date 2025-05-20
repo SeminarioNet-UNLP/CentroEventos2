@@ -3,7 +3,7 @@ using CentroEventos.Aplicaciones.Excepciones;
 public class RepositorioReserva : IRepositorioReserva
 {
 
-    private const int CantPropsReserva = 6;
+    private const int CantPropsReserva = 5;
     private readonly string rutaIDs = "IdReserva.txt";
 
     private readonly string archivoReservas = "ReservasPersistencia.txt";
@@ -50,7 +50,7 @@ public class RepositorioReserva : IRepositorioReserva
             bool encontre = false;
             foreach (var linea in archivo)
             {
-                var partes = linea.Split(' ');
+                var partes = linea.Split('#');
                 if (int.Parse(partes[0]) == id)
                 {
                     encontre = true;
@@ -113,12 +113,12 @@ public class RepositorioReserva : IRepositorioReserva
         {
             for (int i = 0; i < listaReservas.Count() && !cambie; i++)
             {
-            if (listaReservas[i].Id == reserva.Id)
-            {
-                reserva.Id = listaReservas[i].Id;
-                listaReservas[i] = reserva;
-                cambie = true;
-            }
+                if (listaReservas[i].EventoDeportivoId == reserva.EventoDeportivoId && listaReservas[i].PersonaId == reserva.PersonaId)
+                {
+                    reserva.Id = listaReservas[i].Id;
+                    listaReservas[i] = reserva;
+                    cambie = true;
+                }
             }
             if(cambie)
             {

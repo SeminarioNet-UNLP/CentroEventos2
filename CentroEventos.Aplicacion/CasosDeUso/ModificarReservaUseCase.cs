@@ -31,10 +31,6 @@ public class ModificarReservaUseCase
       {
           throw new EntidadNotFoundException(mensajeError);
       }
-      if(!validador.VerificarReservaExistente(reserva, out mensajeError))
-      {
-          throw new CupoExcedidoException(mensajeError);
-      }
       if (!validador.VerificarCupoDisponible(reserva.EventoDeportivoId, out mensajeError))
       {
           throw new DuplicadoException(mensajeError);

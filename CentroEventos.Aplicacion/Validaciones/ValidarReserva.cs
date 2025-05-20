@@ -91,14 +91,18 @@ public class ValidarReserva
         else
         {
             int cantidadReservas = 0;
-            foreach (var reserva in _repoReserva.ListadoReserva())
-            {
-                if (reserva.EventoDeportivoId == eventoId)
+            List<Reserva> reservas = _repoReserva.ListadoReserva();
+            if (reservas != null)
+            { 
+                foreach (Reserva r in reservas)
                 {
-                    cantidadReservas++;
+                    if (r.EventoDeportivoId == eventoId)
+                    {
+                        cantidadReservas++;
+                    }
                 }
             }
-            if (cantidadReservas >= eventoEncontrado.CupoMaximo)
+            if (cantidadReservas+1 >= eventoEncontrado.CupoMaximo)
             {
                 mensajeError = "Error. No hay cupo disponible para este evento.";
             }

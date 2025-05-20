@@ -56,13 +56,17 @@ public class ListarAsistenciaAEventoUseCase
         {
             if (reserva.EventoDeportivoId == idEvento)
             {
-                foreach (Persona p in todasPersonas)
-                {
-                    if (p.Id == reserva.PersonaId)
-                    {
-                        personasAsistidas.Add(p);
-                    }
+                if (reserva.EstadoAsistencia == EstadosAsistencia.Presente)
+                { 
+                  foreach (Persona p in todasPersonas)
+                  {
+                      if (p.Id == reserva.PersonaId)
+                      {
+                          personasAsistidas.Add(p);
+                      }
+                  }
                 }
+              
 
             }
         }

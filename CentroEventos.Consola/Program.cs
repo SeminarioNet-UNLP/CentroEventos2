@@ -31,11 +31,11 @@ List<EventoDeportivo> eventosDisponibles = listarEventosConCupo.Ejecutar();
 try
 {
     CargarPersonas();
-    modPersona.Ejecutar(new Persona("9876543", "Juan", "Pérez", "juan.perez@example.com", "01122334455"), 1);
+    modPersona.Ejecutar(new Persona("9876543", "Juan", "Perez", "juan.perez@gmail.com", "01122334455"), 1);
     bajaPersona.Ejecutar(5, 1);
 
     CargarEventos();
-    modEvento.Ejecutar(new EventoDeportivo("Futbol", "Final de la copa interfacultades", new DateTime(2025, 8, 25, 12, 0, 0), 10, 22, 1), 1);
+    modEvento.Ejecutar(new EventoDeportivo("Futbol", "Final de la copa interfacultades", DateTime.Now.AddSeconds(2), 10, 22, 1), 1);
     bajaEvento.Ejecutar(repoReserva, 4, 1);
 
     CargarReservas();
@@ -59,11 +59,11 @@ catch (Exception e)
 
 void CargarPersonas()
 {
-    altaPersona.Ejecutar(new Persona("9876543", "Juan", "Pérez", "juan.perez@example.com", "01122334455"), 1);
-    altaPersona.Ejecutar(new Persona("8765432", "María", "Gómez", "maria.gomez@example.com", "02299887766"), 1);
-    altaPersona.Ejecutar(new Persona("7654321", "Carlos", "Rodríguez", "carlos.rodriguez@example.com", "03311223344"), 1);
-    altaPersona.Ejecutar(new Persona("6543210", "Laura", "Fernández", "laura.fernandez@example.com", "04455667788"), 1);
-    altaPersona.Ejecutar(new Persona("5432109", "Sofía", "Martínez", "sofia.martinez@example.com", "05566778899"), 1);
+    altaPersona.Ejecutar(new Persona("9876543", "Juan", "Perez", "juan.perez@example.com", "01122334455"), 1);
+    altaPersona.Ejecutar(new Persona("8765432", "Maria", "Gomez", "maria.gomez@example.com", "02299887766"), 1);
+    altaPersona.Ejecutar(new Persona("7654321", "Carlos", "Rodriguez", "carlos.rodriguez@example.com", "03311223344"), 1);
+    altaPersona.Ejecutar(new Persona("6543210", "Laura", "Fernandez", "laura.fernandez@example.com", "04455667788"), 1);
+    altaPersona.Ejecutar(new Persona("5432109", "Sofia", "Martinez", "sofia.martinez@example.com", "05566778899"), 1);
     // elimino a sofia 5
 }
 void CargarEventos()
@@ -137,7 +137,7 @@ void ListadoReservas()
 }
 void ListadoEventosDisponibles()
 {
-    Console.WriteLine("-----------Eventos con cupo disponibles-----------");
+    Console.WriteLine("-----------Eventos con cupo disponibles-----------"+ "\n");
     if (eventosDisponibles != null)
     {
         foreach (EventoDeportivo e in eventosDisponibles)
