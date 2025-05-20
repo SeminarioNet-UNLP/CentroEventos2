@@ -24,8 +24,6 @@ ListarReservaUseCase listarReservas = new ListarReservaUseCase(repoReserva);
 
 ListarAsistenciaAEventoUseCase listarAsistencia = new ListarAsistenciaAEventoUseCase(repoEvento, repoReserva, repoPersona);
 ListarEventosConCupoDisponibleUseCase listarEventosConCupo = new ListarEventosConCupoDisponibleUseCase(repoEvento, repoReserva);
-List<EventoDeportivo> eventosDisponibles = listarEventosConCupo.Ejecutar();
-
 
 
 try
@@ -137,6 +135,7 @@ void ListadoReservas()
 }
 void ListadoEventosDisponibles()
 {
+    List<EventoDeportivo> eventosDisponibles = listarEventosConCupo.Ejecutar();
     Console.WriteLine("-----------Eventos con cupo disponibles-----------"+ "\n");
     if (eventosDisponibles != null)
     {
