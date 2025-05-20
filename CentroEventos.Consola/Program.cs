@@ -30,17 +30,16 @@ try
     CargarPersonas();
     modPersona.Ejecutar(new Persona("9876543", "Juan", "Perez", "juan.perez@gmail.com", "01122334455"), 1);
     bajaPersona.Ejecutar(5, 1);
+    ListadoPersona();
 
     CargarEventos();
     modEvento.Ejecutar(new EventoDeportivo("Futbol", "Final de la copa interfacultades", DateTime.Now.AddSeconds(2), 10, 22, 1), 1);
     bajaEvento.Ejecutar(repoReserva, 4, 1);
+    ListadoEvento();
 
     CargarReservas();
     modReserva.Ejecutar(new Reserva(1, 1, DateTime.Now, EstadosAsistencia.Presente), 1);
     bajaReserva.Ejecutar(4, 1);
-
-    ListadoPersona();
-    ListadoEvento();
     ListadoReservas();
 
     ListadoEventosDisponibles();
@@ -61,7 +60,6 @@ void CargarPersonas()
     altaPersona.Ejecutar(new Persona("7654321", "Carlos", "Rodriguez", "carlos.rodriguez@example.com", "03311223344"), 1);
     altaPersona.Ejecutar(new Persona("6543210", "Laura", "Fernandez", "laura.fernandez@example.com", "04455667788"), 1);
     altaPersona.Ejecutar(new Persona("5432109", "Sofia", "Martinez", "sofia.martinez@example.com", "05566778899"), 1);
-    // elimino a sofia 5
 }
 void CargarEventos()
 {
@@ -69,12 +67,11 @@ void CargarEventos()
     altaEvento.Ejecutar(new EventoDeportivo("Voley", "UNLP vs UBA", new DateTime(2025, 11, 7, 21, 0, 0), 3, 2, 4), 1);
     altaEvento.Ejecutar(new EventoDeportivo("Ping Pong", "Demostracion a beneficio", new DateTime(2025, 6, 29, 16, 0, 0), 6, 2, 2), 1);
     altaEvento.Ejecutar(new EventoDeportivo("Tiro con arco", "Fecha 1", new DateTime(2025, 10, 1, 8, 0, 0), 4, 4, 3), 1);
-    //elimino el 4 osea el tiro con arco
 
 }
 void CargarReservas()
 {
-    altaReserva.Ejecutar(new Reserva(1, 1, DateTime.Now, EstadosAsistencia.Pendiente), 1);
+    altaReserva.Ejecutar(new Reserva(1, 1, DateTime.Now, EstadosAsistencia.Pendiente),1);
     altaReserva.Ejecutar(new Reserva(2, 1, DateTime.Now, EstadosAsistencia.Pendiente),1);
     altaReserva.Ejecutar(new Reserva(3, 1, DateTime.Now, EstadosAsistencia.Pendiente),1);
     altaReserva.Ejecutar(new Reserva(1, 2, DateTime.Now, EstadosAsistencia.Pendiente),1);
