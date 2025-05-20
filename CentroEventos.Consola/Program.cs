@@ -33,7 +33,7 @@ try
     ListadoPersona();
 
     CargarEventos();
-    modEvento.Ejecutar(new EventoDeportivo("Futbol", "Final de la copa interfacultades", DateTime.Now.AddSeconds(2), 10, 22, 1), 1);
+    modEvento.Ejecutar(new EventoDeportivo("Futbol", "Final de la copa interfacultades", DateTime.Now.AddSeconds(1), 10, 22, 1), 1);
     bajaEvento.Ejecutar(repoReserva, 4, 1);
     ListadoEvento();
 
@@ -132,7 +132,7 @@ void ListadoReservas()
 void ListadoEventosDisponibles()
 {
     List<EventoDeportivo> eventosDisponibles = listarEventosConCupo.Ejecutar();
-    Console.WriteLine("-----------Eventos con cupo disponibles-----------"+ "\n");
+    Console.WriteLine("-----------Eventos con cupo disponibles-----------" + "\n");
     if (eventosDisponibles != null)
     {
         foreach (EventoDeportivo e in eventosDisponibles)
@@ -140,10 +140,15 @@ void ListadoEventosDisponibles()
             Console.WriteLine(e.ToString().Replace("#", " "));
         }
     }
+    else
+    { 
+        Console.WriteLine("No existen eventos con cupos disponibles");
+    }
 
 }
 void ListarPersonasAsistidas(int idEvento)
 {
+    Console.WriteLine($"-----------Personas asistidas al evento {idEvento}-----------" + "\n");
     List<Persona> AsistenciaAEvento = listarAsistencia.Ejecutar(idEvento);
     if (AsistenciaAEvento != null)
     {
@@ -152,6 +157,11 @@ void ListarPersonasAsistidas(int idEvento)
             Console.WriteLine(p.ToString().Replace("#", " "));
         }
     }
+     else
+    { 
+        Console.WriteLine("El evento no tiene  parcticiapantes");
+    }
+
 }
 
 
