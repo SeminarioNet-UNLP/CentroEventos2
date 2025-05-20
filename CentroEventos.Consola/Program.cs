@@ -21,7 +21,6 @@ ListarPersonasUseCase listarPersonas = new ListarPersonasUseCase(repoPersona);
 ListarEventosUseCase listarEventos = new ListarEventosUseCase(repoEvento);
 ListarReservaUseCase listarReservas = new ListarReservaUseCase(repoReserva);
 
-
 ListarAsistenciaAEventoUseCase listarAsistencia = new ListarAsistenciaAEventoUseCase(repoEvento, repoReserva, repoPersona);
 ListarEventosConCupoDisponibleUseCase listarEventosConCupo = new ListarEventosConCupoDisponibleUseCase(repoEvento, repoReserva);
 
