@@ -9,14 +9,6 @@ public class ListarReservaUseCase
         _repositorioReserva = repositorioReserva;
     }
 
-    public void Ejecutar()
-    {
-        List<Reserva> listaReserva = _repositorioReserva.ListadoReserva();
-
-        foreach (Reserva res in listaReserva)
-        {
-            Console.WriteLine(res.ToString()+"\n");
-        }
-
-    }
+    public List<Reserva> Ejecutar() => _repositorioReserva.ListadoReserva();
+   
 }

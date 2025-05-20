@@ -5,33 +5,20 @@ public class ListarAsistenciaAEventoUseCase
 {
     private readonly IRepositorioEventoDeportivo _repoEvento;
     private readonly IRepositorioReserva _repoReserva;
+    private readonly IRepositorioPersona _repoPersona;
+
 
     public ListarAsistenciaAEventoUseCase(
         IRepositorioEventoDeportivo repoEvento,
-        IRepositorioReserva repoReserva)
+        IRepositorioReserva repoReserva,
+        IRepositorioPersona repoPersona)
     {
         _repoEvento = repoEvento;
         _repoReserva = repoReserva;
+        _repoPersona = repoPersona;
     }
-
-    /*public List<Reserva> Ejecutar(int idEvento)
-    {
-        EventoDeportivo? eventoBuscado = null;
-        List<EventoDeportivo> listaEventos = _repoEvento.ListadoEventoDeportivo();
-
-        foreach (EventoDeportivo evento in listaEventos)
-        {
-            if (evento.Id == idEvento)
-            {
-                eventoBuscado = evento;
-                break;
-            }
-        }
-    */
-
-    //Esto fue lo se se me ocurrio para reemplazar el foreach con el "break" tan odiado
     
-    public List<Reserva> Ejecutar(int idEvento)
+    public List<Persona> Ejecutar(int idEvento)
     {
 
         EventoDeportivo? eventoBuscado = null;
@@ -57,17 +44,29 @@ public class ListarAsistenciaAEventoUseCase
         }
 
         List<Reserva> todasLasReservas = _repoReserva.ListadoReserva();
-        List<Reserva> reservasDelEvento = new List<Reserva>();
+        List<Persona> todasPersonas = _repoPersona.ListadoPersona();
+        List<Persona> personasAsistidas = new List<Persona>();
+
+        if(todasLasReservas == null)
+            throw  new Exception("No hay reservas realizadas");
+        if (todasPersonas == null)
+            throw new Exception("No hay personas");    
 
         foreach (Reserva reserva in todasLasReservas)
         {
             if (reserva.EventoDeportivoId == idEvento)
             {
-                reservasDelEvento.Add(reserva);
+                foreach (Persona p in todasPersonas)
+                {
+                    if (p.Id == reserva.PersonaId)
+                    {
+                        personasAsistidas.Add(p);
+                    }
+                }
+
             }
         }
-
-        return reservasDelEvento;
+        return personasAsistidas;
     }
     
 }

@@ -4,6 +4,7 @@ public class ListarEventosConCupoDisponibleUseCase
 {
     private readonly IRepositorioEventoDeportivo _repoEvento;
     private readonly IRepositorioReserva _repoReserva;
+  
 
     public ListarEventosConCupoDisponibleUseCase(
         IRepositorioEventoDeportivo repoEvento,
@@ -18,7 +19,16 @@ public class ListarEventosConCupoDisponibleUseCase
         List<EventoDeportivo> todosLosEventos = _repoEvento.ListadoEventoDeportivo();
         List<Reserva> todasLasReservas = _repoReserva.ListadoReserva();
         List<EventoDeportivo> eventosConCupo = new List<EventoDeportivo>();
+      
 
+        if (todosLosEventos == null)
+        {
+            throw new Exception("No hay eventos");
+        }
+        if (todasLasReservas == null)
+        {
+            throw new Exception("No hay reservas realizadas");
+        }
         foreach (EventoDeportivo evento in todosLosEventos)
         {
             if (evento.FechaHoraInicio > DateTime.Now)

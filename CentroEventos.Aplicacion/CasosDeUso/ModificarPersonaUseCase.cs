@@ -17,35 +17,23 @@ public class ModificarPersonaUseCase
 
     public void Ejecutar(Persona persona, int IdUsuario)
     {
-            string mensajeError;
-            ValidarPersona validador = new ValidarPersona(_repoPersona);
-            if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioModificacion))
-            {
-                throw new FalloAutorizacionException();
-            }
-            
-            if (!validador.CamposVacios(persona.Nombre, persona.Apellido, persona.Dni,persona.Email,out mensajeError))
-            {
-                throw new ValidacionException(mensajeError);
-            }
-            
-            //if (!validador.DNINoSeRepite(persona.Dni, out mensajeError))
-            //{
-            //    throw new DuplicadoException(mensajeError);
-            //}
-            
-            //if (!validador.EmailNoSeRepite(persona.Email,out mensajeError))
-            //{
-            //    throw new DuplicadoException(mensajeError);
-            //}
-
+       string mensajeError;
+       ValidarPersona validador = new ValidarPersona(_repoPersona);
+       if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioModificacion))
+       {
+           throw new FalloAutorizacionException();
+       }
+       
+       if (!validador.CamposVacios(persona.Nombre, persona.Apellido, persona.Dni,persona.Email,out mensajeError))
+       {
+           throw new ValidacionException(mensajeError);
+       }
        try
        {
           _repoPersona.ModificarPersona(persona);
        }
        catch
        {
-          System.Console.WriteLine("se rompio en el catch");
           throw;
        }
     }

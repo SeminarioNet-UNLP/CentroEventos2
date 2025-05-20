@@ -7,58 +7,156 @@ IRepositorioReserva repoReserva = new RepositorioReserva();
 
 AltaPersonaUseCase altaPersona = new AltaPersonaUseCase(repoPersona, servicioAutorizacion);
 ModificarPersonaUseCase modPersona = new ModificarPersonaUseCase(repoPersona, servicioAutorizacion);
-BajaPersonaUseCase bajaPersona = new BajaPersonaUseCase(repoPersona, servicioAutorizacion);
+BajaPersonaUseCase bajaPersona = new BajaPersonaUseCase(repoPersona,repoEvento,repoReserva, servicioAutorizacion);
 
 AltaEventoUseCase altaEvento = new AltaEventoUseCase(repoEvento, repoPersona, servicioAutorizacion);
 ModificarEventoUseCase modEvento = new ModificarEventoUseCase(repoEvento,repoPersona,servicioAutorizacion);
 BajaEventoUseCase bajaEvento = new BajaEventoUseCase(repoEvento, repoPersona, servicioAutorizacion);
 
-
-altaPersona.Ejecutar(new Persona("1235643", "pablo", "isla", "chi12cho@gmail", "02213454"), 1);
-modPersona.Ejecutar(new Persona("1235643", "pablo", "cabe", "pablocabe@gmail", "02213454"), 1);
-bajaPersona.Ejecutar(1, 1);
-
-altaEvento.Ejecutar(new EventoDeportivo("futbol","futbol 5", new DateTime(2025, 5, 23, 19, 0, 0), 2, 10, 2), 1);
-modEvento.Ejecutar(new EventoDeportivo("futbol", "futbol 5", new DateTime(2025, 6, 23, 19, 0, 0), 2, 10, 2), 1);
-bajaEvento.Ejecutar(repoReserva, 12, 1);
+AltaReservaUseCase altaReserva = new AltaReservaUseCase(repoReserva, repoPersona, repoEvento, servicioAutorizacion);
+ModificarReservaUseCase modReserva = new ModificarReservaUseCase(repoReserva, repoPersona, repoEvento, servicioAutorizacion);
+BajaReservaUseCase bajaReserva = new BajaReservaUseCase(repoReserva, repoPersona, repoEvento, servicioAutorizacion);
 
 ListarPersonasUseCase listarPersonas = new ListarPersonasUseCase(repoPersona);
 ListarEventosUseCase listarEventos = new ListarEventosUseCase(repoEvento);
 ListarReservaUseCase listarReservas = new ListarReservaUseCase(repoReserva);
 
-Console.WriteLine("Personas:"+"\n");
-listarPersonas.Ejecutar();
-Console.WriteLine();
-Console.WriteLine("Eventos:"+"\n");
-listarEventos.Ejecutar();
-Console.WriteLine();
-Console.WriteLine("Reservas:"+"\n");
-listarReservas.Ejecutar();
 
+ListarAsistenciaAEventoUseCase listarAsistencia = new ListarAsistenciaAEventoUseCase(repoEvento, repoReserva, repoPersona);
 ListarEventosConCupoDisponibleUseCase listarEventosConCupo = new ListarEventosConCupoDisponibleUseCase(repoEvento, repoReserva);
 List<EventoDeportivo> eventosDisponibles = listarEventosConCupo.Ejecutar();
 
-Console.WriteLine("Eventos con cupo disponible:\n");
-foreach (EventoDeportivo evento in eventosDisponibles)
-{
-    Console.WriteLine(evento.ToString() + "\n");
-}
 
-//ESTO ME GENERA DUDA, porque la lista de asistencvia puede arrojar una lista o un error :)
-
-ListarAsistenciaAEventoUseCase listarAsistencia = new ListarAsistenciaAEventoUseCase(repoEvento, repoReserva);
 
 try
 {
-    List<Reserva> asistentes = listarAsistencia.Ejecutar(1);
-    Console.WriteLine("Asistentes al evento:"+"\n");
+    CargarPersonas();
+    modPersona.Ejecutar(new Persona("9876543", "Juan", "Pérez", "juan.perez@example.com", "01122334455"), 1);
+    bajaPersona.Ejecutar(5, 1);
 
-    foreach (Reserva r in asistentes)
+    CargarEventos();
+    modEvento.Ejecutar(new EventoDeportivo("Futbol", "Final de la copa interfacultades", new DateTime(2025, 8, 25, 12, 0, 0), 10, 22, 1), 1);
+    bajaEvento.Ejecutar(repoReserva, 4, 1);
+
+    CargarReservas();
+    modReserva.Ejecutar(new Reserva(1, 1, DateTime.Now, EstadosAsistencia.Presente), 1);
+    bajaReserva.Ejecutar(4, 1);
+
+    ListadoPersona();
+    ListadoEvento();
+    ListadoReservas();
+
+    ListadoEventosDisponibles();
+    ListarPersonasAsistidas(1);
+
+
+}
+catch (Exception e)
+{
+  Console.WriteLine(e.Message);
+}
+
+
+void CargarPersonas()
+{
+    altaPersona.Ejecutar(new Persona("9876543", "Juan", "Pérez", "juan.perez@example.com", "01122334455"), 1);
+    altaPersona.Ejecutar(new Persona("8765432", "María", "Gómez", "maria.gomez@example.com", "02299887766"), 1);
+    altaPersona.Ejecutar(new Persona("7654321", "Carlos", "Rodríguez", "carlos.rodriguez@example.com", "03311223344"), 1);
+    altaPersona.Ejecutar(new Persona("6543210", "Laura", "Fernández", "laura.fernandez@example.com", "04455667788"), 1);
+    altaPersona.Ejecutar(new Persona("5432109", "Sofía", "Martínez", "sofia.martinez@example.com", "05566778899"), 1);
+    // elimino a sofia 5
+}
+void CargarEventos()
+{
+    altaEvento.Ejecutar(new EventoDeportivo("Futbol", "Final copa interfacultades", new DateTime(2025, 8, 25, 12, 0, 0), 6,3, 1), 1);
+    altaEvento.Ejecutar(new EventoDeportivo("Voley", "UNLP vs UBA", new DateTime(2025, 11, 7, 21, 0, 0), 3, 2, 4), 1);
+    altaEvento.Ejecutar(new EventoDeportivo("Ping Pong", "Demostracion a beneficio", new DateTime(2025, 6, 29, 16, 0, 0), 6, 2, 2), 1);
+    altaEvento.Ejecutar(new EventoDeportivo("Tiro con arco", "Fecha 1", new DateTime(2025, 10, 1, 8, 0, 0), 4, 4, 3), 1);
+    //elimino el 4 osea el tiro con arco
+
+}
+void CargarReservas()
+{
+    altaReserva.Ejecutar(new Reserva(1, 1, DateTime.Now, EstadosAsistencia.Pendiente), 1);
+    altaReserva.Ejecutar(new Reserva(2, 1, DateTime.Now, EstadosAsistencia.Pendiente),1);
+    altaReserva.Ejecutar(new Reserva(3, 1, DateTime.Now, EstadosAsistencia.Pendiente),1);
+    altaReserva.Ejecutar(new Reserva(1, 2, DateTime.Now, EstadosAsistencia.Pendiente),1);
+    
+}
+
+void ListadoPersona()
+{
+    Console.WriteLine("-----------Personas-----------" + "\n");
+    List<Persona> personas = listarPersonas.Ejecutar();
+    if (personas != null)
     {
-        Console.WriteLine(r.ToString() + "\n");
+        foreach (Persona p in personas)
+        {
+            Console.WriteLine(p.ToString().Replace("#", " "));
+        }
+    }
+    else
+    { 
+        Console.WriteLine("No hay personas cargadas");
+    }
+    
+}
+void ListadoEvento()
+{
+    Console.WriteLine("-----------Eventos-----------" + "\n");
+    List<EventoDeportivo> todosEventos = listarEventos.Ejecutar();
+    if (todosEventos != null)
+    {
+        foreach (EventoDeportivo e in todosEventos)
+        {
+            Console.WriteLine(e.ToString().Replace("#", " "));
+        }
+    }
+    else
+    {
+        Console.WriteLine("No hay eventos cargadas");
+    }
+   
+}
+void ListadoReservas()
+{
+    Console.WriteLine("-----------Reservas-----------" + "\n");
+    List<Reserva> todasReservas = listarReservas.Ejecutar();
+    if (todasReservas != null)
+    {
+        foreach (Reserva r in todasReservas)
+        {
+            Console.WriteLine(r.ToString().Replace("#", " "));
+        }
+    }
+    else
+    {
+        Console.WriteLine("No hay reservas cargadas");
+    }
+
+}
+void ListadoEventosDisponibles()
+{
+    Console.WriteLine("-----------Eventos con cupo disponibles-----------");
+    if (eventosDisponibles != null)
+    {
+        foreach (EventoDeportivo e in eventosDisponibles)
+        {
+            Console.WriteLine(e.ToString().Replace("#", " "));
+        }
+    }
+
+}
+void ListarPersonasAsistidas(int idEvento)
+{
+    List<Persona> AsistenciaAEvento = listarAsistencia.Ejecutar(idEvento);
+    if (AsistenciaAEvento != null)
+    {
+        foreach (Persona p in AsistenciaAEvento)
+        {
+            Console.WriteLine(p.ToString().Replace("#", " "));
+        }
     }
 }
-catch (Exception ex)
-{
-    Console.WriteLine("Error: " + ex.Message);
-}
+
+

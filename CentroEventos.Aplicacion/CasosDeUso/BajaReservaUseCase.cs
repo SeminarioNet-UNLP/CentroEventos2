@@ -19,36 +19,40 @@ public class BajaReservaUseCase
         _autorizador = autorizador;
     }
 
-    public void Ejecutar(Reserva reserva, int IdUsuario)
+    public void Ejecutar(int idElimiar, int IdUsuario)
     {
-            string mensajeError;
-            ValidarReserva validador = new ValidarReserva(_repoPersona, _repoEventoDeportivo, _repoReserva);
-            if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaBaja))
+        bool condi = false;
+       List<Reserva> reservas = _repoReserva.ListadoReserva();
+       ValidarReserva validador = new ValidarReserva(_repoPersona, _repoEventoDeportivo, _repoReserva);
+       if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaBaja))
+       {
+           throw new FalloAutorizacionException();
+       }
+        if (reservas != null)
+        {
+            for (int i = 0; i < reservas.Count() && !condi; i++)
             {
-                throw new FalloAutorizacionException();
+                if (reservas[i].Id == idElimiar)
+                {
+                    condi = true;
+                }
             }
-            
-            if (!validador.ExistenPersonaYEvento(reserva.PersonaId, reserva.EventoDeportivoId, out mensajeError))
+            if (!condi)
             {
-                throw new EntidadNotFoundException(mensajeError);
+                throw new EntidadNotFoundException($"No se encontro la reserva con el id = {idElimiar}");
             }
-
-            if (!validador.VerificarReservaExistente(reserva, out mensajeError))
-            {
-                throw new CupoExcedidoException(mensajeError);
-            }
-
-            if (!validador.VerificarCupoDisponible(reserva.EventoDeportivoId, out mensajeError))
-            {
-                throw new DuplicadoException(mensajeError);
-            }
+        }
+        else
+        {
+            throw new Exception("no hay reservas para eliminar");
+        }
        try
-       {
-         _repoReserva.BajaReserva(reserva.Id);
-       }
-       catch
-       {
-          throw;
-       }
+        {
+            _repoReserva.BajaReserva(idElimiar);
+        }
+        catch
+        {
+            throw;
+        }
     }
 }

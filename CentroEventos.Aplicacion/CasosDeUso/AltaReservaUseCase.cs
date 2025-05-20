@@ -21,35 +21,32 @@ public class AltaReservaUseCase
 
     public void Ejecutar(Reserva reserva, int IdUsuario)
     {
+       string mensajeError;
+       ValidarReserva validador = new ValidarReserva(_repoPersona, _repoEventoDeportivo, _repoReserva);
+       if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaAlta))
+       {
+           throw new FalloAutorizacionException();
+       }
+       if (!validador.ExistenPersonaYEvento(reserva.PersonaId, reserva.EventoDeportivoId, out mensajeError))
+        {
+            throw new EntidadNotFoundException(mensajeError);
+        }
+       if (!validador.VerificarReservaExistente(reserva, out mensajeError))
+       {
+           throw new CupoExcedidoException(mensajeError);
+       }
+       if (!validador.VerificarCupoDisponible(reserva.EventoDeportivoId, out mensajeError))
+       {
+           throw new DuplicadoException(mensajeError);
+       }
        
-            string mensajeError;
-            ValidarReserva validador = new ValidarReserva(_repoPersona, _repoEventoDeportivo, _repoReserva);
-            if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaAlta))
-            {
-                throw new FalloAutorizacionException();
-            }
-            
-            if (!validador.ExistenPersonaYEvento(reserva.PersonaId, reserva.EventoDeportivoId, out mensajeError))
-            {
-                throw new EntidadNotFoundException(mensajeError);
-            }
-
-            if (!validador.VerificarReservaExistente(reserva, out mensajeError))
-            {
-                throw new CupoExcedidoException(mensajeError);
-            }
-
-            if (!validador.VerificarCupoDisponible(reserva.EventoDeportivoId, out mensajeError))
-            {
-                throw new DuplicadoException(mensajeError);
-            }
        try
-       {
-          _repoReserva.AltaReserva(reserva);
-       }
-       catch
-       {
-          throw;
-       }
+        {
+            _repoReserva.AltaReserva(reserva);
+        }
+        catch
+        {
+            throw;
+        }
     }
 } 

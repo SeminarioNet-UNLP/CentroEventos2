@@ -10,13 +10,6 @@ public class ListarPersonasUseCase
         _repositorioPersona = repositorioPersona;
     }
 
-    public void Ejecutar()
-    {
-        List<Persona> listaPersona = _repositorioPersona.ListadoPersona();
-
-        foreach (Persona per in listaPersona)
-        {
-            Console.WriteLine(per.ToString() + "\n");
-        }
-    }
+    public List<Persona> Ejecutar() => _repositorioPersona.ListadoPersona();
+    
 }

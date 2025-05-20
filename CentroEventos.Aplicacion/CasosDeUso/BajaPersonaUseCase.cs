@@ -7,43 +7,52 @@ public class BajaPersonaUseCase
     private readonly IRepositorioPersona _repoPersona;
 
     private readonly IServicioAutorizacion _autorizador;
-
-    public BajaPersonaUseCase(IRepositorioPersona repoPersona, IServicioAutorizacion autorizador)
-    {
-       //se le pasa tambien repositorios de evento y/o reserva??? yo los saque, duda para despues
-        _repoPersona = repoPersona;
-        _autorizador = autorizador;
-    }
+  private readonly IRepositorioEventoDeportivo _repoEvento;
+  private readonly IRepositorioReserva _repoReserva;
+    public BajaPersonaUseCase(IRepositorioPersona repoPersona,IRepositorioEventoDeportivo repoEvento,IRepositorioReserva repoReserva,IServicioAutorizacion autorizador)
+  {
+    _repoEvento = repoEvento;
+    _repoReserva = repoReserva;
+    _repoPersona = repoPersona;
+    _autorizador = autorizador;
+  }
 
     public void Ejecutar(int IdEliminar, int IdUsuario)
     {
-
-        ValidarPersona validador = new ValidarPersona(_repoPersona);
-        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioBaja))
+      List<EventoDeportivo> todosEventos = _repoEvento.ListadoEventoDeportivo();
+      List<Reserva> todasReservas = _repoReserva.ListadoReserva();
+      if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioBaja))
+      {
+        throw new FalloAutorizacionException();
+      }
+      if (todosEventos != null)
+      {
+        foreach (EventoDeportivo e in todosEventos)
         {
-            throw new FalloAutorizacionException();
+          if (e.ResponsableId == IdEliminar)
+          {
+            throw new OperacionInvalidaException("No se puede dar de baja una persona que es responsable");
+          }
         }
-        //if (!validador.CamposVacios(persona.Nombre, persona.Apellido, persona.Dni,persona.Email,out mensajeError))
-        //{
-        //    throw new ValidacionException(mensajeError);
-        //}
-
-        //if (!validador.DNINoSeRepite(persona.Dni, out mensajeError))
-        //{
-        //    throw new DuplicadoException(mensajeError);
-        //}
-        //
-        //if (!validador.EmailNoSeRepite(persona.Email,out mensajeError))
-        //{
-        //    throw new DuplicadoException(mensajeError);
-        //}
-        try
+      }
+      if(todasReservas != null)
+      { 
+        foreach (Reserva r in todasReservas)
         {
-            _repoPersona.BajaPersona(IdEliminar);
-        }
-        catch
-        {
-            throw;
-        }
+          if (r.PersonaId == IdEliminar)
+          { 
+              throw new OperacionInvalidaException("No se puede dar de baja una persona que tenga una reserva");
+          }
+        } 
+      }
+      
+      try
+      {
+        _repoPersona.BajaPersona(IdEliminar);
+      }
+      catch
+      {
+        throw;
+      }
     }
 }

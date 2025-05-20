@@ -9,13 +9,6 @@ public class ListarEventosUseCase
         _repositorioEventoDeportivo = repositorioEventoDeportivo;
     }
 
-    public void Ejecutar()
-    {
-        List<EventoDeportivo> listaEvento = _repositorioEventoDeportivo.ListadoEventoDeportivo();
-
-        foreach (EventoDeportivo evento in listaEvento)
-        {
-            Console.WriteLine(evento.ToString() + "\n");
-        }
-    }
+    public List<EventoDeportivo> Ejecutar() => _repositorioEventoDeportivo.ListadoEventoDeportivo();
+    
 }
