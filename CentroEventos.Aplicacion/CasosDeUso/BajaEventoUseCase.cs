@@ -18,8 +18,6 @@ using CentroEventos.Aplicaciones.Validaciones;
 
     public void Ejecutar(IRepositorioReserva _repoReserva,int IdEliminar, int IdUsuario)
     {
-        
-        ValidarEvento validador = new ValidarEvento(_repoPersona); 
         List<Reserva> reservas = _repoReserva.ListadoReserva();      
 
         if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoBaja))

@@ -52,16 +52,13 @@ public class ListarAsistenciaAEventoUseCase
 
         foreach (Reserva reserva in todasLasReservas)
         {
-            if (reserva.EventoDeportivoId == idEvento)
+            if ((reserva.EventoDeportivoId == idEvento) && (reserva.EstadoAsistencia == EstadosAsistencia.Presente))
             {
-                if (reserva.EstadoAsistencia == EstadosAsistencia.Presente)
-                { 
-                    foreach (Persona p in todasPersonas)
+                foreach (Persona p in todasPersonas)
+                {
+                    if (p.Id == reserva.PersonaId)
                     {
-                        if (p.Id == reserva.PersonaId)
-                        {
-                            personasAsistidas.Add(p);
-                        }
+                        personasAsistidas.Add(p);
                     }
                 }
             }

@@ -27,7 +27,7 @@ public class ValidarEvento
         mensajeError = "";
         if (fechaHoraInicio <= DateTime.Now)
             mensajeError = "Error. La fecha de la actividad debe ser mayor a la fecha actual.";
-        return mensajeError == "";   
+        return mensajeError == "";
     }
 
     public bool VerCupo (int? cupoMaximo, out string mensajeError)
@@ -35,7 +35,7 @@ public class ValidarEvento
         mensajeError = "";
         if (cupoMaximo < 1)
             mensajeError = "Error. El cupo maximo debe ser mayor a cero.";
-        return true;    
+        return mensajeError == "";
     }
 
     public bool VerHoras (double? duracionHoras, out string mensajeError)
