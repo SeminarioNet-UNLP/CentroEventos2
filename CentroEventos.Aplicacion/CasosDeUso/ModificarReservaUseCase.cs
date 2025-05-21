@@ -9,9 +9,9 @@ public class ModificarReservaUseCase
     private readonly IServicioAutorizacion _autorizador;
 
     public ModificarReservaUseCase(IRepositorioReserva repoReserva, 
-                              IRepositorioPersona repoPersona, 
-                              IRepositorioEventoDeportivo repoEventoDeportivo,
-                              IServicioAutorizacion autorizador)
+                                   IRepositorioPersona repoPersona, 
+                                   IRepositorioEventoDeportivo repoEventoDeportivo,
+                                   IServicioAutorizacion autorizador)
     {
         _repoReserva = repoReserva;
         _repoPersona = repoPersona;
@@ -21,27 +21,32 @@ public class ModificarReservaUseCase
 
     public void Ejecutar(Reserva reserva, int IdUsuario)
     {
-      string mensajeError;
-      ValidarReserva validador = new ValidarReserva(_repoPersona, _repoEventoDeportivo, _repoReserva);
-      if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaModificacion))
-      {
-          throw new FalloAutorizacionException();
-      }
-      if (!validador.ExistenPersonaYEvento(reserva.PersonaId, reserva.EventoDeportivoId, out mensajeError))
-      {
-          throw new EntidadNotFoundException(mensajeError);
-      }
-      if (!validador.VerificarCupoDisponible(reserva.EventoDeportivoId, out mensajeError))
-      {
-          throw new DuplicadoException(mensajeError);
-      }
-      try
-      {
-        _repoReserva.ModificarReserva(reserva);
-      }    
-      catch
-      {
-        throw;
-      }  
+        string mensajeError;
+        ValidarReserva validador = new ValidarReserva(_repoPersona, _repoEventoDeportivo, _repoReserva);
+
+        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaModificacion))
+        {
+            throw new FalloAutorizacionException();
+        }
+
+        if (!validador.ExistenPersonaYEvento(reserva.PersonaId, reserva.EventoDeportivoId, out mensajeError))
+        {
+            throw new EntidadNotFoundException(mensajeError);
+        }
+
+        if (!validador.VerificarCupoDisponible(reserva.EventoDeportivoId, out mensajeError))
+        {
+            throw new DuplicadoException(mensajeError);
+        }
+
+        try
+        {
+            _repoReserva.ModificarReserva(reserva);
+        }    
+        catch
+        {
+            throw;
+        }  
     }
+
 }

@@ -2,7 +2,7 @@
 public class EventoDeportivo
 {
     public EventoDeportivo(string? nombre, string? descripcion, DateTime fechaHoraInicio,
-                          double duracionHoras, int cupoMaximo, int responsableId)
+            double duracionHoras, int cupoMaximo, int responsableId)
     {
         Nombre = nombre;
         Descripcion = descripcion;
@@ -24,4 +24,5 @@ public class EventoDeportivo
     {
         return $"{Id}#{Nombre}#{Descripcion}#{FechaHoraInicio}#{DuracionHoras}#{CupoMaximo}#{ResponsableId}";
     }
+    
 }

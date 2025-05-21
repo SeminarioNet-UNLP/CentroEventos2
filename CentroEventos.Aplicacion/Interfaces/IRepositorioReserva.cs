@@ -4,5 +4,4 @@ public interface IRepositorioReserva
     public void ModificarReserva(Reserva reserva);
     public void BajaReserva(int id);
     public List<Reserva> ListadoReserva();
-
 }

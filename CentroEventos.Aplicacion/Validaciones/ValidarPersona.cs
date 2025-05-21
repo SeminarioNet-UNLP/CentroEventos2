@@ -3,8 +3,8 @@ using CentroEventos.Aplicaciones.Excepciones;  // Este using es importante
 namespace CentroEventos.Aplicaciones.Validaciones;
 public class ValidarPersona
 {
-
     private readonly IRepositorioPersona _repoPersona;
+
     public ValidarPersona(IRepositorioPersona repoPersona)
     {
         _repoPersona = repoPersona;
@@ -15,15 +15,12 @@ public class ValidarPersona
         mensajeError = "";
         if (string.IsNullOrWhiteSpace(nombre))
             mensajeError = "Error. El nombre no puede estar vacio.";         
-
         if (string.IsNullOrWhiteSpace(apellido))
            mensajeError = "Error. El apellido no puede estar vacia.";
-
         if (string.IsNullOrWhiteSpace(Dni))
             mensajeError = "Error. El DNI no puede estar vacio.";
-
         if (string.IsNullOrWhiteSpace(email))
-            mensajeError ="Error. El email no puede estar vacio";     
+            mensajeError = "Error. El email no puede estar vacio";     
         return mensajeError == "";
     }
 
@@ -41,7 +38,6 @@ public class ValidarPersona
                 }
             }   
         }
-        
         return mensajeError == "";
     }
 
@@ -52,14 +48,14 @@ public class ValidarPersona
         List<Persona> personas = _repoPersona.ListadoPersona();
         if (personas != null)
         {
-          for (int i = 0; i< personas.Count() && !corte; i++)
-          {
-              if (personas[i].Email == Email)
-              {
-                  mensajeError= "Error. Ya existe el Email.";
-                  corte  = true;
-              }
-          }
+            for (int i = 0; i< personas.Count() && !corte; i++)
+            {
+                if (personas[i].Email == Email)
+                {
+                    mensajeError= "Error. Ya existe el Email.";
+                    corte  = true;
+                }
+            }
         }
         return mensajeError == "";
     }

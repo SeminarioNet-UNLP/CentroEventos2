@@ -1,9 +1,9 @@
 ﻿using CentroEventos.Aplicaciones.Excepciones;
 
-IRepositorioPersona repoPersona= new RepositorioPersona();
-IServicioAutorizacion servicioAutorizacion = new ServicioAutorizacionProvisorio();
+IRepositorioPersona repoPersona = new RepositorioPersona();
 IRepositorioEventoDeportivo repoEvento = new RepositorioEventoDeportivo();
 IRepositorioReserva repoReserva = new RepositorioReserva();
+IServicioAutorizacion servicioAutorizacion = new ServicioAutorizacionProvisorio();
 
 AltaPersonaUseCase altaPersona = new AltaPersonaUseCase(repoPersona, servicioAutorizacion);
 ModificarPersonaUseCase modPersona = new ModificarPersonaUseCase(repoPersona, servicioAutorizacion);
@@ -44,12 +44,10 @@ try
 
     ListadoEventosDisponibles();
     ListarPersonasAsistidas(1);
-
-
 }
 catch (Exception e)
 {
-  Console.WriteLine(e.Message);
+    Console.WriteLine(e.Message);
 }
 
 
@@ -61,22 +59,25 @@ void CargarPersonas()
     altaPersona.Ejecutar(new Persona("6543210", "Laura", "Fernandez", "laura.fernandez@example.com", "04455667788"), 1);
     altaPersona.Ejecutar(new Persona("5432109", "Sofia", "Martinez", "sofia.martinez@example.com", "05566778899"), 1);
 }
+
+
 void CargarEventos()
 {
     altaEvento.Ejecutar(new EventoDeportivo("Futbol", "Final copa interfacultades", new DateTime(2025, 8, 25, 12, 0, 0), 6,3, 1), 1);
     altaEvento.Ejecutar(new EventoDeportivo("Voley", "UNLP vs UBA", new DateTime(2025, 11, 7, 21, 0, 0), 3, 2, 4), 1);
     altaEvento.Ejecutar(new EventoDeportivo("Ping Pong", "Demostracion a beneficio", new DateTime(2025, 6, 29, 16, 0, 0), 6, 2, 2), 1);
     altaEvento.Ejecutar(new EventoDeportivo("Tiro con arco", "Fecha 1", new DateTime(2025, 10, 1, 8, 0, 0), 4, 4, 3), 1);
-
 }
+
+
 void CargarReservas()
 {
     altaReserva.Ejecutar(new Reserva(1, 1, DateTime.Now, EstadosAsistencia.Pendiente),1);
     altaReserva.Ejecutar(new Reserva(2, 1, DateTime.Now, EstadosAsistencia.Pendiente),1);
     altaReserva.Ejecutar(new Reserva(3, 1, DateTime.Now, EstadosAsistencia.Pendiente),1);
     altaReserva.Ejecutar(new Reserva(1, 2, DateTime.Now, EstadosAsistencia.Pendiente),1);
-    
 }
+
 
 void ListadoPersona()
 {
@@ -93,8 +94,9 @@ void ListadoPersona()
     { 
         Console.WriteLine("No hay personas cargadas");
     }
-    
 }
+
+
 void ListadoEvento()
 {
     Console.WriteLine("-----------Eventos-----------" + "\n");
@@ -112,6 +114,8 @@ void ListadoEvento()
     }
    
 }
+
+
 void ListadoReservas()
 {
     Console.WriteLine("-----------Reservas-----------" + "\n");
@@ -127,8 +131,9 @@ void ListadoReservas()
     {
         Console.WriteLine("No hay reservas cargadas");
     }
-
 }
+
+
 void ListadoEventosDisponibles()
 {
     List<EventoDeportivo> eventosDisponibles = listarEventosConCupo.Ejecutar();
@@ -144,8 +149,9 @@ void ListadoEventosDisponibles()
     { 
         Console.WriteLine("No existen eventos con cupos disponibles");
     }
-
 }
+
+
 void ListarPersonasAsistidas(int idEvento)
 {
     Console.WriteLine($"-----------Personas asistidas al evento {idEvento}-----------" + "\n");
@@ -157,11 +163,8 @@ void ListarPersonasAsistidas(int idEvento)
             Console.WriteLine(p.ToString().Replace("#", " "));
         }
     }
-     else
+    else
     { 
         Console.WriteLine("El evento no tiene  parcticiapantes");
     }
-
 }
-
-

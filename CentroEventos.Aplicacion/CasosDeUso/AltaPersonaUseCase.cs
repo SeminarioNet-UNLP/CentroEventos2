@@ -5,7 +5,6 @@ public class AltaPersonaUseCase
 {
 
     private readonly IRepositorioPersona _repoPersona;
-
     private readonly IServicioAutorizacion _autorizador;
 
     public AltaPersonaUseCase(IRepositorioPersona repoPersona, IServicioAutorizacion autorizador)
@@ -17,7 +16,6 @@ public class AltaPersonaUseCase
 
     public void Ejecutar(Persona persona, int IdUsuario)
     {
-        
         string mensajeError;
         ValidarPersona validador = new ValidarPersona(_repoPersona);
         if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioAlta))
@@ -38,7 +36,6 @@ public class AltaPersonaUseCase
         if (!validador.EmailNoSeRepite(persona.Email, out mensajeError))
         {
             throw new DuplicadoException(mensajeError);
-    
         }
        
         try
@@ -47,7 +44,8 @@ public class AltaPersonaUseCase
         }
         catch 
         {
-            throw; // Propaga la excepcion que se genero.
+            throw;
         }
     }
+    
 }

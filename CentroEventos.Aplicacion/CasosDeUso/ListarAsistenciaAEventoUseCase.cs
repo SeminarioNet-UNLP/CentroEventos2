@@ -7,11 +7,9 @@ public class ListarAsistenciaAEventoUseCase
     private readonly IRepositorioReserva _repoReserva;
     private readonly IRepositorioPersona _repoPersona;
 
-
-    public ListarAsistenciaAEventoUseCase(
-        IRepositorioEventoDeportivo repoEvento,
-        IRepositorioReserva repoReserva,
-        IRepositorioPersona repoPersona)
+    public ListarAsistenciaAEventoUseCase(IRepositorioEventoDeportivo repoEvento,
+                                          IRepositorioReserva repoReserva,
+                                          IRepositorioPersona repoPersona)
     {
         _repoEvento = repoEvento;
         _repoReserva = repoReserva;
@@ -20,7 +18,6 @@ public class ListarAsistenciaAEventoUseCase
     
     public List<Persona> Ejecutar(int idEvento)
     {
-
         EventoDeportivo? eventoBuscado = null;
         List<EventoDeportivo> listaEventos = _repoEvento.ListadoEventoDeportivo();
 
@@ -33,6 +30,7 @@ public class ListarAsistenciaAEventoUseCase
             }
             i++;
         }
+
         if (eventoBuscado == null)
         {
             throw new EntidadNotFoundException("No se encontró el evento con ese ID.");
@@ -50,7 +48,7 @@ public class ListarAsistenciaAEventoUseCase
         if(todasLasReservas == null)
             throw  new Exception("No hay reservas realizadas");
         if (todasPersonas == null)
-            throw new Exception("No hay personas");    
+            throw new Exception("No hay personas");  
 
         foreach (Reserva reserva in todasLasReservas)
         {
@@ -58,16 +56,14 @@ public class ListarAsistenciaAEventoUseCase
             {
                 if (reserva.EstadoAsistencia == EstadosAsistencia.Presente)
                 { 
-                  foreach (Persona p in todasPersonas)
-                  {
-                      if (p.Id == reserva.PersonaId)
-                      {
-                          personasAsistidas.Add(p);
-                      }
-                  }
+                    foreach (Persona p in todasPersonas)
+                    {
+                        if (p.Id == reserva.PersonaId)
+                        {
+                            personasAsistidas.Add(p);
+                        }
+                    }
                 }
-              
-
             }
         }
         return personasAsistidas;

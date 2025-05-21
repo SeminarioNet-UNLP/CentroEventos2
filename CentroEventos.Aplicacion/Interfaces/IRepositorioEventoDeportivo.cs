@@ -4,5 +4,4 @@ public interface IRepositorioEventoDeportivo
     public void ModificarEventoDeportivo(EventoDeportivo evento);
     public void BajaEventoDeportivo(int id);
     public List<EventoDeportivo> ListadoEventoDeportivo();
-
 }

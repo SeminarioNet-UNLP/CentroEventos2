@@ -2,10 +2,8 @@ using CentroEventos.Aplicaciones.Excepciones;
 
 public class RepositorioReserva : IRepositorioReserva
 {
-
     private const int CantPropsReserva = 5;
     private readonly string rutaIDs = "IdReserva.txt";
-
     private readonly string archivoReservas = "ReservasPersistencia.txt";
 
     public void AltaReserva(Reserva reserva)
@@ -28,7 +26,6 @@ public class RepositorioReserva : IRepositorioReserva
 
                 throw new Exception(e.Message);
             }
-
         }
         else
         {
@@ -36,7 +33,6 @@ public class RepositorioReserva : IRepositorioReserva
         }
     }
 
-    // Ver si las bajas deberian ser un bool
     public void BajaReserva(int id)
     {
         if (id < 0)
@@ -54,22 +50,19 @@ public class RepositorioReserva : IRepositorioReserva
                 if (int.Parse(partes[0]) == id)
                 {
                     encontre = true;
-                    continue;// Si encontre ID, no lo agrego al nuevo archivo
+                    continue; // Si encontre ID, no lo agrego al nuevo archivo
                 }
-
-                nuevoarchivo.Add(linea); // se agrega al nuevo archivo si no es la que quiero eliminar
+                nuevoarchivo.Add(linea); // Se agrega al nuevo archivo si no es la que quiero eliminar
             }
             if (!encontre)
                 throw new Exception("No se encontro reserva con el ID.");
-            File.WriteAllLines(archivoReservas, nuevoarchivo);// sobreescribo el archivo con las lineas restantes
+            File.WriteAllLines(archivoReservas, nuevoarchivo); // Sobreescribo el archivo con las lineas restantes
         }
         catch (Exception e)
         {
             throw new Exception($"Error al eliminar la reserva: {e.Message}");
         }
     }
-
-
 
     public List<Reserva> ListadoReserva()
     {
@@ -103,13 +96,11 @@ public class RepositorioReserva : IRepositorioReserva
         return listaReservas;
     }
 
-
-
     public void ModificarReserva(Reserva reserva)
     {
         List<Reserva> listaReservas = ListadoReserva();
         bool cambie = false;
-        if(listaReservas!=null)
+        if (listaReservas!=null)
         {
             for (int i = 0; i < listaReservas.Count() && !cambie; i++)
             {
@@ -120,7 +111,7 @@ public class RepositorioReserva : IRepositorioReserva
                     cambie = true;
                 }
             }
-            if(cambie)
+            if (cambie)
             {
                 RemplazarReservas(listaReservas);
             }
@@ -129,8 +120,8 @@ public class RepositorioReserva : IRepositorioReserva
                 throw new EntidadNotFoundException("ID no encontrado. No se puede modificar la reserva.");
             }
         }
-        
     }
+
     private void RemplazarReservas(List<Reserva> reservas)
     {
         using (StreamWriter sw = new StreamWriter(archivoReservas))
@@ -140,6 +131,6 @@ public class RepositorioReserva : IRepositorioReserva
                 sw.WriteLine(res.ToString());
             }
         }
-        
     }
+    
 }

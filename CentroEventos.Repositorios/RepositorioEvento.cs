@@ -1,4 +1,3 @@
-
 using System.Diagnostics.Tracing;
 using CentroEventos.Aplicaciones.Excepciones;
 
@@ -7,6 +6,7 @@ public class RepositorioEventoDeportivo : IRepositorioEventoDeportivo
     private const int CantPropsPersona = 7;
     private readonly string rutaIDs = "IdEventosDeportivos.txt";
     private readonly string archivoEventos = "EventoPersistencia.txt";
+
     public void AltaEventoDeportivo(EventoDeportivo evento)
     {
         string mensajeError;
@@ -116,8 +116,8 @@ public class RepositorioEventoDeportivo : IRepositorioEventoDeportivo
 
             }
         }
-        
     }
+
     private void RemplazarEventos(List<EventoDeportivo> eventos)
     {
         using (StreamWriter sw = new StreamWriter(archivoEventos))
@@ -127,6 +127,6 @@ public class RepositorioEventoDeportivo : IRepositorioEventoDeportivo
                 sw.WriteLine(eve.ToString());
             }
         }
-        
     }
+    
 }

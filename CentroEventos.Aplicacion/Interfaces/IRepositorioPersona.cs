@@ -6,5 +6,4 @@ public interface IRepositorioPersona
     public void ModificarPersona(Persona persona);
     public void BajaPersona(int id);
     public List<Persona> ListadoPersona();
-
 }

@@ -1,4 +1,5 @@
-public enum EstadosAsistencia {
+public enum EstadosAsistencia
+{
     Pendiente,
     Presente,
     Ausente

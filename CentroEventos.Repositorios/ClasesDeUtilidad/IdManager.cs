@@ -6,40 +6,41 @@ public static class IdManager
     {
         int aux = 0;
         mensajeError  = "";
-        if(File.Exists(ruta))
+        if (File.Exists(ruta))
         {
             using (StreamReader sr = new StreamReader(ruta))
             {
-              while(!sr.EndOfStream)
-              {
-                string? linea = sr.ReadLine();
-                if (linea != null)
+                while (!sr.EndOfStream)
                 {
-                  aux = int.Parse(linea);
+                    string? linea = sr.ReadLine();
+                    if (linea != null)
+                    {
+                        aux = int.Parse(linea);
+                    }
                 }
-              }
             }
         }
         else
         {
-          aux = -1;
-          mensajeError = "no existe el archivo actual";
+            aux = -1;
+            mensajeError = "no existe el archivo actual";
         }
         return aux;
-
     }
+
     public static void ActualizarArchivoId(string ruta, int id)
     {
-      try
-      {
-        using (StreamWriter sw = new StreamWriter(ruta,true))
+        try
         {
-          sw.WriteLine(id);
+            using (StreamWriter sw = new StreamWriter(ruta,true))
+            {
+                sw.WriteLine(id);
+            }
         }
-      }
-      catch (Exception e)
-      {
-        throw new Exception($"No se pudo guardar el id: {e.Message}");
-      }  
+        catch (Exception e)
+        {
+            throw new Exception($"No se pudo guardar el id: {e.Message}");
+        }  
     }
+    
 }

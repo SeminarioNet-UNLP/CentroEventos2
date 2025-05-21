@@ -22,19 +22,21 @@ public class BajaReservaUseCase
     public void Ejecutar(int idElimiar, int IdUsuario)
     {
         bool condi = false;
-       List<Reserva> reservas = _repoReserva.ListadoReserva();
-       ValidarReserva validador = new ValidarReserva(_repoPersona, _repoEventoDeportivo, _repoReserva);
-       if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaBaja))
-       {
-           throw new FalloAutorizacionException();
-       }
+        List<Reserva> reservas = _repoReserva.ListadoReserva();
+        ValidarReserva validador = new ValidarReserva(_repoPersona, _repoEventoDeportivo, _repoReserva);
+
+        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaBaja))
+        {
+            throw new FalloAutorizacionException();
+        }
+
         if (reservas != null)
         {
             for (int i = 0; i < reservas.Count() && !condi; i++)
             {
                 if (reservas[i].Id == idElimiar)
                 {
-                    condi = true;
+                condi = true;
                 }
             }
             if (!condi)
@@ -46,7 +48,8 @@ public class BajaReservaUseCase
         {
             throw new Exception("no hay reservas para eliminar");
         }
-       try
+
+        try
         {
             _repoReserva.BajaReserva(idElimiar);
         }
@@ -55,4 +58,5 @@ public class BajaReservaUseCase
             throw;
         }
     }
+
 }

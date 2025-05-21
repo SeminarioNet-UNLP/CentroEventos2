@@ -2,11 +2,9 @@ using CentroEventos.Aplicaciones.Excepciones;
 
 public class RepositorioPersona : IRepositorioPersona
 {
-    // Cantidad de propiedades que tiene la clase Persona (Id, Nombre, Apellido, Dni, Email, Rol)
     private const int CantPropsPersona = 6;
     private readonly string rutaIDs = "IdPersona.txt";
     private readonly string archivoPersonas = "PersonasPersistencia.txt";
-
 
     public void AltaPersona(Persona persona)
     {
@@ -58,7 +56,6 @@ public class RepositorioPersona : IRepositorioPersona
 
     public List<Persona> ListadoPersona()
     {
-
         List<Persona> personas = new List<Persona>();
         try
         {
@@ -100,7 +97,7 @@ public class RepositorioPersona : IRepositorioPersona
             {
                 if (personas[i].Dni == persona.Dni)
                 {
-                    persona.Id = personas[i].Id; // la persona que ingresa no tiene id por el momento
+                    persona.Id = personas[i].Id; // La persona que ingresa no tiene ID por el momento
                     personas[i] = persona;
                     encontrePersona = true;
                 }
@@ -114,8 +111,8 @@ public class RepositorioPersona : IRepositorioPersona
                 throw new EntidadNotFoundException("No se encontro el id correspondiente");
             }
         }
-       
     }
+
     private void RemplazarPersonas(List<Persona> persona)
     {
         using (StreamWriter sw = new StreamWriter(archivoPersonas))
@@ -125,7 +122,7 @@ public class RepositorioPersona : IRepositorioPersona
                 sw.WriteLine(per.ToString());
             }
         }
-        
     }
+    
 }
 

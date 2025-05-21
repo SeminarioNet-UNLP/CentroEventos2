@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using CentroEventos.Aplicaciones.Excepciones;  // Este using es importante
+using CentroEventos.Aplicaciones.Excepciones;
 
 namespace CentroEventos.Aplicaciones.Validaciones;
 public class ValidarReserva
@@ -7,13 +7,14 @@ public class ValidarReserva
     private readonly IRepositorioPersona _repoPersona;
     private readonly IRepositorioEventoDeportivo _repoEventoDeportivo;
     private readonly IRepositorioReserva _repoReserva;
+
     public ValidarReserva (IRepositorioPersona repoPersona, IRepositorioEventoDeportivo repoEventoDeportivo, IRepositorioReserva repoReserva)
     {
         _repoPersona = repoPersona;
         _repoEventoDeportivo = repoEventoDeportivo;
         _repoReserva = repoReserva;
-
     }
+
     public bool ExistenPersonaYEvento(int IdPersona, int IdEvento, out string mensajeError)
     {
         mensajeError = "";
@@ -23,14 +24,14 @@ public class ValidarReserva
         bool existeEvento = false;
         for (int i = 0; i < personas.Count() && !existePersona ; i++)
         {
-            if(personas[i].Id == IdPersona)
+            if (personas[i].Id == IdPersona)
             {   
                 existePersona = true;
             }
         }
         for (int i = 0; i < eventos.Count() && !existeEvento ; i++)
         {
-            if(eventos[i].Id == IdEvento)
+            if (eventos[i].Id == IdEvento)
             {   
                 existeEvento = true;
             }
@@ -70,11 +71,10 @@ public class ValidarReserva
         return mensajeError == "";
     }
 
-    public bool VerificarCupoDisponible(int eventoId, out string mensajeError) // 
+    public bool VerificarCupoDisponible(int eventoId, out string mensajeError)
     {
         mensajeError = "";
         EventoDeportivo? eventoEncontrado = null;
-
         foreach (var evento in _repoEventoDeportivo.ListadoEventoDeportivo())
         {
             if (evento.Id == eventoId)
@@ -83,7 +83,6 @@ public class ValidarReserva
                 break;
             }
         }
-
         if (eventoEncontrado == null)
         {
             mensajeError = "Error. El evento no existe.";
@@ -107,7 +106,7 @@ public class ValidarReserva
                 mensajeError = "Error. No hay cupo disponible para este evento.";
             }
         }
-
         return mensajeError == "";
     }
+    
 }

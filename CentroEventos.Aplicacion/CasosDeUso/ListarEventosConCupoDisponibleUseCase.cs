@@ -4,11 +4,8 @@ public class ListarEventosConCupoDisponibleUseCase
 {
     private readonly IRepositorioEventoDeportivo _repoEvento;
     private readonly IRepositorioReserva _repoReserva;
-  
 
-    public ListarEventosConCupoDisponibleUseCase(
-        IRepositorioEventoDeportivo repoEvento,
-        IRepositorioReserva repoReserva)
+    public ListarEventosConCupoDisponibleUseCase(IRepositorioEventoDeportivo repoEvento, IRepositorioReserva repoReserva)
     {
         _repoEvento = repoEvento;
         _repoReserva = repoReserva;
@@ -19,22 +16,22 @@ public class ListarEventosConCupoDisponibleUseCase
         List<EventoDeportivo> todosLosEventos = _repoEvento.ListadoEventoDeportivo();
         List<Reserva> todasLasReservas = _repoReserva.ListadoReserva();
         List<EventoDeportivo> eventosConCupo = new List<EventoDeportivo>();
-      
 
         if (todosLosEventos == null)
         {
             throw new Exception("No hay eventos");
         }
+
         if (todasLasReservas == null)
         {
             throw new Exception("No hay reservas realizadas");
         }
+
         foreach (EventoDeportivo evento in todosLosEventos)
         {
             if (evento.FechaHoraInicio > DateTime.Now)
             {
                 int cantidadReservas = 0;
-
                 foreach (Reserva reserva in todasLasReservas)
                 {
                     if (reserva.EventoDeportivoId == evento.Id)
@@ -42,14 +39,13 @@ public class ListarEventosConCupoDisponibleUseCase
                         cantidadReservas++;
                     }
                 }
-
                 if (cantidadReservas < evento.CupoMaximo)
                 {
                     eventosConCupo.Add(evento);
                 }
             }
         }
-
         return eventosConCupo;
     }
+    
 }
