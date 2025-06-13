@@ -26,10 +26,15 @@ public class AltaEventoUseCase
             throw new FalloAutorizacionException();
         }
 
-        if (!validador.VerCupo(eventoDeportivo.CupoMaximo,out mensajeError))
+        if (!validador.VerNombreYDescripcion(eventoDeportivo.Nombre, eventoDeportivo.Descripcion, out mensajeError))
         {
             throw new ValidacionException(mensajeError);
         }
+        
+        if (!validador.VerCupo(eventoDeportivo.CupoMaximo, out mensajeError))
+         {
+             throw new ValidacionException(mensajeError);
+         }
 
         if (!validador.VerFecha(eventoDeportivo.FechaHoraInicio,out mensajeError))
         {

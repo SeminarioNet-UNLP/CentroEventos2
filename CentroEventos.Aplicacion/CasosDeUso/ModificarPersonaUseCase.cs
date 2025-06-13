@@ -27,6 +27,11 @@ public class ModificarPersonaUseCase
             throw new ValidacionException(mensajeError);
         }
 
+        if (!validador.EmailNoSeRepite(persona.Email, out mensajeError))
+        {
+            throw new DuplicadoException(mensajeError);
+        }
+
         try
         {
             _repoPersona.ModificarPersona(persona);
