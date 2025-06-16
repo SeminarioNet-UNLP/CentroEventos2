@@ -7,20 +7,22 @@ public class ModificarEventoUseCase
     private readonly IRepositorioEventoDeportivo _repoEvento;
     private readonly IRepositorioPersona _repoPersona;
     private readonly IServicioAutorizacion _autorizador;
+    private readonly ValidarEvento _validador;
 
     public ModificarEventoUseCase(IRepositorioEventoDeportivo repoEvento,
                                   IRepositorioPersona repoPersona,
-                                  IServicioAutorizacion autorizador)
+                                  IServicioAutorizacion autorizador,
+                                  ValidarEvento validador)
     {
         _repoEvento = repoEvento;
         _repoPersona = repoPersona;
         _autorizador = autorizador;
+        _validador = validador;
     }
 
     public void Ejecutar(EventoDeportivo eventoDeportivo, int IdUsuario)
     {
         string mensajeError;
-        ValidarEvento validador = new ValidarEvento(_repoPersona);
         List<EventoDeportivo> eventos = _repoEvento.ListadoEventoDeportivo();
 
         if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoModificacion))
@@ -40,27 +42,27 @@ public class ModificarEventoUseCase
             }    
         }
 
-        if (!validador.VerNombreYDescripcion(eventoDeportivo.Nombre, eventoDeportivo.Descripcion, out mensajeError))
+        if (!_validador.VerNombreYDescripcion(eventoDeportivo.Nombre, eventoDeportivo.Descripcion, out mensajeError))
         {
             throw new ValidacionException(mensajeError);
         }
 
-        if (!validador.VerCupo(eventoDeportivo.CupoMaximo, out mensajeError))
+        if (!_validador.VerCupo(eventoDeportivo.CupoMaximo, out mensajeError))
         {
             throw new ValidacionException(mensajeError);
         }
 
-        if (!validador.VerFecha(eventoDeportivo.FechaHoraInicio, out mensajeError))
+        if (!_validador.VerFecha(eventoDeportivo.FechaHoraInicio, out mensajeError))
         {
             throw new ValidacionException(mensajeError);
         }
 
-        if (!validador.VerHoras(eventoDeportivo.DuracionHoras, out mensajeError))
+        if (!_validador.VerHoras(eventoDeportivo.DuracionHoras, out mensajeError))
         {
             throw new ValidacionException(mensajeError);
         }
 
-        if (!validador.VerResponsable(eventoDeportivo.ResponsableId, out mensajeError))
+        if (!_validador.VerResponsable(eventoDeportivo.ResponsableId, out mensajeError))
         {
             throw new EntidadNotFoundException(mensajeError);
         }

@@ -7,9 +7,8 @@ public class BajaReservaUseCase
     private readonly IRepositorioPersona _repoPersona;
     private readonly IRepositorioEventoDeportivo _repoEventoDeportivo;
     private readonly IServicioAutorizacion _autorizador;
-
-    public BajaReservaUseCase(IRepositorioReserva repoReserva, 
-                              IRepositorioPersona repoPersona, 
+    public BajaReservaUseCase(IRepositorioReserva repoReserva,
+                              IRepositorioPersona repoPersona,
                               IRepositorioEventoDeportivo repoEventoDeportivo,
                               IServicioAutorizacion autorizador)
     {
@@ -23,8 +22,6 @@ public class BajaReservaUseCase
     {
         bool condi = false;
         List<Reserva> reservas = _repoReserva.ListadoReserva();
-        ValidarReserva validador = new ValidarReserva(_repoPersona, _repoEventoDeportivo, _repoReserva);
-
         if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaBaja))
         {
             throw new FalloAutorizacionException();

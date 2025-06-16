@@ -1,20 +1,25 @@
 ﻿using CentroEventos.Aplicaciones.Excepciones;
+using CentroEventos.Aplicaciones.Validaciones;
 
 IRepositorioPersona repoPersona = new RepositorioPersona();
 IRepositorioEventoDeportivo repoEvento = new RepositorioEventoDeportivo();
 IRepositorioReserva repoReserva = new RepositorioReserva();
 IServicioAutorizacion servicioAutorizacion = new ServicioAutorizacionProvisorio();
+ValidarEvento validadorEvento = new ValidarEvento(repoPersona);
+ValidarReserva validadorReserva = new ValidarReserva(repoPersona,repoEvento,repoReserva);
+ValidarPersona validadorPersona = new ValidarPersona(repoPersona);
 
-AltaPersonaUseCase altaPersona = new AltaPersonaUseCase(repoPersona, servicioAutorizacion);
-ModificarPersonaUseCase modPersona = new ModificarPersonaUseCase(repoPersona, servicioAutorizacion);
+
+AltaPersonaUseCase altaPersona = new AltaPersonaUseCase(repoPersona, servicioAutorizacion,validadorPersona);
+ModificarPersonaUseCase modPersona = new ModificarPersonaUseCase(repoPersona, servicioAutorizacion,validadorPersona);
 BajaPersonaUseCase bajaPersona = new BajaPersonaUseCase(repoPersona,repoEvento,repoReserva, servicioAutorizacion);
 
-AltaEventoUseCase altaEvento = new AltaEventoUseCase(repoEvento, repoPersona, servicioAutorizacion);
-ModificarEventoUseCase modEvento = new ModificarEventoUseCase(repoEvento,repoPersona,servicioAutorizacion);
+AltaEventoUseCase altaEvento = new AltaEventoUseCase(repoEvento, repoPersona, servicioAutorizacion,validadorEvento);
+ModificarEventoUseCase modEvento = new ModificarEventoUseCase(repoEvento,repoPersona,servicioAutorizacion,validadorEvento);
 BajaEventoUseCase bajaEvento = new BajaEventoUseCase(repoEvento, repoPersona, servicioAutorizacion);
 
-AltaReservaUseCase altaReserva = new AltaReservaUseCase(repoReserva, repoPersona, repoEvento, servicioAutorizacion);
-ModificarReservaUseCase modReserva = new ModificarReservaUseCase(repoReserva, repoPersona, repoEvento, servicioAutorizacion);
+AltaReservaUseCase altaReserva = new AltaReservaUseCase(repoReserva, repoPersona, repoEvento, servicioAutorizacion,validadorReserva);
+ModificarReservaUseCase modReserva = new ModificarReservaUseCase(repoReserva, repoPersona, repoEvento, servicioAutorizacion,validadorReserva);
 BajaReservaUseCase bajaReserva = new BajaReservaUseCase(repoReserva, repoPersona, repoEvento, servicioAutorizacion);
 
 ListarPersonasUseCase listarPersonas = new ListarPersonasUseCase(repoPersona);

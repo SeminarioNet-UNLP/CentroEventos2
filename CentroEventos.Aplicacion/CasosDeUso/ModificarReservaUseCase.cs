@@ -7,34 +7,34 @@ public class ModificarReservaUseCase
     private readonly IRepositorioPersona _repoPersona;
     private readonly IRepositorioEventoDeportivo _repoEventoDeportivo;
     private readonly IServicioAutorizacion _autorizador;
-
-    public ModificarReservaUseCase(IRepositorioReserva repoReserva, 
-                                   IRepositorioPersona repoPersona, 
+    private readonly ValidarReserva _validador;
+    public ModificarReservaUseCase(IRepositorioReserva repoReserva,
+                                   IRepositorioPersona repoPersona,
                                    IRepositorioEventoDeportivo repoEventoDeportivo,
-                                   IServicioAutorizacion autorizador)
+                                   IServicioAutorizacion autorizador,
+                                   ValidarReserva validador)
     {
         _repoReserva = repoReserva;
         _repoPersona = repoPersona;
         _repoEventoDeportivo = repoEventoDeportivo;
-        _autorizador = autorizador; 
+        _autorizador = autorizador;
+        _validador = validador;
     }
 
     public void Ejecutar(Reserva reserva, int IdUsuario)
     {
         string mensajeError;
-        ValidarReserva validador = new ValidarReserva(_repoPersona, _repoEventoDeportivo, _repoReserva);
-
         if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaModificacion))
         {
             throw new FalloAutorizacionException();
         }
 
-        if (!validador.ExistenPersonaYEvento(reserva.PersonaId, reserva.EventoDeportivoId, out mensajeError))
+        if (!_validador.ExistenPersonaYEvento(reserva.PersonaId, reserva.EventoDeportivoId, out mensajeError))
         {
             throw new EntidadNotFoundException(mensajeError);
         }
 
-        if (!validador.VerificarCupoDisponible(reserva.EventoDeportivoId, out mensajeError))
+        if (!_validador.VerificarCupoDisponible(reserva.EventoDeportivoId, out mensajeError))
         {
             throw new DuplicadoException(mensajeError);
         }
