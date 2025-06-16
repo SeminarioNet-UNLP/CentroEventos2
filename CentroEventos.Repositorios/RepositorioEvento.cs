@@ -98,9 +98,8 @@ public class RepositorioEventoDeportivo : IRepositorioEventoDeportivo
         {
             for (int i = 0; i < eventos.Count() && !encontreEvento; i++)
             {
-                if (eventos[i].ResponsableId == evento.ResponsableId)
+                if (eventos[i].Id == evento.Id)
                 {
-                    evento.Id = eventos[i].Id;
                     eventos[i] = evento;
                     encontreEvento = true;
                 }

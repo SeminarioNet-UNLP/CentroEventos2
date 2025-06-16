@@ -35,7 +35,7 @@ public class ModificarEventoUseCase
             bool condi = false;
             for (int i = 0; i < eventos.Count() && !condi; i++)
             {
-                if (eventos[i].ResponsableId == eventoDeportivo.ResponsableId && eventos[i].FechaHoraInicio < DateTime.Now)
+                if (eventos[i].Id == eventoDeportivo.Id && eventos[i].FechaHoraInicio < DateTime.Now)
                 {
                     throw new OperacionInvalidaException("No se puede modificar un evento. Ya expiro");
                 }
