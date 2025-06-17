@@ -15,10 +15,10 @@ public class AltaPersonaUseCase
         _validador = validador;
     }
 
-    public void Ejecutar(Persona persona, int IdUsuario)
+    public void Ejecutar(Persona persona, Usuario usuario)
     {
         string mensajeError;
-        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioAlta))
+        if (!_autorizador.PoseeElPermiso(usuario, Permiso.Administrador))
         {
             throw new FalloAutorizacionException();
         }

@@ -16,11 +16,11 @@ using CentroEventos.Aplicaciones.Validaciones;
         _autorizador = autorizador;
     }
 
-    public void Ejecutar(IRepositorioReserva _repoReserva,int IdEliminar, int IdUsuario)
+    public void Ejecutar(IRepositorioReserva _repoReserva,int IdEliminar, Usuario usuario)
     {
         List<Reserva> reservas = _repoReserva.ListadoReserva();      
 
-        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoBaja))
+        if (!_autorizador.PoseeElPermiso(usuario, Permiso.Administrador))
         {
             throw new FalloAutorizacionException();
         }
