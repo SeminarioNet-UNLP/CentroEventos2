@@ -5,7 +5,7 @@ public class RepositorioPersona : IRepositorioPersona
     private const int CantPropsPersona = 6;
     private readonly string rutaIDs = "IdPersona.txt";
     private readonly string archivoPersonas = "PersonasPersistencia.txt";
-
+    private  readonly CentroEventosContext context = new CentroEventosContext();
     public void AltaPersona(Persona persona)
     {
         string mensajeError;
@@ -56,35 +56,7 @@ public class RepositorioPersona : IRepositorioPersona
 
     public List<Persona> ListadoPersona()
     {
-        List<Persona> personas = new List<Persona>();
-        try
-        {
-            using (StreamReader sr = new StreamReader(archivoPersonas))
-            {
-                string? lineaP;
-                while (!sr.EndOfStream && ((lineaP = sr.ReadLine()) != null))
-                {
-                    string[] campos = lineaP.Split("#");
-                    if (campos.Length == CantPropsPersona)
-                    {
-                        Persona per = new Persona(
-                            campos[1],
-                            campos[2],
-                            campos[3],
-                            campos[4],
-                            campos[5]
-                        );
-                        per.Id = int.Parse(campos[0]);
-                        personas.Add(per);
-                    }
-                }
-            }
-        }
-        catch
-        {
-            return personas;
-        }
-        return personas;
+        return context.Personas.ToList();
     }
 
     public void ModificarPersona(Persona persona)

@@ -15,6 +15,7 @@ public class Persona
     public string? Apellido { get; set; }
     public string? Email { get; set; }
     public string? Telefono {get; set;}
+    public List<Reserva> Reservas { get; set; } = new();
 
     public override string ToString()
     {
