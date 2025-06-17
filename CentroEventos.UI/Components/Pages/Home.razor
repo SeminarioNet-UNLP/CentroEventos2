@@ -1,8 +1,9 @@
 ﻿@page "/"
-@rendermode InteractiveServer
 @inject ListarPersonasUseCase listado
 
-<PageTitle>Home</PageTitle>
+<PageTitle>
+    Centro de eventos
+</PageTitle>
 
 
 @if(_lista == null)
@@ -16,12 +17,6 @@ else
         <p><b> @i.Nombre esto esto la primer perosna @i.Dni </b></p>
     }
 }
-
-
-
-
-
-
 
 
 @code

@@ -5,7 +5,6 @@ public class RepositorioPersona : IRepositorioPersona
     private const int CantPropsPersona = 6;
     private readonly string rutaIDs = "IdPersona.txt";
     private readonly string archivoPersonas = "PersonasPersistencia.txt";
-    private  readonly CentroEventosContext context = new CentroEventosContext();
     public void AltaPersona(Persona persona)
     {
         string mensajeError;
@@ -56,7 +55,11 @@ public class RepositorioPersona : IRepositorioPersona
 
     public List<Persona> ListadoPersona()
     {
-        return context.Personas.ToList();
+        using (var context = new CentroEventosContext())
+        {
+            return context.Personas.ToList();
+        }
+        
     }
 
     public void ModificarPersona(Persona persona)
