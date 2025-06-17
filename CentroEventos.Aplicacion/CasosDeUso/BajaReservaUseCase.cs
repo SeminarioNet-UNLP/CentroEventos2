@@ -18,11 +18,11 @@ public class BajaReservaUseCase
         _autorizador = autorizador;
     }
 
-    public void Ejecutar(int idElimiar, int IdUsuario)
+    public void Ejecutar(int idElimiar, Usuario usuario)
     {
         bool condi = false;
         List<Reserva> reservas = _repoReserva.ListadoReserva();
-        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaBaja))
+        if (!_autorizador.PoseeElPermiso(usuario, Permiso.Administrador))
         {
             throw new FalloAutorizacionException();
         }

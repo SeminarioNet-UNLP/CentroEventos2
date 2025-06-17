@@ -20,12 +20,12 @@ public class ModificarEventoUseCase
         _validador = validador;
     }
 
-    public void Ejecutar(EventoDeportivo eventoDeportivo, int IdUsuario)
+    public void Ejecutar(EventoDeportivo eventoDeportivo, Usuario usuario)
     {
         string mensajeError;
         List<EventoDeportivo> eventos = _repoEvento.ListadoEventoDeportivo();
 
-        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoModificacion))
+        if (!_autorizador.PoseeElPermiso(usuario, Permiso.Administrador))
         {
             throw new FalloAutorizacionException();
         }

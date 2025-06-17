@@ -17,11 +17,11 @@ public class AltaEventoUseCase
         _validador = validador;
     }
 
-    public void Ejecutar(EventoDeportivo eventoDeportivo, int IdUsuario)
+    public void Ejecutar(EventoDeportivo eventoDeportivo, Usuario usuario)
     {
         string mensajeError;
 
-        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.EventoAlta))
+        if (!_autorizador.PoseeElPermiso(usuario, Permiso.Administrador))
         {
             throw new FalloAutorizacionException();
         }

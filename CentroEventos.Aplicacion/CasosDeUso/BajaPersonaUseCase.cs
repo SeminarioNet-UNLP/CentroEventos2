@@ -19,12 +19,12 @@ using CentroEventos.Aplicaciones.Validaciones;
         _autorizador = autorizador;
 	}
 
-    public void Ejecutar(int IdEliminar, int IdUsuario)
+    public void Ejecutar(int IdEliminar, Usuario usuario)
     {
         List<EventoDeportivo> todosEventos = _repoEvento.ListadoEventoDeportivo();
         List<Reserva> todasReservas = _repoReserva.ListadoReserva();
 
-        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.UsuarioBaja))
+        if (!_autorizador.PoseeElPermiso(usuario, Permiso.Administrador))
         {
             throw new FalloAutorizacionException();
         }

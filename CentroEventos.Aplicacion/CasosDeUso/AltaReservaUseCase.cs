@@ -20,10 +20,10 @@ public class AltaReservaUseCase
         _validador = validador;
     }
 
-    public void Ejecutar(Reserva reserva, int IdUsuario)
+    public void Ejecutar(Reserva reserva, Usuario usuario)
     {
         string mensajeError;
-        if (!_autorizador.PoseeElPermiso(IdUsuario, Permiso.ReservaAlta))
+        if (!_autorizador.PoseeElPermiso(usuario, Permiso.Administrador))
         {
             throw new FalloAutorizacionException();
         }
