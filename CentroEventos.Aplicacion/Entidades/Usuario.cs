@@ -8,12 +8,8 @@ public class Usuario
     public List<Permiso> Permisos { get; set; } = new();
 
 
-    public Usuario(string nombre, string apellido, string correoElectronico, string clave, List<Permiso> permisos)
+   public override string ToString()
     {
-        Nombre = nombre;
-        Apellido = apellido;
-        CorreoElectronico = correoElectronico;
-        Clave = clave;
-        Permisos = permisos;
-    } 
+        return $"[{Id}] {Nombre} {Apellido} - {CorreoElectronico} - Permisos: {string.Join(", ", Permisos)}";
+    }
 }
