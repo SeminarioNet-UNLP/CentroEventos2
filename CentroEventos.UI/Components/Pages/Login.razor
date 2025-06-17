@@ -1,0 +1,43 @@
+
+@page "/Login"
+@rendermode InteractiveServer
+<Modal @ref="modal" Title="Login" IsVerticallyCentered="true" UseStaticBackdrop="true">
+    <BodyTemplate>
+        
+        <div class="row g-3 align-items-center body-custom">
+            <div class="row-auto">
+                <label for="inputUsuario" class="col-form-label">Usuario</label>
+            </div>
+            <div class="row-auto">
+                <input class="form-control" type="text" placeholder="Default input" aria-label="default input example">
+            </div>
+            <div class="row-auto">
+                <label for="inputPassword6" class="col-form-label">Password</label>
+            </div>
+            <div class="row-auto">
+                <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+            </div>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+        <Button Color="ButtonColor.Primary">Save changes</Button>
+    </FooterTemplate>
+</Modal>
+
+<Button Color="ButtonColor.Primary" @onclick="OnShowModalClick">Open Login Modal</Button>
+
+@code {
+    private Modal modal;
+
+    private async Task OnShowModalClick()
+    {
+        await modal?.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal?.HideAsync();
+        
+    }
+}
