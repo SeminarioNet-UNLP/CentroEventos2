@@ -2,23 +2,20 @@ using CentroEventos.Aplicaciones.Excepciones;
 
 public class RepositorioPersona : IRepositorioPersona
 {
-    private const int CantPropsPersona = 6;
-    private readonly string rutaIDs = "IdPersona.txt";
-    private readonly string archivoPersonas = "PersonasPersistencia.txt";
+   
     public void AltaPersona(Persona persona)
     {
-        string mensajeError;
-        int ultimoId = IdManager.BuscarUltimoId(rutaIDs, out mensajeError);
-        if (ultimoId >= 0)
+        if (persona != null)
         {
-            persona.Id = ultimoId + 1;
+            
             try
             {
-                using (StreamWriter sw = new StreamWriter(archivoPersonas, true))
+                using (var context = new CentroEventosContext())
                 {
-                    sw.WriteLine(persona.ToString());
+                    context.Personas.Add(persona);
+                    context.SaveChanges();
                 }
-                IdManager.ActualizarArchivoId(rutaIDs, persona.Id);
+                
             }
             catch (Exception e)
             {
@@ -27,29 +24,24 @@ public class RepositorioPersona : IRepositorioPersona
         }
         else
         {
-            throw new Exception($"Error: {mensajeError}");
+            throw new Exception($"Error: no puede estar vacia la persona");
         }
     }
 
     public void BajaPersona(int id)
     {
-        bool encontrePersona = false;
-        List<Persona> personas = ListadoPersona();
-        for (int i = 0; i < personas.Count() && !encontrePersona; i++)
+        using (var context = new CentroEventosContext())
         {
-            if (personas[i].Id == id)
+            var PersonaEliminar = context.Personas.FirstOrDefault(p => p.Id == id);
+            if (PersonaEliminar != null)
             {
-                personas.RemoveAt(i);
-                encontrePersona = true;
+                context.Personas.Remove(PersonaEliminar);
+                context.SaveChanges();
             }
-        }
-        if (encontrePersona)
-        {
-            RemplazarPersonas(personas);
-        }
-        else
-        {
-            throw new EntidadNotFoundException("No se encontro el id correspondiente");
+            else
+            {
+                throw new EntidadNotFoundException("No se encontro el id correspondiente");
+            }
         }
     }
 
@@ -64,22 +56,13 @@ public class RepositorioPersona : IRepositorioPersona
 
     public void ModificarPersona(Persona persona)
     {
-        List<Persona> personas = ListadoPersona();
-        bool encontrePersona = false;
-        if (personas != null)
+        using (var context = new CentroEventosContext())
         {
-            for (int i = 0; i < personas.Count() && !encontrePersona; i++)
+            var PersonaModificar = context.Personas.FirstOrDefault(p => p.Id == persona.Id);
+            if (PersonaModificar != null)
             {
-                if (personas[i].Dni == persona.Dni)
-                {
-                    persona.Id = personas[i].Id; // La persona que ingresa no tiene ID por el momento
-                    personas[i] = persona;
-                    encontrePersona = true;
-                }
-            }
-            if (encontrePersona)
-            {
-                RemplazarPersonas(personas);
+                PersonaModificar = persona;
+                context.SaveChanges();
             }
             else
             {
@@ -88,16 +71,6 @@ public class RepositorioPersona : IRepositorioPersona
         }
     }
 
-    private void RemplazarPersonas(List<Persona> persona)
-    {
-        using (StreamWriter sw = new StreamWriter(archivoPersonas))
-        {
-            foreach (Persona per in persona)
-            {
-                sw.WriteLine(per.ToString());
-            }
-        }
-    }
     
 }
 
