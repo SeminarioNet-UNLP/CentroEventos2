@@ -1,5 +1,3 @@
-using CentroEventos.Aplicaciones.Excepciones;  // Este using es importante
-
 namespace CentroEventos.Aplicaciones.Validaciones;
 public class ValidarPersona
 {

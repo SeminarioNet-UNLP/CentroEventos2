@@ -1,5 +1,3 @@
-using CentroEventos.Aplicaciones.Excepciones;
-
 namespace CentroEventos.Aplicaciones.Validaciones;
 
 public class ValidarEvento
