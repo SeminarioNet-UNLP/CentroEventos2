@@ -2,135 +2,53 @@ using CentroEventos.Aplicaciones.Excepciones;
 
 public class RepositorioReserva : IRepositorioReserva
 {
-    private const int CantPropsReserva = 5;
-    private readonly string rutaIDs = "IdReserva.txt";
-    private readonly string archivoReservas = "ReservasPersistencia.txt";
-
     public void AltaReserva(Reserva reserva)
     {
-        string mensajeError = "";
-        int ultimoId = IdManager.BuscarUltimoId(rutaIDs, out mensajeError);
-        if (ultimoId >= 0)
+        using (var context = new CentroEventosContext())
         {
-            reserva.Id = ultimoId + 1;
-            try
-            {
-                using (StreamWriter sw = new StreamWriter(archivoReservas, true))
-                {
-                    sw.WriteLine(reserva.ToString());
-                }
-                IdManager.ActualizarArchivoId(rutaIDs, reserva.Id);
-            }
-            catch (Exception e)
-            {
-
-                throw new Exception(e.Message);
-            }
-        }
-        else
-        {
-            throw new Exception($"Error: {mensajeError}");
+            context.Add(reserva);
+            context.SaveChanges();
         }
     }
 
     public void BajaReserva(int id)
     {
-        if (id < 0)
+        using (var context = new CentroEventosContext())
         {
-            throw new ValidacionException("No puede ser negativo el ID.");
-        }
-        try
-        {
-            var archivo = File.ReadAllLines(archivoReservas);
-            var nuevoarchivo = new List<string>();
-            bool encontre = false;
-            foreach (var linea in archivo)
+            var query = context.Reservas.SingleOrDefault(r => r.Id == id);
+            if (query != null)
             {
-                var partes = linea.Split('#');
-                if (int.Parse(partes[0]) == id)
-                {
-                    encontre = true;
-                    continue; // Si encontre ID, no lo agrego al nuevo archivo
-                }
-                nuevoarchivo.Add(linea); // Se agrega al nuevo archivo si no es la que quiero eliminar
+                context.Remove(query);
+                context.SaveChanges();
             }
-            if (!encontre)
-                throw new Exception("No se encontro reserva con el ID.");
-            File.WriteAllLines(archivoReservas, nuevoarchivo); // Sobreescribo el archivo con las lineas restantes
-        }
-        catch (Exception e)
-        {
-            throw new Exception($"Error al eliminar la reserva: {e.Message}");
+            else
+            {
+                throw new EntidadNotFoundException($"Error: La reserva a eliminar no existe.");
+            }
         }
     }
 
     public List<Reserva> ListadoReserva()
     {
-        List<Reserva> listaReservas = new List<Reserva>();
-        try
-        {
-            using (StreamReader sr = new StreamReader(archivoReservas))
-            {
-                string? lineaP;
-                while (!sr.EndOfStream && (lineaP = sr.ReadLine()) != null)
-                {
-                    string[] campos = lineaP.Split("#");
-                    if (campos.Length == CantPropsReserva)
-                    {
-                        Reserva reserva = new Reserva(
-                            int.Parse(campos[1]),
-                            int.Parse(campos[2]),
-                            DateTime.Parse(campos[3]),
-                            Enum.Parse<EstadosAsistencia>(campos[4])
-                        );
-                        reserva.Id = int.Parse(campos[0]);
-                        listaReservas.Add(reserva);
-                    }
-                }
-            }
-        }
-        catch
-        {
-            return listaReservas;
-        }
-        return listaReservas;
+        List<Reserva> reserva = new List<Reserva>();
+        throw new NotImplementedException();
     }
 
     public void ModificarReserva(Reserva reserva)
     {
-        List<Reserva> listaReservas = ListadoReserva();
-        bool cambie = false;
-        if (listaReservas!=null)
+        using (var context = new CentroEventosContext())
         {
-            for (int i = 0; i < listaReservas.Count() && !cambie; i++)
+            var query = context.Reservas.SingleOrDefault(r => r.Id == reserva.Id);
+            if (query != null)
             {
-                if (listaReservas[i].EventoDeportivoId == reserva.EventoDeportivoId && listaReservas[i].PersonaId == reserva.PersonaId)
-                {
-                    reserva.Id = listaReservas[i].Id;
-                    listaReservas[i] = reserva;
-                    cambie = true;
-                }
-            }
-            if (cambie)
-            {
-                RemplazarReservas(listaReservas);
+                query = reserva;
+                context.SaveChanges();
             }
             else
             {
-                throw new EntidadNotFoundException("ID no encontrado. No se puede modificar la reserva.");
+                throw new EntidadNotFoundException($"Error: La reserva a modificar no existe.");
             }
         }
     }
 
-    private void RemplazarReservas(List<Reserva> reservas)
-    {
-        using (StreamWriter sw = new StreamWriter(archivoReservas))
-        {
-            foreach (Reserva res in reservas)
-            {
-                sw.WriteLine(res.ToString());
-            }
-        }
-    }
-    
 }
