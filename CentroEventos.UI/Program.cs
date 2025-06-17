@@ -8,6 +8,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddTransient<ListarPersonasUseCase>();
 builder.Services.AddScoped<IRepositorioPersona, RepositorioPersona>();
+builder.Services.AddBlazorBootstrap();
 var app = builder.Build();
 CentroEventosSQLite.Inicializar();
 
