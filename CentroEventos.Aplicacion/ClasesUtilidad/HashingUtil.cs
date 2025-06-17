@@ -5,12 +5,20 @@ public static class HashingUtil
 {
     public static string ConvertirCadena(string entrada)
     {
-         using (SHA256 sha256 = SHA256.Create())
+        if (entrada != null)
         {
-            byte[] bytes = Encoding.UTF8.GetBytes(entrada);
-            byte[] hashBytes = sha256.ComputeHash(bytes);
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = Encoding.UTF8.GetBytes(entrada);
+                byte[] hashBytes = sha256.ComputeHash(bytes);
 
-            return Convert.ToHexString(hashBytes); 
+                return Convert.ToHexString(hashBytes);
+            }
         }
+        else
+        {
+            return "";
+        }
+         
     }
 }
