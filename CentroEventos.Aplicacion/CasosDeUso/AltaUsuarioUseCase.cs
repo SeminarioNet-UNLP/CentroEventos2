@@ -16,11 +16,11 @@ public class AltaUsuarioUseCase
         _validador = validador;
     }
 
-    public void Ejecutar(Usuario usuario, int idQueSolicita)
+    public void Ejecutar(Usuario usuario, Usuario usuarioRespo)
     {
         string mensajeError;
 
-        if (!_autorizador.PoseeElPermiso(idQueSolicita, Permiso.UsuarioAlta))
+        if (!_autorizador.PoseeElPermiso(usuarioRespo, Permiso.Administrador))
         {
             throw new FalloAutorizacionException("No tiene permiso para crear usuarios.");
         }

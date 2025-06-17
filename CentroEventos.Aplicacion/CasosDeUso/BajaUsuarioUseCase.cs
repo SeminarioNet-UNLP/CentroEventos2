@@ -14,11 +14,11 @@ public class BajaUsuarioUseCase
         _autorizador = autorizador;
     }
 
-    public void Ejecutar(int idAEliminar, int idQueSolicita)
+    public void Ejecutar(int idAEliminar, Usuario usuario)
     {
-        List<Usuario> usuarios = _repoUsuario.ListarUsuarios();
+        List<Usuario> usuarios = _repoUsuario.ListadoUsuario();
 
-        if (!_autorizador.PoseeElPermiso(idQueSolicita, Permiso.UsuarioBaja))
+        if (!_autorizador.PoseeElPermiso(usuario, Permiso.Administrador))
         {
             throw new FalloAutorizacionException();
         }

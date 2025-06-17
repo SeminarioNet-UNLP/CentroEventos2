@@ -16,11 +16,11 @@ public class ModificarUsuarioUseCase
         _validador = validador;
     }
 
-    public void Ejecutar(Usuario usuario, int idQueSolicita)
+    public void Ejecutar(Usuario usuario, Usuario UsQueSolicita)
     {
         string mensajeError;
 
-        if (!_autorizador.PoseeElPermiso(idQueSolicita, Permiso.UsuarioAlta))
+        if (!_autorizador.PoseeElPermiso(UsQueSolicita, Permiso.Administrador))
         {
             throw new FalloAutorizacionException("No tiene permiso para crear usuarios.");
         }
