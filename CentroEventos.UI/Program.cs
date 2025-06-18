@@ -19,7 +19,9 @@ builder.Services.AddSingleton<IServicioAutorizacion, ServicioAutorizacion>();
 
 
 builder.Services.AddTransient<ListarPersonasUseCase>();
+builder.Services.AddTransient<ListarEventosUseCase>();
 builder.Services.AddTransient<ListarUsuariosUseCase>();
+builder.Services.AddTransient<ListarReservaUseCase>();
 builder.Services.AddTransient<ValidarUsuario>();
 builder.Services.AddTransient<AltaUsuarioUseCase>();
 builder.Services.AddTransient<BajaUsuarioUseCase>();

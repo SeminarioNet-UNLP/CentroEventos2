@@ -1,0 +1,90 @@
+@page "/agregarreserva"
+@rendermode InteractiveServer
+@inject AltaReservaUseCase altaReserva
+@inject ServicioAutorizacion permisos
+
+<div class="row g-3 align-items-center body-custom">
+    <div class="row-auto">
+        <label for="inputUsuario" class="col-form-label">Id persona</label>
+    </div>
+    <div class="row-auto">
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example" @bind-value= "reservaView.PersonaId">
+    </div>
+    <div class="row-auto">
+        <label for="inputUsuario" class="col-form-label">Id del evento deportivo</label>
+    </div>
+    <div class="row-auto">
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value= "reservaView.EventoDeportivoId">
+    </div>
+    <div class="row-auto">
+        <label for="inputUsuario" class="col-form-label">Fecha de reserva</label>
+    </div>
+    <div class="row-auto">
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value= "reservaView.FechaAltaReserva">
+    </div>
+    <div class="row-auto">
+        <label for="inputPassword6" class="col-form-label">Estado de asistencia</label>
+    </div>
+    <div class="row-auto">
+         <select class="form-control" @bind="reservaView.EstadoAsistencia">
+        @foreach (EstadosAsistencia estado in Enum.GetValues(typeof(EstadosAsistencia)))
+        {
+            <option value="@estado">@estado</option>
+        }
+    </select>
+    </div>
+    <Button Color="ButtonColor.Secondary" @onclick="Registrar">Registrar</Button>
+    <div>
+    @if(alert)
+    {
+     <Alert Color="AlertColor.Success">
+        <h4 class="alert-heading">Registro completado!</h4>
+        <p>Bienvenido al sistema</p>
+        <hr>
+     </Alert>
+    }
+    
+    </div>
+</div>
+
+@code
+{
+    private class ReservaViewModel
+    {
+         public int PersonaId { get; set; }
+         public int EventoDeportivoId { get; set; }
+         public DateTime FechaAltaReserva { get; set; }
+         public EstadosAsistencia EstadoAsistencia { get; set; }
+    }
+    
+    ReservaViewModel reservaView = new();
+    bool alert = false;
+    private void Registrar()
+    {   
+        Usuario? usuario = permisos.ObtenerUsuarioActivo();
+        try 
+        {
+            if (usuario == null)
+            {
+                throw new Exception($"Error en el registro: Inicie sesion para poder registrar una reserva.");
+            }
+            if (reservaView.PersonaId > 0  && 
+                reservaView.EventoDeportivoId > 0 &&
+                reservaView.FechaAltaReserva != default   &&
+                reservaView.EstadoAsistencia != EstadosAsistencia.Ausente)  
+            {
+                List<EventoDeportivo> permisos = new List<EventoDeportivo>(); //esta de mas? si la elimino esta linea no pasa nada.
+                Reserva reserva = new Reserva(reservaView.PersonaId, reservaView.EventoDeportivoId, reservaView.FechaAltaReserva,
+                reservaView.EstadoAsistencia);
+                
+                altaReserva.Ejecutar(reserva,usuario);
+                alert = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error en el registro: {ex.Message}");
+        }
+    }
+
+}    
