@@ -11,11 +11,13 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<CentroEventosContext>();
 CentroEventosSQLite.Inicializar();
 
-
-
+builder.Services.AddTransient<AltaPersonaUseCase>();
+builder.Services.AddTransient<ValidarPersona>();
 builder.Services.AddTransient<ListarPersonasUseCase>();
-builder.Services.AddTransient<ValidarUsuario>();
+
 builder.Services.AddTransient<AltaUsuarioUseCase>();
+builder.Services.AddTransient<ValidarUsuario>();
+
 
 builder.Services.AddScoped<IRepositorioEventoDeportivo, RepositorioEventoDeportivo>();
 builder.Services.AddScoped<IRepositorioReserva, RepositorioReserva>();
