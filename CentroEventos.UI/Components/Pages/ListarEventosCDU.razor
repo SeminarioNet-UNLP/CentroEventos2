@@ -3,6 +3,7 @@
 
 @inject ListarEventosUseCase ListarEventosUseCase
 @inject ListarPersonasUseCase RepoPersona
+@inject IServicioAutorizacion autorizacion
 
 
 <h3>Listado de Eventos Deportivos</h3>
@@ -27,6 +28,10 @@ else
                 <th>Duracion de horas</th>
                 <th>Cupo maximo</th>
                 <th>Responsable ID</th>
+                @if (esAdmin)
+                {
+                  <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+                }
             </tr>
         </thead>
         <tbody>
@@ -39,6 +44,10 @@ else
                     <td>@e.FechaHoraInicio.ToString("dd/MM/yyyy")</td>
                     <td>@e.DuracionHoras</td> <!--- Va así? Porque es un double -->
                     <td>@e.CupoMaximo</td>
+                    @if (esAdmin)
+                    {
+                      <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+                    }   
                 </tr>
             }
         </tbody>
@@ -46,6 +55,7 @@ else
 }
 
 @code{
+    bool esAdmin=false;
     private List<EventoDeportivo>? _eventos;
     public class eventoViewModel
     {
@@ -66,6 +76,8 @@ else
     {
         _eventos = ListarEventosUseCase.Ejecutar();
         hacer(_eventos);
+        var usuarioActual = autorizacion.ObtenerUsuarioActivo();
+        bool esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
 
     public void hacer (List<EventoDeportivo> eventos)

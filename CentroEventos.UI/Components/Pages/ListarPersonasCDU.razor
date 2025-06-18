@@ -12,7 +12,10 @@
             <th>Apellido</th>
             <th>Email</th>
             <th>Telefono</th>
-            <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+            @if (esAdmin)
+            {
+              <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+            }
         </tr>
     </thead>
     <tbody>
@@ -23,22 +26,27 @@
                 <td>@p.Nombre</td>
                 <td>@p.Apellido</td>
                 <td>@p.Email</td>
-                <td>@p.Telefono</td
-                <td>
-                    <button class="btn btn-primary">Agregar</button>
-                    <button class="btn btn-secundary">Editar</button>
-                </td>
+                <td>@p.Telefono</td>
+                @if (esAdmin)
+                {
+                  <td>  
+                      <button class="btn btn-primary">Agregar</button>
+                      <button class="btn btn-secundary">Editar</button>
+                  </td>
+                }
             </tr>
         }
     </tbody>
 </table>
 
 @code {
+    bool esAdmin=false;
     List<Persona> _lista = new List<Persona>();
     protected override void OnInitialized()
     {
         _lista = ListarPersonasUseCase.Ejecutar();
-        // Este método se invoca una vez creada la instancia de la clase que representa el componente
+        var usuarioActual = autorizacion.ObtenerUsuarioActivo();
+        bool esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
 
 }
