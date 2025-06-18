@@ -1,4 +1,3 @@
-namespace CentroEventos.Aplicacion.Repositorios;
 
 public interface IRepositorioUsuario
 {
