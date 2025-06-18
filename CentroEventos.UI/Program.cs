@@ -1,7 +1,8 @@
 using CentroEventos.Aplicacion.Repositorios;
 using CentroEventos.Aplicaciones.Validaciones;
 using CentroEventos.UI.Components;
-  
+using CentroEventos.UI.Components.Pages;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -18,6 +19,7 @@ builder.Services.AddSingleton<IServicioAutorizacion, ServicioAutorizacion>();
 
 
 builder.Services.AddTransient<ListarPersonasUseCase>();
+builder.Services.AddTransient<ListarUsuariosUseCase>();
 builder.Services.AddTransient<ValidarUsuario>();
 builder.Services.AddTransient<AltaUsuarioUseCase>();
 
