@@ -3,11 +3,9 @@
 @inject ListarReservaUseCase ListarReservaUseCase
 @inject ListarPersonasUseCase RepoPersona
 @inject ListarEventosUseCase RepoEvento
-<<<<<<< HEAD
-@inject IServicioAutorizacion autorizacion
-=======
 
->>>>>>> 04a75399f437ec8a3b1732d6cfdbe732bc170ed8
+@inject IServicioAutorizacion autorizacion
+
 
 <h3>Listado de Reservas</h3>
 
@@ -73,14 +71,14 @@ else
     protected override void OnInitialized()
     {
         _reservas = ListarReservaUseCase.Ejecutar();
-<<<<<<< HEAD
+
              hacer(_reservas);
         var usuarioActual = autorizacion.ObtenerUsuarioActivo();
         bool esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
    
-=======
+
         hacer(_reservas);
->>>>>>> 04a75399f437ec8a3b1732d6cfdbe732bc170ed8
+
     }
 
     public void hacer (List<Reserva>reservas)
