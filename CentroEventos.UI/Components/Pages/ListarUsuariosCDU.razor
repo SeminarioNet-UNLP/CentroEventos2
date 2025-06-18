@@ -9,7 +9,6 @@
             <th>Nombre</th>
             <th>Apellido</th>
             <th>CorreoElectronico</th>
-            <th>Clave</th>
             <th>Permisos</th>
              @if (esAdmin)
             {
@@ -24,8 +23,7 @@
                 <td>@u.Nombre</td>
                 <td>@u.Apellido</td>
                 <td>@u.CorreoElectronico</td>
-                <td>@u.Clave</td>
-                <td>@u.Permisos</td>
+                <td>@string.Join(", ", u.Permisos.Select(p => p.ToString()))</td>
                 @if (esAdmin)
                 {
                   <td>  
@@ -45,7 +43,7 @@
     {
         _lista = listarUsuariosUseCase.Ejecutar();
         var usuarioActual = autorizacion.ObtenerUsuarioActivo();
-        bool esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
+       esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
 
 }

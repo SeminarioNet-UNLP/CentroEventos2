@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@inject IServicioAutorizacion serviAuth
+@inherits LayoutComponentBase
+
 
 <div class="page">
     <div class="sidebar">
@@ -7,7 +9,7 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <Button Color="ButtonColor.Dark" Outline="true" Disabled="@disableButton" @onclick="CerrarSesion"> LogOut </Button>
         </div>
 
         <article class="content px-4">
@@ -21,3 +23,20 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+
+@code
+{
+   
+    bool disableButton= false;
+    Usuario? usActivo = new();
+    protected override void OnInitialized()
+    {
+        usActivo = serviAuth.ObtenerUsuarioActivo();
+        disableButton = usActivo!= null;
+    }
+    private void CerrarSesion()
+    {
+        serviAuth.LogOut();
+    }
+}

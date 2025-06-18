@@ -46,7 +46,7 @@
     {
         _lista = ListarPersonasUseCase.Ejecutar();
         var usuarioActual = autorizacion.ObtenerUsuarioActivo();
-        bool esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
+        esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
 
 }

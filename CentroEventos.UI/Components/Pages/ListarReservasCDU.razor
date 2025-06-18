@@ -74,9 +74,7 @@ else
 
              hacer(_reservas);
         var usuarioActual = autorizacion.ObtenerUsuarioActivo();
-        bool esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
-   
-
+        esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
         hacer(_reservas);
 
     }
