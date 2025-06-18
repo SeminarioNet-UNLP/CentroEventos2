@@ -1,6 +1,9 @@
 @page "/listadopersonas"
 @rendermode InteractiveServer
 @inject ListarPersonasUseCase ListarPersonasUseCase
+@inject IServicioAutorizacion autorizacion
+
+
 <table class= "table">
     <thead>
         <tr>
@@ -20,10 +23,10 @@
                 <td>@p.Nombre</td>
                 <td>@p.Apellido</td>
                 <td>@p.Email</td>
-                <td>@p.Telefono</td>
+                <td>@p.Telefono</td
                 <td>
-                    <button>Agregar</button>
-                    <button>Editar</button>
+                    <button class="btn btn-primary">Agregar</button>
+                    <button class="btn btn-secundary">Editar</button>
                 </td>
             </tr>
         }

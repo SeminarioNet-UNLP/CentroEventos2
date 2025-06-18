@@ -54,28 +54,27 @@
     usuarioViewModel usuarioView = new();
     bool alert = false;
     private void Registrar()
-{   
-    try 
-    {
-        if (!string.IsNullOrEmpty(usuarioView.Clave) && 
-            !string.IsNullOrEmpty(usuarioView.Nombre) && 
-            !string.IsNullOrEmpty(usuarioView.Apellido) && 
-            !string.IsNullOrEmpty(usuarioView.CorreoElectronico))   
+    {   
+        try 
         {
-            List<Permiso> permisos = new List<Permiso> { Permiso.Usuario };
-            Usuario usuario = new Usuario(usuarioView.Nombre, usuarioView.Apellido, usuarioView.CorreoElectronico, 
-                                          HashingUtil.ConvertirCadena(usuarioView.Clave), permisos);
-            
-            altaUs.Ejecutar(usuario);
-            alert = true;
+            if (!string.IsNullOrEmpty(usuarioView.Clave) && 
+                !string.IsNullOrEmpty(usuarioView.Nombre) && 
+                !string.IsNullOrEmpty(usuarioView.Apellido) && 
+                !string.IsNullOrEmpty(usuarioView.CorreoElectronico))   
+            {
+                List<Permiso> permisos = new List<Permiso> { Permiso.Usuario };
+                Usuario usuario = new Usuario(usuarioView.Nombre, usuarioView.Apellido, usuarioView.CorreoElectronico, 
+                                            HashingUtil.ConvertirCadena(usuarioView.Clave), permisos);
+                
+                altaUs.Ejecutar(usuario);
+                alert = true;
+            }
+        }
+        catch (Exception ex) // Maneja cualquier excepción inesperada
+        {
+            Console.WriteLine($"Error en el registro: {ex.Message}");
+            // Aquí podrías loguear el error o notificar al usuario
         }
     }
-    catch (Exception ex) // Maneja cualquier excepción inesperada
-    {
-        Console.WriteLine($"Error en el registro: {ex.Message}");
-        // Aquí podrías loguear el error o notificar al usuario
-    }
-}
-
 
 }    
