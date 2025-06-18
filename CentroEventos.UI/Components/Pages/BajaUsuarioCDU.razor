@@ -1,0 +1,110 @@
+@page "/bajausuario/{idUsuario:int}"
+@inject BajaUsuarioUseCase bajaUsuario
+@inject ServicioAutorizacion permisos
+@inject NavigationManager Navigation
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Confirmar Baja de Usuario</h4>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        ¿Está seguro que desea eliminar al usuario con ID: <strong>@idUsuario</strong>?
+                    </p>
+                    <p class="text-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Esta acción no se puede deshacer.
+                    </p>
+                    
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-danger" @onclick="Eliminar">
+                            <i class="bi bi-trash"></i> Confirmar Eliminación
+                        </button>
+                        <button class="btn btn-secondary" @onclick="Cancelar">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (alert)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        <i class="bi bi-check-circle"></i>
+        <strong>¡Éxito!</strong> El usuario ha sido eliminado correctamente.
+        <button type="button" class="btn-close" @onclick="() => alert = false"></button>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        <i class="bi bi-exclamation-triangle"></i>
+        <strong>Error:</strong> @errorMessage
+        <button type="button" class="btn-close" @onclick="() => errorMessage = null"></button>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public int idUsuario {get; set;}
+    bool alert = false;
+    string? errorMessage = null;
+    
+    private void Eliminar()
+    {   
+        Usuario? usu = permisos.ObtenerUsuarioActivo();
+
+        try 
+        {
+            if (usu == null)
+            {
+                throw new Exception("Error en la eliminación de usuario: Inicie sesión.");
+            }
+
+            // Ejecutar el caso de uso de baja de usuario
+            bajaUsuario.Ejecutar(idUsuario, usu);
+            
+            // Si llegamos aquí, la eliminación fue exitosa
+            alert = true;
+            errorMessage = null;
+            
+            // Redirigir después de un breve delay para mostrar el mensaje de éxito
+            Task.Delay(2000).ContinueWith(_ => {
+                Navigation.NavigateTo("/usuarios");
+            });
+        }
+        catch (FalloAutorizacionException ex) 
+        {
+            errorMessage = "No tiene permisos de administrador para realizar esta operación.";
+            Console.WriteLine($"Error de autorización: {ex.Message}");
+        }
+        catch (OperacionInvalidaException ex)
+        {
+            errorMessage = ex.Message;
+            Console.WriteLine($"Error de operación: {ex.Message}");
+        }
+        catch (EntidadNotFoundException ex)
+        {
+            errorMessage = "El usuario especificado no existe en el sistema.";
+            Console.WriteLine($"Error de entidad no encontrada: {ex.Message}");
+        }
+        catch (Exception ex) 
+        {
+            errorMessage = $"Error inesperado: {ex.Message}";
+            Console.WriteLine($"Error en la eliminación de usuario: {ex.Message}");
+        }
+    }
+    
+    private void Cancelar()
+    {
+        Navigation.NavigateTo("/usuarios");
+    }
+}    
