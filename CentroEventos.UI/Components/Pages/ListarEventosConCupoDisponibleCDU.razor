@@ -1,12 +1,12 @@
-@page "/listareventos"
-@rendermode InteractiveServer
+@page "/listadoeventosconcupodisponible"
 
-@inject ListarEventosUseCase ListarEventosUseCase
+@rendermode InteractiveServer
+@inject ListarEventosConCupoDisponibleUseCase ListarEventosConCupoDisponible
 @inject ListarPersonasUseCase RepoPersona
 @inject IServicioAutorizacion autorizacion
 
 
-<h3>Listado de Eventos Deportivos</h3>
+<h3>Listado de Eventos Deportivos con cupo disponible</h3>
 
 @if (_eventos is null)
 {
@@ -67,13 +67,11 @@ else
         public int? ResponsableId { get; set; }
         public Persona? persona  { get; set; }
     }
-
     List<eventoViewModel> listaEvento = new ();
     eventoViewModel eventoView = new ();
-
     protected override void OnInitialized()
     {
-        _eventos = ListarEventosUseCase.Ejecutar();
+        _eventos = ListarEventosConCupoDisponible.Ejecutar();
         hacer(_eventos);
         var usuarioActual = autorizacion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
@@ -99,4 +97,5 @@ else
             }
         }
     }
+    
 }
