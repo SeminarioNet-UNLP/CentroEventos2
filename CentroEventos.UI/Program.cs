@@ -14,6 +14,8 @@ CentroEventosSQLite.Inicializar();
 
 
 builder.Services.AddTransient<ListarPersonasUseCase>();
+builder.Services.AddTransient<ListarEventosUseCase>();
+builder.Services.AddTransient<ListarReservaUseCase>();
 builder.Services.AddTransient<ValidarUsuario>();
 builder.Services.AddTransient<AltaUsuarioUseCase>();
 
