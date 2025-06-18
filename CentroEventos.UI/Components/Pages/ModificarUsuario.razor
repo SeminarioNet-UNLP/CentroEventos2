@@ -1,4 +1,4 @@
-@page "/modificarusuario/{id:int}"
+@page "/modificarusuario/{idUsuario:int}"
 @inject ModificarUsuarioUseCase modiUs
 @inject ServicioAutorizacion permisos
 
@@ -45,6 +45,8 @@
 
 @code
 {
+    [Parameter]
+    public int idUsuario {get; set;}
     private class usuarioViewModel
     {
         public string? Nombre { get; set; }
@@ -79,6 +81,7 @@
                     permisos
                 );
 
+                idUsuario = usuario.Id;
                 modiUs.Ejecutar(usuario,usu);
                 alert = true;
         }
