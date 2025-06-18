@@ -11,15 +11,28 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<CentroEventosContext>();
 CentroEventosSQLite.Inicializar();
 
+<<<<<<< HEAD
 
 //servicio de autorizacion
 builder.Services.AddTransient<LoginUseCase>();
 builder.Services.AddSingleton<IServicioAutorizacion, ServicioAutorizacion>();
 
 
+=======
+builder.Services.AddTransient<AltaPersonaUseCase>();
+builder.Services.AddTransient<ValidarPersona>();
+>>>>>>> 8f0e0fa27f29b9b90f5e6074711dc56f81e17fc2
 builder.Services.AddTransient<ListarPersonasUseCase>();
+<<<<<<< HEAD
+builder.Services.AddTransient<ListarEventosUseCase>();
+builder.Services.AddTransient<ListarReservaUseCase>();
 builder.Services.AddTransient<ValidarUsuario>();
+=======
+
+>>>>>>> 49648da3f55be7d28174b97527188119871bf65b
 builder.Services.AddTransient<AltaUsuarioUseCase>();
+builder.Services.AddTransient<ValidarUsuario>();
+
 
 
 

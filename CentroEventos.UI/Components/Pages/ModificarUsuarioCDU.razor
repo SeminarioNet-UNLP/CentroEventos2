@@ -1,4 +1,6 @@
-@inject AltaUsuarioUseCase altaUs;
+@page "/modificarusuario/{idUsuario:int}"
+@inject ModificarUsuarioUseCase modiUs
+@inject ServicioAutorizacion permisos
 
 <div class="row g-3 align-items-center body-custom">
     <div class="row-auto">
@@ -25,12 +27,12 @@
     <div class="row-auto">
         <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline"@bind-value= "usuarioView.Clave">
     </div>
-    <Button Color="ButtonColor.Secondary" @onclick="Registrar">Registrar</Button>
+    <Button Color="ButtonColor.Secondary" @onclick="Modificar">Guardar Cambios</Button>
     <div>
     @if(alert)
     {
      <Alert Color="AlertColor.Success">
-        <h4 class="alert-heading">Registro completado!</h4>
+        <h4 class="alert-heading">Modificacion completada</h4>
         <p>Bienvenido al sistema</p>
         <hr>
      </Alert>
@@ -43,6 +45,8 @@
 
 @code
 {
+    [Parameter]
+    public int idUsuario {get; set;}
     private class usuarioViewModel
     {
         public string? Nombre { get; set; }
@@ -53,27 +57,38 @@
     
     usuarioViewModel usuarioView = new();
     bool alert = false;
-    private void Registrar()
+    private void Modificar()
 {   
+    Usuario? usu = permisos.ObtenerUsuarioActivo();
+    
     try 
     {
+        if (usu==null)
+        {
+          throw new Exception ($"Error en la modificacion de usuario: Inicie sesion.");
+        }
         if (!string.IsNullOrEmpty(usuarioView.Clave) && 
             !string.IsNullOrEmpty(usuarioView.Nombre) && 
             !string.IsNullOrEmpty(usuarioView.Apellido) && 
             !string.IsNullOrEmpty(usuarioView.CorreoElectronico))   
         {
             List<Permiso> permisos = new List<Permiso> { Permiso.Usuario };
-            Usuario usuario = new Usuario(usuarioView.Nombre, usuarioView.Apellido, usuarioView.CorreoElectronico, 
-                                          HashingUtil.ConvertirCadena(usuarioView.Clave), permisos);
-            
-            altaUs.Ejecutar(usuario);
-            alert = true;
+            Usuario usuario = new Usuario(                   
+                    usuarioView.Nombre,
+                    usuarioView.Apellido,
+                    usuarioView.CorreoElectronico,
+                    HashingUtil.ConvertirCadena(usuarioView.Clave),
+                    permisos
+                );
+
+                idUsuario = usuario.Id;
+                modiUs.Ejecutar(usuario,usu);
+                alert = true;
         }
     }
-    catch (Exception ex) // Maneja cualquier excepción inesperada
+    catch (Exception ex) 
     {
-        Console.WriteLine($"Error en el registro: {ex.Message}");
-        // Aquí podrías loguear el error o notificar al usuario
+        Console.WriteLine($"Error en la modificacion de usuario: {ex.Message}");
     }
 }
 

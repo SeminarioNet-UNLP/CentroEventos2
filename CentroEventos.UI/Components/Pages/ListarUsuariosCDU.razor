@@ -1,0 +1,40 @@
+@page "/listadousuarios"
+@rendermode InteractiveServer
+@inject ListarUsuariosUseCase ListarUsuariosUseCase
+<table class= "table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>CorreoElectronico</th>
+            <th>Clave</th>
+            <th>Permisos</th>
+            <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in _lista)
+        {
+            <tr>
+                <td>@u.Nombre</td>
+                <td>@u.Apellido</td>
+                <td>@u.CorreoElectronico</td>
+                <td>@u.Clave</td>
+                <td>@u.Permisos</td>
+                <td>
+                    <button>Agregar</button>
+                    <button>Editar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<Usuario> _lista = new List<Usuario>();
+    protected override void OnInitialized()
+    {
+        _lista = ListarUsuariosUseCase.Ejecutar();
+    }
+
+}
