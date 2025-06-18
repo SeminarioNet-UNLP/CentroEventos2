@@ -30,8 +30,10 @@ public class RepositorioEventoDeportivo : IRepositorioEventoDeportivo
 
     public List<EventoDeportivo> ListadoEventoDeportivo()
     {
-        List<EventoDeportivo> eventosDeportivos = new List<EventoDeportivo>();
-        throw new NotImplementedException();
+        using (var context = new CentroEventosContext())
+        {
+            return context.EventoDeportivos.ToList();
+        }
     }
 
     public void ModificarEventoDeportivo(EventoDeportivo eventoDeportivo)

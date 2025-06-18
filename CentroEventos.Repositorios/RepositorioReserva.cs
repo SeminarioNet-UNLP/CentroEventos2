@@ -30,8 +30,10 @@ public class RepositorioReserva : IRepositorioReserva
 
     public List<Reserva> ListadoReserva()
     {
-        List<Reserva> reserva = new List<Reserva>();
-        throw new NotImplementedException();
+        using (var context = new CentroEventosContext())
+        {
+            return context.Reservas.ToList();
+        }
     }
 
     public void ModificarReserva(Reserva reserva)

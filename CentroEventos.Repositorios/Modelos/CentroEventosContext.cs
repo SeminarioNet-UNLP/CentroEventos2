@@ -9,6 +9,6 @@ public class CentroEventosContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder
     optionsBuilder)
     {
-            optionsBuilder.UseSqlite("data source=CentroEventos");
+        optionsBuilder.UseSqlite("data source=CentroEventos");
     }
 }

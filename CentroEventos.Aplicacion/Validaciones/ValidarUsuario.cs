@@ -9,6 +9,7 @@ public class ValidarUsuario
     {
         _repUsuario = repoUsuario;
     }
+
     public bool CamposVacios(Usuario? usuario, out string mensajeError)
     {
         mensajeError = "";
@@ -27,6 +28,7 @@ public class ValidarUsuario
             mensajeError = "Error. La clave no puede estar vacia.";
         return mensajeError == "";
     }
+
     public bool ExisteUsuario(Usuario usuario, out string mensajeError)
     {
         mensajeError = "";
@@ -44,10 +46,9 @@ public class ValidarUsuario
         }
         else
         {
-            mensajeError = "no exite el usuario";
+            mensajeError = "No existe el usuario";
         }
         return mensajeError == "";
-       
     }
     
 }
