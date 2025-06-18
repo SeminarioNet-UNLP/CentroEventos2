@@ -2,13 +2,14 @@
 @rendermode InteractiveServer
 @inject ListarReservaUseCase ListarReservaUseCase
 @inject ListarPersonasUseCase RepoPersona
- @inject ListarEventosUseCase RepoEvento
+@inject ListarEventosUseCase RepoEvento
+
 
 <h3>Listado de Reservas</h3>
 
 @if (_reservas is null)
 {
-    <p>Cargando...</p>
+    <p>Cargando reservas...</p>
 }
 else if (_reservas.Count == 0)
 {
@@ -30,8 +31,8 @@ else
             @foreach (var r in listaReserva)
             {
                 <tr>
-                    <td>@($"{r.persona.Nombre} {r.persona.Apellido}")</td>
-                    <td>@r.eventoDeportivo.Nombre</td>
+                    <td>@($"{r.persona?.Nombre} {r.persona?.Apellido}")</td>
+                    <td>@r.eventoDeportivo?.Nombre</td>
                     <td>@r.FechaAltaReserva.ToString("dd/MM/yyyy")</td>
                     <td>@r.estadoAsistencia.ToString()</td>
                 </tr>
@@ -42,39 +43,41 @@ else
 
 @code {
     private List<Reserva>? _reservas;
-    public class reservaViewModel {
+    public class reservaViewModel
+    {
         public int Id { get; set; }
         public int PersonaId { get; set; }
         public Persona? persona  { get; set; }
         public int EventoDeportivoId { get; set; }
         public EventoDeportivo? eventoDeportivo { get; set; }
         public DateTime FechaAltaReserva { get; set; }
-
         public EstadosAsistencia estadoAsistencia { get; set; }
     }
+
     List<reservaViewModel> listaReserva = new ();
     reservaViewModel reservaView = new ();
+
     protected override void OnInitialized()
     {
         _reservas = ListarReservaUseCase.Ejecutar();
-             hacer(_reservas);
-   
+        hacer(_reservas);
     }
-    public void hacer (List<Reserva>reservas){
-            var Personas = RepoPersona.Ejecutar(); 
-         var RepoEventos = RepoEvento.Ejecutar();
-         foreach (var r in _reservas){
-            reservaView.Id= r.Id;
-            reservaView.FechaAltaReserva = r.FechaAltaReserva; 
-            reservaView.estadoAsistencia = r.EstadoAsistencia;
-            reservaView.persona = Personas.FirstOrDefault(p=>p.Id == r.PersonaId);
-            reservaView.eventoDeportivo = RepoEventos.FirstOrDefault(e=>e.Id == r.EventoDeportivoId);
-            listaReserva.Add(reservaView);
+
+    public void hacer (List<Reserva>reservas)
+    {
+        var Personas = RepoPersona.Ejecutar();
+        var RepoEventos = RepoEvento.Ejecutar();
+        if (_reservas != null)
+        {
+            foreach (var r in _reservas)
+            {
+                reservaView.Id= r.Id;
+                reservaView.FechaAltaReserva = r.FechaAltaReserva; 
+                reservaView.estadoAsistencia = r.EstadoAsistencia;
+                reservaView.persona = Personas.FirstOrDefault(p=>p.Id == r.PersonaId);
+                reservaView.eventoDeportivo = RepoEventos.FirstOrDefault(e=>e.Id == r.EventoDeportivoId);
+                listaReserva.Add(reservaView);
             }
         }
-
-
-}    using System.Security.AccessControl;
-
-#nullable disable
-#line default
+    }
+}
