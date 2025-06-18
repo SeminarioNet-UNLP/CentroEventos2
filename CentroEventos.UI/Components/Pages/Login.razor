@@ -1,9 +1,13 @@
 
 @page "/Login"
 @rendermode InteractiveServer
-<Modal @ref="modal" Title="Login" IsVerticallyCentered="true" UseStaticBackdrop="true">
+
+
+<Modal @ref="modal" Title="Iniciar sesion" IsVerticallyCentered="true" UseStaticBackdrop="true">
     <BodyTemplate>
-        
+
+       @if(!isRegistro)  
+       {
         <div class="row g-3 align-items-center body-custom">
             <div class="row-auto">
                 <label for="inputUsuario" class="col-form-label">Usuario</label>
@@ -18,18 +22,34 @@
                 <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
             </div>
         </div>
+       }
+        @if(isRegistro)
+        {
+            <RegistrarUsuario/>
+        }
     </BodyTemplate>
+
     <FooterTemplate>
+        @if(!isRegistro){
         <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+        <Button Color="ButtonColor.Secondary" @onclick="IsRegistro">Registrar</Button>
         <Button Color="ButtonColor.Primary">Save changes</Button>
+        }
     </FooterTemplate>
+    
 </Modal>
 
 <Button Color="ButtonColor.Primary" @onclick="OnShowModalClick">Open Login Modal</Button>
 
 @code {
-    private Modal modal;
-
+    bool isRegistro = false;
+    private Modal? modal;
+   
+    private void  IsRegistro()
+    {
+        isRegistro = true;
+        StateHasChanged();
+    }
     private async Task OnShowModalClick()
     {
         await modal?.ShowAsync();
@@ -37,6 +57,7 @@
 
     private async Task OnHideModalClick()
     {
+        isRegistro = false;
         await modal?.HideAsync();
         
     }
