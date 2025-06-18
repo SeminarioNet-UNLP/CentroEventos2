@@ -1,0 +1,96 @@
+@page "/modificarusuario/{idUsuario:int}"
+@inject ModificarUsuarioUseCase modiUs
+@inject ServicioAutorizacion permisos
+
+<div class="row g-3 align-items-center body-custom">
+    <div class="row-auto">
+        <label for="inputUsuario" class="col-form-label">Nombre</label>
+    </div>
+    <div class="row-auto">
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example" @bind-value= "usuarioView.Nombre">
+    </div>
+    <div class="row-auto">
+        <label for="inputUsuario" class="col-form-label">Apellido </label>
+    </div>
+    <div class="row-auto">
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value= "usuarioView.Apellido">
+    </div>
+    <div class="row-auto">
+        <label for="inputUsuario" class="col-form-label">Correo electronico</label>
+    </div>
+    <div class="row-auto">
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value= "usuarioView.CorreoElectronico">
+    </div>
+    <div class="row-auto">
+        <label for="inputPassword6" class="col-form-label">Clave</label>
+    </div>
+    <div class="row-auto">
+        <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline"@bind-value= "usuarioView.Clave">
+    </div>
+    <Button Color="ButtonColor.Secondary" @onclick="Modificar">Guardar Cambios</Button>
+    <div>
+    @if(alert)
+    {
+     <Alert Color="AlertColor.Success">
+        <h4 class="alert-heading">Modificacion completada</h4>
+        <p>Bienvenido al sistema</p>
+        <hr>
+     </Alert>
+    }
+    
+    </div>
+</div>
+
+
+
+@code
+{
+    [Parameter]
+    public int idUsuario {get; set;}
+    private class usuarioViewModel
+    {
+        public string? Nombre { get; set; }
+        public string? Apellido { get; set; }
+        public string? CorreoElectronico { get; set; }
+        public string? Clave { get; set; }
+    }
+    
+    usuarioViewModel usuarioView = new();
+    bool alert = false;
+    private void Modificar()
+{   
+    Usuario? usu = permisos.ObtenerUsuarioActivo();
+    
+    try 
+    {
+        if (usu==null)
+        {
+          throw new Exception ($"Error en la modificacion de usuario: Inicie sesion.");
+        }
+        if (!string.IsNullOrEmpty(usuarioView.Clave) && 
+            !string.IsNullOrEmpty(usuarioView.Nombre) && 
+            !string.IsNullOrEmpty(usuarioView.Apellido) && 
+            !string.IsNullOrEmpty(usuarioView.CorreoElectronico))   
+        {
+            List<Permiso> permisos = new List<Permiso> { Permiso.Usuario };
+            Usuario usuario = new Usuario(                   
+                    usuarioView.Nombre,
+                    usuarioView.Apellido,
+                    usuarioView.CorreoElectronico,
+                    HashingUtil.ConvertirCadena(usuarioView.Clave),
+                    permisos
+                );
+
+                idUsuario = usuario.Id;
+                modiUs.Ejecutar(usuario,usu);
+                alert = true;
+        }
+    }
+    catch (Exception ex) 
+    {
+        Console.WriteLine($"Error en la modificacion de usuario: {ex.Message}");
+    }
+}
+
+
+}    
