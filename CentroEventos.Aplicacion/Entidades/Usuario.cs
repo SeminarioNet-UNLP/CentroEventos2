@@ -1,5 +1,6 @@
 public class Usuario
 {
+    public Usuario() { }
       public Usuario(string nombre, string apellido, string correoElectronico, string clave, List<Permiso> permisos)
     {
         Nombre = nombre;
