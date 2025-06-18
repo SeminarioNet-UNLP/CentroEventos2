@@ -1,6 +1,6 @@
 @page "/listadousuarios"
 @rendermode InteractiveServer
-@inject ListarUsuariosUseCase ListarUsuariosUseCase
+@inject ListarUsuariosUseCase listarUsuariosUseCase
 <table class= "table">
     <thead>
         <tr>
@@ -34,7 +34,7 @@
     List<Usuario> _lista = new List<Usuario>();
     protected override void OnInitialized()
     {
-        _lista = ListarUsuariosUseCase.Ejecutar();
+        _lista = listarUsuariosUseCase.Ejecutar();
     }
 
 }

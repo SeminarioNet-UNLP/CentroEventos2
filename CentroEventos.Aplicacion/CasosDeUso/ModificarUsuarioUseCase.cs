@@ -1,3 +1,4 @@
+using CentroEventos.Aplicacion.Repositorios;
 using CentroEventos.Aplicaciones.Excepciones;
 using CentroEventos.Aplicaciones.Validaciones;
 
@@ -32,7 +33,7 @@ public class ModificarUsuarioUseCase
 
         try
         {
-            _repoUsuario.ModificarUsuario(usuario);
+            _repoUsuario.AltaUsuario(usuario);
         }
         catch
         {

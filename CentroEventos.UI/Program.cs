@@ -1,7 +1,8 @@
 using CentroEventos.Aplicacion.Repositorios;
 using CentroEventos.Aplicaciones.Validaciones;
 using CentroEventos.UI.Components;
-  
+using CentroEventos.UI.Components.Pages;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,25 +12,25 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<CentroEventosContext>();
 CentroEventosSQLite.Inicializar();
 
-builder.Services.AddTransient<AltaPersonaUseCase>();
-builder.Services.AddTransient<ValidarPersona>();
-builder.Services.AddTransient<ListarPersonasUseCase>();
-<<<<<<< HEAD
-builder.Services.AddTransient<ListarEventosUseCase>();
-builder.Services.AddTransient<ListarReservaUseCase>();
-builder.Services.AddTransient<ValidarUsuario>();
-=======
 
->>>>>>> 49648da3f55be7d28174b97527188119871bf65b
-builder.Services.AddTransient<AltaUsuarioUseCase>();
+//servicio de autorizacion
+builder.Services.AddTransient<LoginUseCase>();
+builder.Services.AddSingleton<IServicioAutorizacion, ServicioAutorizacion>();
+
+
+builder.Services.AddTransient<ListarPersonasUseCase>();
+builder.Services.AddTransient<ListarUsuariosUseCase>();
 builder.Services.AddTransient<ValidarUsuario>();
+builder.Services.AddTransient<AltaUsuarioUseCase>();
+
+
 
 
 builder.Services.AddScoped<IRepositorioEventoDeportivo, RepositorioEventoDeportivo>();
 builder.Services.AddScoped<IRepositorioReserva, RepositorioReserva>();
 builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuario>();
 builder.Services.AddScoped<IRepositorioPersona, RepositorioPersona>();
-builder.Services.AddSingleton<IServicioAutorizacion, ServicioAutorizacion>();
+
 
 
 builder.Services.AddBlazorBootstrap();
