@@ -1,6 +1,8 @@
 @page "/listadousuarios"
 @rendermode InteractiveServer
 @inject ListarUsuariosUseCase listarUsuariosUseCase
+@inject IServicioAutorizacion autorizacion
+
 <table class= "table">
     <thead>
         <tr>
@@ -9,7 +11,10 @@
             <th>CorreoElectronico</th>
             <th>Clave</th>
             <th>Permisos</th>
-            <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+             @if (esAdmin)
+            {
+              <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+            }
         </tr>
     </thead>
     <tbody>
@@ -21,20 +26,26 @@
                 <td>@u.CorreoElectronico</td>
                 <td>@u.Clave</td>
                 <td>@u.Permisos</td>
-                <td>
-                    <button>Agregar</button>
-                    <button>Editar</button>
-                </td>
+                @if (esAdmin)
+                {
+                  <td>  
+                      <button class="btn btn-primary">Agregar</button>
+                      <button class="btn btn-secundary">Editar</button>
+                  </td>
+                }
             </tr>
         }
     </tbody>
 </table>
 
 @code {
+    bool esAdmin=false;
     List<Usuario> _lista = new List<Usuario>();
     protected override void OnInitialized()
     {
         _lista = listarUsuariosUseCase.Ejecutar();
+        var usuarioActual = autorizacion.ObtenerUsuarioActivo();
+        bool esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
 
 }

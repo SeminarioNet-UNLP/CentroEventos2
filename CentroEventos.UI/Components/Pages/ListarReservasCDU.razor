@@ -2,7 +2,8 @@
 @rendermode InteractiveServer
 @inject ListarReservaUseCase ListarReservaUseCase
 @inject ListarPersonasUseCase RepoPersona
- @inject ListarEventosUseCase RepoEvento
+@inject ListarEventosUseCase RepoEvento
+@inject IServicioAutorizacion autorizacion
 
 <h3>Listado de Reservas</h3>
 
@@ -24,6 +25,10 @@ else
                 <th>Evento ID</th>
                 <th>Fecha de Alta</th>
                 <th>Estado de Asistencia</th>
+                @if (esAdmin)
+                {
+                  <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+                }
             </tr>
         </thead>
         <tbody>
@@ -34,6 +39,10 @@ else
                     <td>@r.eventoDeportivo.Nombre</td>
                     <td>@r.FechaAltaReserva.ToString("dd/MM/yyyy")</td>
                     <td>@r.estadoAsistencia.ToString()</td>
+                    @if (esAdmin)
+                    {
+                      <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+                    }
                 </tr>
             }
         </tbody>
@@ -41,6 +50,7 @@ else
 }
 
 @code {
+    bool esAdmin=false;
     private List<Reserva>? _reservas;
     public class reservaViewModel {
         public int Id { get; set; }
@@ -58,6 +68,8 @@ else
     {
         _reservas = ListarReservaUseCase.Ejecutar();
              hacer(_reservas);
+        var usuarioActual = autorizacion.ObtenerUsuarioActivo();
+        bool esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
    
     }
     public void hacer (List<Reserva>reservas){
