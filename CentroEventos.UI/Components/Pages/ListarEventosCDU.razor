@@ -2,11 +2,14 @@
 @rendermode InteractiveServer
 
 @inject ListarEventosUseCase ListarEventosUseCase
-@inject ListarPersonasUseCase RepoPersona
+@inject ListarPersonasUseCase repoPersona
 @inject IServicioAutorizacion autorizacion
 
 
 <h3>Listado de Eventos Deportivos</h3>
+<button class="btn btn-primary">
+    <span class="bi bi-plus " aria-hidden="true"></span> 
+</button> 
 
 @if (_eventos is null)
 {
@@ -21,16 +24,16 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Evento ID</th>
+                <th>Responsable</th>
                 <th>Nombre</th>
                 <th>Descripcion</th>
                 <th>Fecha y Hora de Inicio</th>
                 <th>Duracion de horas</th>
                 <th>Cupo maximo</th>
-                <th>Responsable ID</th>
                 @if (esAdmin)
                 {
-                  <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+                  <th>Acciones</th>
+                  <!--- Solo se ve si tengo el permiso (soy administrador) --->
                 }
             </tr>
         </thead>
@@ -39,14 +42,21 @@ else
             {
                 <tr>
                     <td>@($"{e.persona?.Nombre} {e.persona?.Apellido}")</td>
-                    <td>@e.Id</td>
+                    <td>@e.Nombre</td>
                     <td>@e.Descripcion</td>
                     <td>@e.FechaHoraInicio.ToString("dd/MM/yyyy")</td>
                     <td>@e.DuracionHoras</td> <!--- Va así? Porque es un double -->
                     <td>@e.CupoMaximo</td>
                     @if (esAdmin)
                     {
-                      <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+                      <td>  
+                        <button class="btn btn-primary">
+                            <span class="bi bi-pencil " aria-hidden="true"></span> 
+                        </button>
+                        <button class="btn btn-danger">
+                          <span class="bi bi-trash" aria-hidden="true"></span>
+                         </button>
+                      </td>
                     }   
                 </tr>
             }
@@ -82,8 +92,8 @@ else
 
     public void hacer (List<EventoDeportivo> eventos)
     {
-        var Personas = RepoPersona.Ejecutar(); 
-        var RepoEventos = RepoPersona.Ejecutar();
+        var Personas = repoPersona.Ejecutar(); 
+        var RepoEventos = repoPersona.Ejecutar();
         if (_eventos != null)
         {
             foreach (var e in _eventos)

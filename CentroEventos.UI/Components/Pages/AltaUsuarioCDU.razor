@@ -1,4 +1,3 @@
-@page "/altausuario"
 @inject AltaUsuarioUseCase altaUs;
 
 <div class="row g-3 align-items-center body-custom">
@@ -55,27 +54,28 @@
     usuarioViewModel usuarioView = new();
     bool alert = false;
     private void Registrar()
-    {   
-        try 
+{   
+    try 
+    {
+        if (!string.IsNullOrEmpty(usuarioView.Clave) && 
+            !string.IsNullOrEmpty(usuarioView.Nombre) && 
+            !string.IsNullOrEmpty(usuarioView.Apellido) && 
+            !string.IsNullOrEmpty(usuarioView.CorreoElectronico))   
         {
-            if (!string.IsNullOrEmpty(usuarioView.Clave) && 
-                !string.IsNullOrEmpty(usuarioView.Nombre) && 
-                !string.IsNullOrEmpty(usuarioView.Apellido) && 
-                !string.IsNullOrEmpty(usuarioView.CorreoElectronico))   
-            {
-                List<Permiso> permisos = new List<Permiso> { Permiso.Usuario };
-                Usuario usuario = new Usuario(usuarioView.Nombre, usuarioView.Apellido, usuarioView.CorreoElectronico, 
-                                            HashingUtil.ConvertirCadena(usuarioView.Clave), permisos);
-                
-                altaUs.Ejecutar(usuario);
-                alert = true;
-            }
-        }
-        catch (Exception ex) // Maneja cualquier excepción inesperada
-        {
-            Console.WriteLine($"Error en el registro: {ex.Message}");
-            // Aquí podrías loguear el error o notificar al usuario
+            List<Permiso> permisos = new List<Permiso> { Permiso.Usuario };
+            Usuario usuario = new Usuario(usuarioView.Nombre, usuarioView.Apellido, usuarioView.CorreoElectronico, 
+                                          HashingUtil.ConvertirCadena(usuarioView.Clave), permisos);
+            
+            altaUs.Ejecutar(usuario);
+            alert = true;
         }
     }
+    catch (Exception ex) // Maneja cualquier excepción inesperada
+    {
+        Console.WriteLine($"Error en el registro: {ex.Message}");
+        // Aquí podrías loguear el error o notificar al usuario
+    }
+}
+
 
 }    
