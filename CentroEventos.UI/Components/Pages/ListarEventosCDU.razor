@@ -77,7 +77,7 @@ else
         _eventos = ListarEventosUseCase.Ejecutar();
         hacer(_eventos);
         var usuarioActual = autorizacion.ObtenerUsuarioActivo();
-        bool esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
+        esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
 
     public void hacer (List<EventoDeportivo> eventos)
