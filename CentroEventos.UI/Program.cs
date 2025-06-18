@@ -22,6 +22,7 @@ builder.Services.AddTransient<ListarPersonasUseCase>();
 builder.Services.AddTransient<ListarUsuariosUseCase>();
 builder.Services.AddTransient<ValidarUsuario>();
 builder.Services.AddTransient<AltaUsuarioUseCase>();
+builder.Services.AddTransient<BajaUsuarioUseCase>();
 
 
 
