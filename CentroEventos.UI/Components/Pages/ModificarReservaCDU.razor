@@ -1,7 +1,7 @@
-@page "/modificarreserva/{idUsuario:int}"
+@using static CentroEventos.UI.Components.Pages.ListarReservasCDU
 @rendermode InteractiveServer
 @inject ModificarReservaUseCase modificarReserva
-@inject ServicioSesion sesion
+@inject ISesion sesion
 @inject IRepositorioPersona RepoPersona
 @inject IRepositorioEventoDeportivo RepoEvento
 
@@ -36,14 +36,14 @@
         <label class="col-form-label">Fecha de reserva</label>
     </div>
     <div class="row-auto">
-        <input class="form-control" type="date" @bind-value="reservaView.FechaAltaReserva" />
+        <input class="form-control" type="date" @bind-value="reservaEditar.FechaAltaReserva" />
     </div>
 
     <div class="row-auto">
         <label class="col-form-label">Estado de asistencia</label>
     </div>
     <div class="row-auto">
-        <select class="form-control" @bind="reservaView.EstadoAsistencia">
+        <select class="form-control" @bind="reservaEditar.estadoAsistencia">
             @foreach (EstadosAsistencia estado in Enum.GetValues(typeof(EstadosAsistencia)))
             {
                 <option value="@estado">@estado</option>
@@ -63,29 +63,33 @@
             </Alert>
         }
     </div>
+      <div>
+        @if (alert2)
+        {
+            <Alert Color="AlertColor.Danger">
+                <h4 class="alert-heading">Error: @error</h4>
+                <hr />
+            </Alert>
+        }
+    </div>
 </div>
 
 @code {
     [Parameter]
-    public int idUsuario { get; set; }
+    public reservaViewModel? reservaEditar { get; set; }
 
-    private class ReservaViewModel
-    {
-          public int PersonaId { get; set; }
-          public int EventoDeportivoId { get; set; }
-          public DateTime FechaAltaReserva { get; set; }
-          public EstadosAsistencia EstadoAsistencia { get; set; }
-    }
-
-    ReservaViewModel reservaView = new();
+    reservaViewModel reservaView = new();
     List<Persona> responsablesDisponibles = new();
     List<EventoDeportivo> eventosDisponibles = new();
     bool alert = false;
 
+    bool alert2 = false;
+    string? error ;
+
     protected override void OnInitialized()
     {
         responsablesDisponibles = RepoPersona.ListadoPersona();
-
+        eventosDisponibles = RepoEvento.ListadoEventoDeportivo();
     }
 
     private void Modificar()
@@ -97,26 +101,26 @@
             {
                 throw new Exception("Inicie sesión para modificar la reserva.");
             }
-            if (reservaView.PersonaId > 0 &&
-                reservaView.EventoDeportivoId > 0 &&
-                reservaView.FechaAltaReserva != default &&
-                reservaView.EstadoAsistencia != EstadosAsistencia.Ausente)
+            if (reservaEditar.PersonaId > 0 &&
+                reservaEditar.EventoDeportivoId > 0 &&
+                reservaEditar.FechaAltaReserva != DateTime.Now &&
+                reservaEditar.estadoAsistencia!= EstadosAsistencia.Ausente)
             {
-                 List<Permiso> permisos = new List<Permiso> { Permiso.Usuario };
                 Reserva reserva= new Reserva(                   
-                        reservaView.PersonaId,
-                        reservaView.EventoDeportivoId,
-                        reservaView.FechaAltaReserva,
-                        reservaView.EstadoAsistencia);
+                        reservaEditar.PersonaId,
+                        reservaEditar.EventoDeportivoId,
+                        reservaEditar.FechaAltaReserva,
+                        reservaEditar.estadoAsistencia);
 
-                reserva.Id=idUsuario;
+                reserva.Id=reservaEditar.Id;
                 modificarReserva.Ejecutar(reserva,usuario);
                 alert = true;
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error en la modificación de la reserva: {ex.Message}");
+            error = ex.Message;
+            alert2 = true;
         }
     }
 }
