@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-@page "/modificarusuario/{idUsuario:int}"
 @inject ModificarUsuarioUseCase modificarUsuario
-@inject ServicioAutorizacion permisos
-=======
-@inject ModificarUsuarioUseCase modiUs
 @inject IServicioAutorizacion serviAuth
->>>>>>> 14450bc5ec1aa2c03db6794a5563b509718a3164
 
 <p>@idUsuario</p>
 <div class="row g-3 align-items-center body-custom">
@@ -64,15 +58,11 @@
     bool alert = false;
     private void Modificar()
     {   
-<<<<<<< HEAD
-        Usuario? usuarioActivo = permisos.ObtenerUsuarioActivo();
-=======
-        Usuario? usu = serviAuth.ObtenerUsuarioActivo();
->>>>>>> 14450bc5ec1aa2c03db6794a5563b509718a3164
+        Usuario? usuarioActual = serviAuth.ObtenerUsuarioActivo();
         
         try 
         {
-            if (usuarioActivo == null)
+            if (usuarioActual==null)
             {
                 throw new Exception ($"Error en la modificacion de usuario: Inicie sesion.");
             }
@@ -88,14 +78,9 @@
                         usuarioView.CorreoElectronico,
                         HashingUtil.ConvertirCadena(usuarioView.Clave), permisos);
 
-<<<<<<< HEAD
-                idUsuario = usuario.Id;
-                modificarUsuario.Ejecutar(usuario, usuarioActivo);
-=======
                 usuario.Id = idUsuario;
-                modiUs.Ejecutar(usuario,usu);
+                modificarUsuario.Ejecutar(usuario, usuarioActual);
                 OnInitializedAsync();
->>>>>>> 14450bc5ec1aa2c03db6794a5563b509718a3164
                 alert = true;
             }
         }
@@ -104,4 +89,4 @@
             Console.WriteLine($"Error en la modificacion de usuario: {ex.Message}");
         }
     }
-}    
+}
