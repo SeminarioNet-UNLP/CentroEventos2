@@ -1,4 +1,5 @@
 ﻿@inject IServicioAutorizacion serviAuth
+@inject ISesion sesion
 @inherits LayoutComponentBase
 
 
@@ -32,11 +33,11 @@
     Usuario? usActivo = new();
     protected override void OnInitialized()
     {
-        usActivo = serviAuth.ObtenerUsuarioActivo();
+        usActivo = sesion.ObtenerUsuarioActivo();
         disableButton = usActivo== null;
     }
     private void CerrarSesion()
     {
-        serviAuth.LogOut();
+        sesion.LogOut();
     }
 }

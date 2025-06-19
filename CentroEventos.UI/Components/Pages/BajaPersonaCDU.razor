@@ -2,6 +2,7 @@
 @inject ListarPersonasUseCase ListarPersonasUseCase
 @inject BajaPersonaUseCase BajaPersonaUseCase
 @inject IServicioAutorizacion ServicioAutorizacion
+@inject ISesion sesion
 
 @rendermode InteractiveServer
 
@@ -68,7 +69,7 @@ else
         _error = null;
         _mensajeExito = null;
 
-        var usuarioActual = ServicioAutorizacion.ObtenerUsuarioActivo();
+        var usuarioActual = sesion.ObtenerUsuarioActivo();
         if (usuarioActual == null)
         {
             _error = "No hay una sesion iniciada";

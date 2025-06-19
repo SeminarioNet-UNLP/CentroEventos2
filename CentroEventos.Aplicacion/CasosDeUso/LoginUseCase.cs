@@ -4,12 +4,12 @@ using CentroEventos.Aplicaciones.Validaciones;
 
 public class LoginUseCase
 {
-    private readonly IServicioAutorizacion _autorizador;
+    private readonly ISesion _sesion;
     private readonly IRepositorioUsuario _repoUsuario;
     private readonly ValidarUsuario _validador;
-    public LoginUseCase(IServicioAutorizacion autorizador, IRepositorioUsuario repoUsuario, ValidarUsuario validador)
+    public LoginUseCase(ISesion sesion, IRepositorioUsuario repoUsuario, ValidarUsuario validador)
     {
-        _autorizador = autorizador;
+        _sesion = sesion;
         _validador = validador;
         _repoUsuario = repoUsuario;
     }
@@ -31,7 +31,7 @@ public class LoginUseCase
         }
         if (usuarioBuscar.Clave == usuario.Clave)
         { 
-            _autorizador.LogIn(usuarioBuscar);
+            _sesion.LogIn(usuarioBuscar);
         }
         else
         {

@@ -5,6 +5,7 @@
 @inject ListarEventosUseCase RepoEvento
 
 @inject IServicioAutorizacion autorizacion
+@inject ISesion sesion
 
 
 <h3>Listado de Reservas</h3>
@@ -79,7 +80,7 @@ else
     {
         _reservas = listarReservaUseCase.Ejecutar();
         hacer(_reservas);
-        var usuarioActual = autorizacion.ObtenerUsuarioActivo();
+        var usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
        
 

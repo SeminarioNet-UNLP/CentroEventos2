@@ -4,6 +4,7 @@
 @inject ListarUsuariosUseCase listarUsuariosUseCase
 @inject BajaUsuarioUseCase bajaUsuario
 @inject IServicioAutorizacion autorizacion
+@inject ISesion sesion
 <h3>Listado de usuarios</h3>
 <button class="btn btn-primary">
     <span class="bi bi-plus " aria-hidden="true" @onclick="OnShowModalClick"></span> 
@@ -97,14 +98,14 @@
         AlertError = false;
         AlertSucces= false;
         _lista = listarUsuariosUseCase.Ejecutar(); 
-        var usuarioActual = autorizacion.ObtenerUsuarioActivo();
+        var usuarioActual = sesion.ObtenerUsuarioActivo();
        esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
     private ConfirmDialog? dialog;
 
     private  void Eliminar(int idUsuario)
     {   
-        Usuario? usu = autorizacion.ObtenerUsuarioActivo();
+        Usuario? usu = sesion.ObtenerUsuarioActivo();
 
        if(usu != null&& autorizacion.PoseeElPermiso(usu, Permiso.Administrador))
         {

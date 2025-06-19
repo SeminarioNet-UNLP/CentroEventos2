@@ -3,6 +3,7 @@
 @inject BajaEventoUseCase BajaEventoUseCase
 @inject IRepositorioReserva RepoReserva
 @inject IServicioAutorizacion ServicioAutorizacion
+@inject ISesion sesion
 
 @rendermode InteractiveServer
 
@@ -67,7 +68,7 @@ else
         _error = null;
         _exito = null;
 
-        var usuarioActual = ServicioAutorizacion.ObtenerUsuarioActivo();
+        var usuarioActual = sesion.ObtenerUsuarioActivo();
         if (usuarioActual == null)
         {
             _error = "Debe iniciar sesión para eliminar un evento.";

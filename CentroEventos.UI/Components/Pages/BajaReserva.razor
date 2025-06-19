@@ -4,6 +4,7 @@
 @inject IServicioAutorizacion ServicioAutorizacion
 @inject IRepositorioPersona RepoPersona
 @inject IRepositorioEventoDeportivo RepoEvento
+@inject ISesion sesion
 
 @rendermode InteractiveServer
 
@@ -77,7 +78,7 @@ else
         _error = null;
         _mensajeExito = null;
 
-        var usuarioActual = ServicioAutorizacion.ObtenerUsuarioActivo();
+        var usuarioActual = sesion.ObtenerUsuarioActivo();
         if (usuarioActual == null)
         {
             _error = "No hay una sesión iniciada.";

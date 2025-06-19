@@ -4,6 +4,7 @@
 @inject ListarEventosConCupoDisponibleUseCase ListarEventosConCupoDisponible
 @inject ListarPersonasUseCase RepoPersona
 @inject IServicioAutorizacion autorizacion
+@inject ISesion sesion
 
 
 <h3>Listado de Eventos Deportivos con cupo disponible</h3>
@@ -73,7 +74,7 @@ else
     {
         _eventos = ListarEventosConCupoDisponible.Ejecutar();
         hacer(_eventos);
-        var usuarioActual = autorizacion.ObtenerUsuarioActivo();
+        var usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
 

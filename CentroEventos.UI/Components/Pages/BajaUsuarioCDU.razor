@@ -1,5 +1,6 @@
 @inject BajaUsuarioUseCase bajaUsuario
 @inject ServicioAutorizacion permisos
+@inject ISesion sesion
 
 @inject IServicioAutorizacion autorizacion
 @if(AlertError)
@@ -27,7 +28,7 @@
     
     private void Eliminar()
     {   
-        Usuario? usu = autorizacion.ObtenerUsuarioActivo();
+        Usuario? usu = sesion.ObtenerUsuarioActivo();
 
        if(usu != null&& autorizacion.PoseeElPermiso(usu, Permiso.Administrador))
         {

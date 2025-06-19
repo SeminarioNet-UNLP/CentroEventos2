@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @inject ListarPersonasUseCase ListarPersonasUseCase
 @inject IServicioAutorizacion autorizacion
+@inject ISesion sesion
 <h3>Listado de personas</h3>
 <button class="btn btn-primary">
     <span class="bi bi-plus " aria-hidden="true"></span> 
@@ -52,7 +53,7 @@
     protected override void OnInitialized()
     {
         _lista = ListarPersonasUseCase.Ejecutar();
-        var usuarioActual = autorizacion.ObtenerUsuarioActivo();
+        var usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
 

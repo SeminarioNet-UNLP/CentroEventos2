@@ -1,5 +1,5 @@
 @inject ModificarUsuarioUseCase modificarUsuario
-@inject IServicioAutorizacion serviAuth
+@inject ISesion sesion
 
 <div class="row g-3 align-items-center body-custom">
     <div class="row-auto">
@@ -79,7 +79,7 @@
     }
     private void Modificar()
     {   
-        Usuario? usuarioActual = serviAuth.ObtenerUsuarioActivo();
+        Usuario? usuarioActual = sesion.ObtenerUsuarioActivo();
         
         try 
         {

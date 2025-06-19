@@ -4,6 +4,7 @@
 @inject ListarEventosUseCase listarEventosUseCase
 @inject ListarPersonasUseCase repoPersona
 @inject IServicioAutorizacion autorizacion
+@inject ISesion sesion
 
 
 <h3>Listado de Eventos Deportivos</h3>
@@ -87,7 +88,7 @@ else
     {
         _eventos = listarEventosUseCase.Ejecutar();
         hacer(_eventos);
-        var usuarioActual = autorizacion.ObtenerUsuarioActivo();
+        var usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
 

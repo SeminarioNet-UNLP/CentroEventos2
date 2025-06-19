@@ -1,5 +1,5 @@
 ﻿@page "/"
-@inject IServicioAutorizacion serviAuth
+@inject ISesion sesion
 
 
 
@@ -20,7 +20,7 @@
     string? nombre;
     protected override void OnInitialized()
     {
-        var usuario= serviAuth.ObtenerUsuarioActivo();
+        var usuario= sesion.ObtenerUsuarioActivo();
         if(usuario!= null)
         {
             nombre = $"{usuario.Nombre} {usuario.Apellido}";

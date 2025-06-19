@@ -4,6 +4,7 @@
 @inject ListarAsistenciaAEventoUseCase ListarAsistenciaAEventoUseCase
 @inject ListarEventosUseCase ListarEventosUseCase
 @inject IServicioAutorizacion autorizacion
+@inject ISesion sesion
 
 <h3>Listado de Asistencia a Evento</h3>
 
@@ -81,7 +82,7 @@ else
     protected override void OnInitialized()
     {
         eventosDisponibles = ListarEventosUseCase.Ejecutar();
-        var usuarioActual = autorizacion.ObtenerUsuarioActivo();
+        var usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
 
