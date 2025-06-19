@@ -68,7 +68,7 @@ else
         public Persona? persona  { get; set; }
     }
     List<eventoViewModel> listaEvento = new ();
-    eventoViewModel eventoView = new ();
+    
     protected override void OnInitialized()
     {
         _eventos = ListarEventosConCupoDisponible.Ejecutar();
@@ -85,14 +85,17 @@ else
         {
             foreach (var e in _eventos)
             {
-                eventoView.Id= e.Id;
-                eventoView.Nombre = e.Nombre; 
-                eventoView.Descripcion = e.Descripcion;
-                eventoView.FechaHoraInicio = e.FechaHoraInicio;
-                eventoView.DuracionHoras = e.DuracionHoras;
-                eventoView.CupoMaximo = e.CupoMaximo;
-                eventoView.ResponsableId = e.ResponsableId;
-                eventoView.persona = Personas.FirstOrDefault(p => p.Id == e.ResponsableId);
+                eventoViewModel eventoView = new ();
+                {
+                    eventoView.Id= e.Id;
+                    eventoView.Nombre = e.Nombre; 
+                    eventoView.Descripcion = e.Descripcion;
+                    eventoView.FechaHoraInicio = e.FechaHoraInicio;
+                    eventoView.DuracionHoras = e.DuracionHoras;
+                    eventoView.CupoMaximo = e.CupoMaximo;
+                    eventoView.ResponsableId = e.ResponsableId;
+                    eventoView.persona = Personas.FirstOrDefault(p => p.Id == e.ResponsableId);
+                }
                 listaEvento.Add(eventoView);
             }
         }
