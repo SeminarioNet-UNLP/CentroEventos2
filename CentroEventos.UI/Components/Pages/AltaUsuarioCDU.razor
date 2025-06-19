@@ -5,19 +5,19 @@
         <label for="inputUsuario" class="col-form-label">Nombre</label>
     </div>
     <div class="row-auto">
-        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example" @bind-value= "usuarioView.Nombre">
+        <input class="form-control" type="text" placeholder="Nombre" aria-label="default input example" @bind-value= "usuarioView.Nombre">
     </div>
     <div class="row-auto">
         <label for="inputUsuario" class="col-form-label">Apellido </label>
     </div>
     <div class="row-auto">
-        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value= "usuarioView.Apellido">
+        <input class="form-control" type="text" placeholder="Apellido" aria-label="default input example"@bind-value= "usuarioView.Apellido">
     </div>
     <div class="row-auto">
         <label for="inputUsuario" class="col-form-label">Correo electronico</label>
     </div>
     <div class="row-auto">
-        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value= "usuarioView.CorreoElectronico">
+        <input class="form-control" type="text" placeholder="Correo electronico" aria-label="default input example"@bind-value= "usuarioView.CorreoElectronico">
     </div>
     <div class="row-auto">
         <label for="inputPassword6" class="col-form-label">Clave</label>
@@ -25,7 +25,7 @@
     <div class="row-auto">
         <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline"@bind-value= "usuarioView.Clave">
     </div>
-    <Button Color="ButtonColor.Secondary" @onclick="Registrar">Registrar</Button>
+    <Button Color="ButtonColor.Primary" @onclick="Registrar">Registrar</Button>
     <div>
     @if(alert)
     {
@@ -53,6 +53,7 @@
         
 
     usuarioViewModel usuarioView = new();
+    
     bool alert = false;
     private void Registrar()
 {   
@@ -68,7 +69,9 @@
                                           HashingUtil.ConvertirCadena(usuarioView.Clave), permisos);
             
             altaUs.Ejecutar(usuario);
+
             alert = true;
+            
         }
     }
     catch (Exception ex) // Maneja cualquier excepción inesperada
@@ -76,6 +79,7 @@
         Console.WriteLine($"Error en el registro: {ex.Message}");
         // Aquí podrías loguear el error o notificar al usuario
     }
+    
 }
 
 

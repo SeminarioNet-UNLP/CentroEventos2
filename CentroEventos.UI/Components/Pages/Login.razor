@@ -78,10 +78,10 @@
         var usuario = serviAuth.ObtenerUsuarioActivo();
         if(usuario== null)
         {
-            if (firstRender)
+            if (firstRender && modal != null)
             {
-                await modal?.ShowAsync();
-                StateHasChanged(); // Asegura la actualización del estado del componente
+                await modal.ShowAsync();
+                StateHasChanged(); 
             }
         }
         
@@ -121,13 +121,15 @@
          isRegistro = false;
          alert = false;
          alert2 = false;
-        await modal?.ShowAsync();
+         if(modal!= null)
+            await modal.ShowAsync();
     }
 
     private async Task OnHideModalClick()
     {
-
-        await modal?.HideAsync();
+        if(modal!= null)    
+            await modal.HideAsync();
+        StateHasChanged();
     }
 }
     

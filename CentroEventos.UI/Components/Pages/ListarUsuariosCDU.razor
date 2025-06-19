@@ -32,13 +32,12 @@
                 @if (esAdmin)
                 {
                   <td>  
-                      <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(u.Id)">
+                      <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(u)">
                             <span class="bi bi-pencil " aria-hidden="true"></span> 
-                        </button>
-                        <button class="btn btn-danger">
-                          <span class="bi bi-trash" aria-hidden="true"  @onclick="()=>Eliminar(u.Id)"></span>
-                         </button>
-                        
+                      </button>
+                      <button class="btn btn-danger">
+                            <span class="bi bi-trash" aria-hidden="true"  @onclick="()=>ShowSaveConfirmationAsync(u.Id)"></span>
+                      </button>
                   </td>
                 }
             </tr>
@@ -57,19 +56,32 @@
          
     </tbody>
 </table>
-<Modal @ref="modal" Title="Agregar usuario" IsVerticallyCentered="true" UseStaticBackdrop="true">
+<Modal @ref="modal" Title="Agregar usuario" IsVerticallyCentered="true" UseStaticBackdrop="true"  >
     <BodyTemplate>
             <AltaUsuarioCDU/>
+            <div style="display: flex; justify-content: flex-end;">
+                <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Close</Button>
+            </div>
     </BodyTemplate>
 </Modal>
 <Modal @ref="modal2" Title="Editar usuario" IsVerticallyCentered="true" UseStaticBackdrop="true">
     <BodyTemplate>
-            <ModificarUsuarioCDU idUsuario="@idSeleccionado" />
+        <ModificarUsuarioCDU usuarioEditar="@editar"  />
+        <div style="display: flex; justify-content: flex-end;">
+            <Button Color="ButtonColor.Danger" @onclick="OnHideModalClickEdit">Close</Button>
+        </div>
     </BodyTemplate>
 </Modal>
+<ConfirmDialog @ref="dialog" />
+
+
+
+
+
 
 
 @code {
+        
     bool esAdmin=false;
     private bool AlertError = false;
     private bool AlertSucces = false;
@@ -77,16 +89,19 @@
     private Modal? modal;
     private Modal? modal2;
     public int idSeleccionado;
+    public Usuario? editar;
     List<Usuario> _lista = new List<Usuario>();
+        
     protected override void OnInitialized()
     {
         AlertError = false;
         AlertSucces= false;
-        _lista = listarUsuariosUseCase.Ejecutar();
+        _lista = listarUsuariosUseCase.Ejecutar(); 
         var usuarioActual = autorizacion.ObtenerUsuarioActivo();
        esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
-   
+    private ConfirmDialog? dialog;
+
     private  void Eliminar(int idUsuario)
     {   
         Usuario? usu = autorizacion.ObtenerUsuarioActivo();
@@ -102,30 +117,71 @@
             }catch(Exception ex)
             {   
                 AlertError=true;
-                errorMessage = $"Erro: {ex}";
+                errorMessage = $"Error: {ex}";
             }
         }
        
 
     }
-     private async Task OnShowModalClick()
+    private async Task ShowSaveConfirmationAsync(int idUsuario)
     {
+        var options = new ConfirmDialogOptions
+            {
+                YesButtonText = "Si",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "CANCEL",
+                NoButtonColor = ButtonColor.Danger
+            };
+
+        if(dialog!= null)
+        {
+            var confirmation = await dialog.ShowAsync(
+            title: "Eliminar",
+            message1: "¿Estas seguro que queres eliminar el usuario?",
+            confirmDialogOptions: options);
+            if (confirmation)
+            {
+                Eliminar(idUsuario);
+            }
+        }
         
-        await modal?.ShowAsync();
-        OnInitialized();
     }
-    private async Task OnShowModalClickEdit(int id)
+    private async Task OnShowModalClick()
     {
-        idSeleccionado = id;
-        await modal2?.ShowAsync();
+        if (modal != null)
+        {
+            await modal.ShowAsync();
+        }
+    }
+     
+    private async Task OnShowModalClickEdit(Usuario e)
+    {
+        editar =e;
+        if (modal2 != null)
+        {
+            await modal2.ShowAsync();
+        }
+        OnInitialized();
     }
 
     private async Task OnHideModalClick()
     {
+        if (modal != null)
+        {
+            await modal.HideAsync();
+        }
+        OnInitialized(); 
+    }
+    private async Task OnHideModalClickEdit()
+    {
         
-        await modal?.HideAsync();
-        OnInitialized();
+        if(modal2!= null)
+        {
+            await modal2.HideAsync();
+        }
         
+       
+        OnInitialized(); 
     }
     
 

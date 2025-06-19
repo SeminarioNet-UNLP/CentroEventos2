@@ -1,13 +1,12 @@
 @inject ModificarUsuarioUseCase modificarUsuario
 @inject IServicioAutorizacion serviAuth
 
-<p>@idUsuario</p>
 <div class="row g-3 align-items-center body-custom">
     <div class="row-auto">
         <label for="inputUsuario" class="col-form-label">Nombre</label>
     </div>
     <div class="row-auto">
-        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example" @bind-value= "usuarioView.Nombre">
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example" @bind-value= "usuarioView.Nombre"> 
     </div>
     <div class="row-auto">
         <label for="inputUsuario" class="col-form-label">Apellido </label>
@@ -19,7 +18,8 @@
         <label for="inputUsuario" class="col-form-label">Correo electronico</label>
     </div>
     <div class="row-auto">
-        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value= "usuarioView.CorreoElectronico">
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value="usuarioView.CorreoElectronico">
+
     </div>
     <div class="row-auto">
         <label for="inputPassword6" class="col-form-label">Clave</label>
@@ -27,12 +27,19 @@
     <div class="row-auto"> <!-- En caso de que se necesite cambiar la contraseña el admin necesita poder cambiarla por eso lo dejamos-->
         <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline"@bind-value= "usuarioView.Clave">
     </div>
-    <Button Color="ButtonColor.Secondary" @onclick="Modificar">Guardar Cambios</Button>
+    <Button Color="ButtonColor.Primary" @onclick="Modificar">Guardar Cambios</Button>
     <div>
     @if(alert)
     {
      <Alert Color="AlertColor.Success">
         <h4 class="alert-heading">Modificacion completada</h4>
+        <hr>
+     </Alert>
+    }
+    @if(alertDanger)
+    {
+     <Alert Color="AlertColor.Danger">
+        <h4 class="alert-heading">Error:@mensajeError </h4>
         <hr>
      </Alert>
     }
@@ -43,8 +50,10 @@
 
 @code {
 
+ 
+
     [Parameter]
-    public int idUsuario {get; set;}
+    public Usuario? usuarioEditar{get; set;}
     
     private class usuarioViewModel
     {
@@ -55,7 +64,19 @@
     }
     
     usuarioViewModel usuarioView = new();
+    string? mensajeError;
     bool alert = false;
+    bool alertDanger = false;
+    protected override void OnInitialized()
+    {
+        if(usuarioEditar!= null)
+        {
+            usuarioView.Nombre = usuarioEditar.Nombre;
+            usuarioView.Apellido =usuarioEditar.Apellido;
+            usuarioView.CorreoElectronico =usuarioEditar.CorreoElectronico;
+        }
+      
+    }
     private void Modificar()
     {   
         Usuario? usuarioActual = serviAuth.ObtenerUsuarioActivo();
@@ -69,7 +90,8 @@
             if (!string.IsNullOrEmpty(usuarioView.Clave) && 
                 !string.IsNullOrEmpty(usuarioView.Nombre) && 
                 !string.IsNullOrEmpty(usuarioView.Apellido) && 
-                !string.IsNullOrEmpty(usuarioView.CorreoElectronico))   
+                !string.IsNullOrEmpty(usuarioView.CorreoElectronico)&& 
+                usuarioEditar!= null)   
             {
                 List<Permiso> permisos = new List<Permiso> { Permiso.Usuario };
                 Usuario usuario = new Usuario(                   
@@ -78,10 +100,17 @@
                         usuarioView.CorreoElectronico,
                         HashingUtil.ConvertirCadena(usuarioView.Clave), permisos);
 
-                usuario.Id = idUsuario;
-                modificarUsuario.Ejecutar(usuario, usuarioActual);
-                OnInitializedAsync();
-                alert = true;
+                usuario.Id = usuarioEditar.Id;
+                try
+                {
+                    modificarUsuario.Ejecutar(usuario, usuarioActual);
+                    alert = true;
+                }
+                catch(Exception ex)
+                {
+                    alertDanger = true;
+                    mensajeError = ex.Message;
+                }
             }
         }
         catch (Exception ex) 
