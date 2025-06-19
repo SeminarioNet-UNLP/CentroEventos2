@@ -1,0 +1,96 @@
+@page "/bajaEvento"
+@inject ListarEventosUseCase ListarEventosUseCase
+@inject BajaEventoUseCase BajaEventoUseCase
+@inject IRepositorioReserva RepoReserva
+@inject IServicioAutorizacion ServicioAutorizacion
+
+@rendermode InteractiveServer
+
+<h3>Baja de Eventos Deportivos</h3>
+
+@if (!string.IsNullOrEmpty(_error))
+{
+    <div class="alert alert-danger">@_error</div>
+}
+@if (!string.IsNullOrEmpty(_exito))
+{
+    <div class="alert alert-success">@_exito</div>
+}
+
+@if (_eventos == null)
+{
+    <p>Cargando.</p>
+}
+else if (_eventos.Count == 0)
+{
+    <p>No hay eventos disponibles.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var evento in _eventos)
+            {
+                <tr>
+                    <td>@evento.Id</td>
+                    <td>@evento.Nombre</td>
+                    <td>@evento.FechaHoraInicio.ToShortDateString()</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarEvento(evento.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<EventoDeportivo>? _eventos;
+    private string? _error;
+    private string? _exito;
+
+    protected override void OnInitialized()
+    {
+        _eventos = ListarEventosUseCase.Ejecutar();
+    }
+
+    private void EliminarEvento(int id)
+    {
+        _error = null;
+        _exito = null;
+
+        var usuarioActual = ServicioAutorizacion.ObtenerUsuarioActivo();
+        if (usuarioActual == null)
+        {
+            _error = "Debe iniciar sesión para eliminar un evento.";
+            return;
+        }
+
+        try
+        {
+            BajaEventoUseCase.Ejecutar(RepoReserva, id, usuarioActual);
+            _eventos = ListarEventosUseCase.Ejecutar();
+            _exito = "Evento eliminado correctamente.";
+        }
+        catch (FalloAutorizacionException)
+        {
+            _error = "No tiene permisos para eliminar eventos.";
+        }
+        catch (OperacionInvalidaException ex)
+        {
+            _error = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            _error = "Error inesperado: " + ex.Message;
+        }
+    }
+}
