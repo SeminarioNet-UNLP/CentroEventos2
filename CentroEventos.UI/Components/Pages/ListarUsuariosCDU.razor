@@ -2,6 +2,7 @@
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
 @rendermode InteractiveServer
 @inject ListarUsuariosUseCase listarUsuariosUseCase
+@inject AsignarPermisosUseCase asignarPermisos
 @inject BajaUsuarioUseCase bajaUsuario
 @inject IServicioAutorizacion autorizacion
 @inject ISesion sesion
@@ -34,7 +35,19 @@
                 <td>@u.Nombre</td>
                 <td>@u.Apellido</td>
                 <td>@u.CorreoElectronico</td>
-                <td>@string.Join(", ", u.Permisos.Select(p => p.ToString()))</td>
+                <td>
+                    @string.Join(", ", u.Permisos.Select(p => p.ToString()))
+                    @if(esAdmin) 
+                    {
+                        <Dropdown Class="btn-sm" Color="DropdownColor.Secondary" Split="true">
+                            <DropdownToggleButton>Otorgar permiso</DropdownToggleButton>
+                            <DropdownMenu>
+                                <DropdownItem To="#" Type="DropdownItemType.Button"@onclick="@(() => AsignarPermiso(u,Permiso.Administrador))">@Permiso.Administrador</DropdownItem>
+                                <DropdownItem To="#" Type="DropdownItemType.Button" @onclick="@(() => AsignarPermiso(u,Permiso.Usuario))">@Permiso.Usuario</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    }
+                </td>
                 @if (esAdmin)
                 {
                   <td>  
@@ -44,24 +57,26 @@
                       <button class="btn btn-danger">
                             <span class="bi bi-trash" aria-hidden="true" @onclick="()=>ShowSaveConfirmationAsync(u.Id)"></span>
                       </button>
+                      
                   </td>
                 }
             </tr>
         }
-        @if(AlertError)
-        {
-            <Alert Color="AlertColor.Danger"> @errorMessage </Alert>
-        }
-
-        @if(AlertSucces)
-        {
-            <div>
-                <Alert Color="AlertColor.Success"> <h4>Se borró con éxito!</h4></Alert> 
-            </div>
-        }
+       
          
     </tbody>
+    
 </table>
+ @if(AlertError)
+{
+    <Alert Color="AlertColor.Danger"> @errorMessage </Alert>
+}
+@if(AlertSucces)
+{
+    <div>
+        <Alert Color="AlertColor.Success"> <h4>Se borró con éxito!</h4></Alert> 
+    </div>
+}
 <Modal @ref="modal" Title="Agregar usuario" IsVerticallyCentered="true" UseStaticBackdrop="true"  >
     <BodyTemplate>
             <AltaUsuarioCDU/>
@@ -76,7 +91,7 @@
         <div style="display: flex; justify-content: flex-end;">
             <Button Color="ButtonColor.Danger" @onclick="OnHideModalClickEdit">Cerrar</Button>
         </div>
-    </BodyTemplate>
+</BodyTemplate>
 </Modal>
 <ConfirmDialog @ref="dialog" />
 
@@ -89,7 +104,6 @@
     string? errorMessage;
     private Modal? modal;
     private Modal? modal2;
-    public int idSeleccionado;
     public Usuario? editar;
     List<Usuario> _lista = new List<Usuario>();
         
@@ -124,6 +138,22 @@
        
 
     }
+    private void AsignarPermiso(Usuario usOtorgar,Permiso permiso)
+    {
+       
+        try
+        {
+            asignarPermisos.Ejecutar(usOtorgar,permiso);
+            OnInitialized();
+        }
+        catch(Exception ex)
+        {
+            AlertError = true;
+            errorMessage = $"Error: {ex}";
+        }
+        
+       
+    }
     private async Task ShowSaveConfirmationAsync(int idUsuario)
     {
         var options = new ConfirmDialogOptions
@@ -138,7 +168,7 @@
         {
             var confirmation = await dialog.ShowAsync(
             title: "Eliminar",
-            message1: "¿Estás seguro de que querés eliminar al usuario?",
+            message1: "¿Estas seguro que queres eliminar el usuario?",
             confirmDialogOptions: options);
             if (confirmation)
             {
@@ -180,8 +210,6 @@
         {
             await modal2.HideAsync();
         }
-        
-       
         OnInitialized(); 
     }
     
