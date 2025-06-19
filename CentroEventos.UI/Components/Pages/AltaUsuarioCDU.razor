@@ -1,60 +1,71 @@
+@using System.ComponentModel.DataAnnotations
 @inject AltaUsuarioUseCase altaUs;
 
-<div class="row g-3 align-items-center body-custom">
-    <div class="row-auto">
-        <label for="inputUsuario" class="col-form-label">Nombre</label>
+<EditForm Model="usuarioView" OnValidSubmit="Registrar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="row g-3 align-items-center body-custom">
+        <div class="row-auto">
+            <label class="col-form-label">Nombre</label>
+            <InputText class="form-control" @bind-Value="usuarioView.Nombre" />
+            <ValidationMessage For="@(() => usuarioView.Nombre)" />
+        </div>
+
+        <div class="row-auto">
+            <label class="col-form-label">Apellido</label>
+            <InputText class="form-control" @bind-Value="usuarioView.Apellido" />
+            <ValidationMessage For="@(() => usuarioView.Apellido)" />
+        </div>
+
+        <div class="row-auto">
+            <label class="col-form-label">Correo electrónico</label>
+            <InputText class="form-control" @bind-Value="usuarioView.CorreoElectronico" />
+            <ValidationMessage For="@(() => usuarioView.CorreoElectronico)" />
+        </div>
+
+        <div class="row-auto">
+            <label class="col-form-label">Clave</label>
+            <InputText type="password" class="form-control" @bind-Value="usuarioView.Clave" />
+            <ValidationMessage For="@(() => usuarioView.Clave)" />
+        </div>
+
+        <Button Color="ButtonColor.Primary" ButtonType="ButtonType.Submit" @onclick="Registrar">Registrar</Button>
     </div>
-    <div class="row-auto">
-        <input class="form-control" type="text"  aria-label="default input example" @bind-value= "usuarioView.Nombre">
-    </div>
-    <div class="row-auto">
-        <label for="inputUsuario" class="col-form-label">Apellido </label>
-    </div>
-    <div class="row-auto">
-        <input class="form-control" type="text"  aria-label="default input example"@bind-value= "usuarioView.Apellido">
-    </div>
-    <div class="row-auto">
-        <label for="inputUsuario" class="col-form-label">Correo electronico</label>
-    </div>
-    <div class="row-auto">
-        <input class="form-control" type="text"  aria-label="default input example"@bind-value= "usuarioView.CorreoElectronico">
-    </div>
-    <div class="row-auto">
-        <label for="inputPassword6" class="col-form-label">Clave</label>
-    </div>
-    <div class="row-auto">
-        <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline"@bind-value= "usuarioView.Clave">
-    </div>
-    <Button Color="ButtonColor.Primary" @onclick="Registrar">Registrar</Button>
-    <div>
-    @if(alert)
+</EditForm>
+
+ @if(alert)
     {
-     <Alert Color="AlertColor.Success">
-        <h4 class="alert-heading">Registro completado!</h4>
-        <p>Bienvenido al sistema</p>
-        <hr>
-     </Alert>
+        <Alert Color="AlertColor.Success">
+            <h4 class="alert-heading">Registro completado!</h4>
+            <p>Bienvenido al sistema</p>
+            <hr>
+        </Alert>
     }
     @if(alert2)
     {
-     <Alert Color="AlertColor.Danger">
-        <h4 class="alert-heading">error:@mensaje </h4>
-        <hr>
-     </Alert>
+        <Alert Color="AlertColor.Danger">
+            <h4 class="alert-heading">error: @mensaje</h4>
+            <hr>
+        </Alert>
     }
-    
-    </div>
-</div>
-
-
 
 @code
 {
     private class usuarioViewModel
     {
+        [Required(ErrorMessage = "El nombre es obligatorio.")]
         public string? Nombre { get; set; }
+    
+        [Required(ErrorMessage = "El apellido es obligatorio.")]
         public string? Apellido { get; set; }
+    
+        [Required(ErrorMessage = "El correo electrónico es obligatorio.")]
+        [EmailAddress(ErrorMessage = "Debe ser un correo electrónico válido.")]
         public string? CorreoElectronico { get; set; }
+    
+        [Required(ErrorMessage = "La clave es obligatoria.")]
+        [MinLength(6, ErrorMessage = "La clave debe tener al menos 6 caracteres.")]
         public string? Clave { get; set; }
     }
         
