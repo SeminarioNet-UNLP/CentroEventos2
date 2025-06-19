@@ -1,6 +1,6 @@
-@page "/agregarreserva"
+@page "/modificarreserva/{idUsuario:int}"
 @rendermode InteractiveServer
-@inject AltaReservaUseCase altaReserva
+@inject ModificarReservaUseCase modificarReserva
 @inject ServicioAutorizacion permisos
 @inject IRepositorioPersona RepoPersona
 @inject IRepositorioEventoDeportivo RepoEvento
@@ -12,7 +12,7 @@
     <div class="row-auto">
         <select class="form-control" @bind="reservaView.PersonaId">
             <option disabled selected value="0">Seleccione una persona</option>
-            @foreach (var persona in personasDisponibles)
+            @foreach (var persona in responsablesDisponibles)
             {
                 <option value="@persona.Id">@persona.Nombre @persona.Apellido</option>
             }
@@ -51,14 +51,14 @@
         </select>
     </div>
 
-    <Button Color="ButtonColor.Secondary" @onclick="Registrar">Registrar</Button>
+    <Button Color="ButtonColor.Secondary" @onclick="Modificar">Guardar Cambios</Button>
 
     <div>
         @if (alert)
         {
             <Alert Color="AlertColor.Success">
-                <h4 class="alert-heading">Registro completado!</h4>
-                <p>Bienvenido al sistema</p>
+                <h4 class="alert-heading">Modificación completada</h4>
+                <p>La reserva fue actualizada correctamente.</p>
                 <hr />
             </Alert>
         }
@@ -66,54 +66,57 @@
 </div>
 
 @code {
+    [Parameter]
+    public int idUsuario { get; set; }
+
     private class ReservaViewModel
     {
-        public int PersonaId { get; set; }
-        public int EventoDeportivoId { get; set; }
-        public DateTime FechaAltaReserva { get; set; }
-        public EstadosAsistencia EstadoAsistencia { get; set; }
+          public int PersonaId { get; set; }
+          public int EventoDeportivoId { get; set; }
+          public DateTime FechaAltaReserva { get; set; }
+          public EstadosAsistencia EstadoAsistencia { get; set; }
     }
 
     ReservaViewModel reservaView = new();
-    bool alert = false;
-
-    List<Persona> personasDisponibles = new();
+    List<Persona> responsablesDisponibles = new();
     List<EventoDeportivo> eventosDisponibles = new();
+    bool alert = false;
 
     protected override void OnInitialized()
     {
-        personasDisponibles = RepoPersona.ListadoPersona();
-        eventosDisponibles = RepoEvento.ListadoEventoDeportivo();
+        responsablesDisponibles = RepoPersona.ListadoPersona();
+
     }
 
-    private void Registrar()
+    private void Modificar()
     {
-        Usuario? usuario = permisos.ObtenerUsuarioActivo();
-
+        Usuario? usuario = permisos.ObtenerUsuarioActivo(); 
         try
         {
             if (usuario == null)
-                throw new Exception("Debe iniciar sesión.");
-
+            {
+                throw new Exception("Inicie sesión para modificar la reserva.");
+            }
             if (reservaView.PersonaId > 0 &&
                 reservaView.EventoDeportivoId > 0 &&
                 reservaView.FechaAltaReserva != default &&
                 reservaView.EstadoAsistencia != EstadosAsistencia.Ausente)
             {
-                Reserva reserva = new Reserva(
-                    reservaView.PersonaId,
-                    reservaView.EventoDeportivoId,
-                    reservaView.FechaAltaReserva,
-                    reservaView.EstadoAsistencia
-                );
+                 List<Permiso> permisos = new List<Permiso> { Permiso.Usuario };
+                Reserva reserva= new Reserva(                   
+                        reservaView.PersonaId,
+                        reservaView.EventoDeportivoId,
+                        reservaView.FechaAltaReserva,
+                        reservaView.EstadoAsistencia);
 
-                altaReserva.Ejecutar(reserva, usuario);
+                reserva.Id=idUsuario;
+                modificarReserva.Ejecutar(reserva,usuario);
                 alert = true;
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error en el registro: {ex.Message}");
+            Console.WriteLine($"Error en la modificación de la reserva: {ex.Message}");
         }
     }
 }
