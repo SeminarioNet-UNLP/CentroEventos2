@@ -2,7 +2,7 @@
 @rendermode InteractiveServer
 @inject AltaEventoUseCase altaEvento
 @inject ServicioAutorizacion permisos
-
+@inject IRepositorioPersona RepoPersona
 <div class="row g-3 align-items-center body-custom">
     <div class="row-auto">
         <label for="inputUsuario" class="col-form-label">Nombre</label>
@@ -34,11 +34,17 @@
     <div class="row-auto">
         <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline"@bind-value= "eventoView.CupoMaximo">
     </div>
-     <div class="row-auto">
-        <label for="inputPassword6" class="col-form-label">Id responsable</label>
+      <div class="row-auto">
+        <label class="col-form-label">Responsable</label>
     </div>
     <div class="row-auto">
-        <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline"@bind-value= "eventoView.ResponsableId">
+        <select class="form-control" @bind="eventoView.ResponsableId">
+            <option disabled selected value="0">Seleccione un responsable</option>
+            @foreach (var persona in responsablesDisponibles)
+            {
+                <option value="@persona.Id">@persona.Nombre @persona.Apellido</option>
+            }
+        </select>
     </div>
     <Button Color="ButtonColor.Secondary" @onclick="Registrar">Registrar</Button>
     <div>
@@ -60,16 +66,22 @@
 {
     private class EventoViewModel
     {
-         public string? Nombre { get; set; }
-         public string? Descripcion { get; set; }
-         public DateTime FechaHoraInicio { get; set; }
+        public string? Nombre { get; set; }
+        public string? Descripcion { get; set; }
+        public DateTime FechaHoraInicio { get; set; }
         public double DuracionHoras { get; set; }
         public int CupoMaximo { get; set; }
         public int ResponsableId { get; set; }
     }
     
     EventoViewModel eventoView = new();
+    List<Persona> responsablesDisponibles = new();
     bool alert = false;
+
+     protected override void OnInitialized()
+    {
+        responsablesDisponibles = RepoPersona.ListadoPersona();
+    }
     private void Registrar()
     {   
         Usuario? usuario = permisos.ObtenerUsuarioActivo();
