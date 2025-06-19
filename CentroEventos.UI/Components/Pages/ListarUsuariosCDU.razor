@@ -22,10 +22,9 @@
             <th>Apellido</th>
             <th>Correo Electrónico</th>
             <th>Permisos</th>
-             @if (esAdmin)
-            {
+             
                 <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
-            }
+            
         </tr>
     </thead>
     <tbody>
@@ -48,7 +47,7 @@
                         </Dropdown>
                     }
                 </td>
-                @if (esAdmin)
+                @if (esAdmin ||(usuarioActual!= null && u.Id == usuarioActual.Id))
                 {
                   <td>  
                       <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(u)">
@@ -59,6 +58,10 @@
                       </button>
                       
                   </td>
+                }
+                else
+                {
+                    <td> </td>
                 }
             </tr>
         }
@@ -106,13 +109,13 @@
     private Modal? modal2;
     public Usuario? editar;
     List<Usuario> _lista = new List<Usuario>();
-        
+    Usuario? usuarioActual;
     protected override void OnInitialized()
     {
         AlertError = false;
         AlertSucces= false;
         _lista = listarUsuariosUseCase.Ejecutar(); 
-        var usuarioActual = sesion.ObtenerUsuarioActivo();
+        usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
     private ConfirmDialog? dialog;
