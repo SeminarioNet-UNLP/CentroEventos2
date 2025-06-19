@@ -5,11 +5,12 @@
 @inject BajaUsuarioUseCase bajaUsuario
 @inject IServicioAutorizacion autorizacion
 @inject ISesion sesion
+
 <h3>Listado de usuarios</h3>
 @if(esAdmin)
 {
     <button class="btn btn-primary">
-        <span class="bi bi-plus " aria-hidden="true" @onclick="OnShowModalClick"></span> 
+        <span class="bi bi-plus" aria-hidden="true" @onclick="OnShowModalClick"></span> 
     </button> 
 }
 
@@ -18,11 +19,11 @@
         <tr>
             <th>Nombre</th>
             <th>Apellido</th>
-            <th>CorreoElectronico</th>
+            <th>Correo Electrónico</th>
             <th>Permisos</th>
              @if (esAdmin)
             {
-              <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+                <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
             }
         </tr>
     </thead>
@@ -38,10 +39,10 @@
                 {
                   <td>  
                       <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(u)">
-                            <span class="bi bi-pencil " aria-hidden="true"></span> 
+                            <span class="bi bi-pencil" aria-hidden="true"></span> 
                       </button>
                       <button class="btn btn-danger">
-                            <span class="bi bi-trash" aria-hidden="true"  @onclick="()=>ShowSaveConfirmationAsync(u.Id)"></span>
+                            <span class="bi bi-trash" aria-hidden="true" @onclick="()=>ShowSaveConfirmationAsync(u.Id)"></span>
                       </button>
                   </td>
                 }
@@ -55,7 +56,7 @@
         @if(AlertSucces)
         {
             <div>
-                <Alert Color="AlertColor.Success"> <h4>Se a borrado con exito!</h4></Alert>
+                <Alert Color="AlertColor.Success"> <h4>Se borró con exito!</h4></Alert>
             </div>
         }
          
@@ -65,7 +66,7 @@
     <BodyTemplate>
             <AltaUsuarioCDU/>
             <div style="display: flex; justify-content: flex-end;">
-                <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Close</Button>
+                <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Cerrar</Button>
             </div>
     </BodyTemplate>
 </Modal>
@@ -73,16 +74,11 @@
     <BodyTemplate>
         <ModificarUsuarioCDU usuarioEditar="@editar"  />
         <div style="display: flex; justify-content: flex-end;">
-            <Button Color="ButtonColor.Danger" @onclick="OnHideModalClickEdit">Close</Button>
+            <Button Color="ButtonColor.Danger" @onclick="OnHideModalClickEdit">Cerrar</Button>
         </div>
     </BodyTemplate>
 </Modal>
 <ConfirmDialog @ref="dialog" />
-
-
-
-
-
 
 
 @code {
@@ -103,7 +99,7 @@
         AlertSucces= false;
         _lista = listarUsuariosUseCase.Ejecutar(); 
         var usuarioActual = sesion.ObtenerUsuarioActivo();
-       esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
+        esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
     private ConfirmDialog? dialog;
 

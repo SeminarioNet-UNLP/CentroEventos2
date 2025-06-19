@@ -12,7 +12,7 @@
        {
         <div class="row g-3 align-items-center body-custom">
             <div class="row-auto">
-                <label for="inputUsuario" class="col-form-label">Correo electronico</label>
+                <label for="inputUsuario" class="col-form-label">Correo electrónico</label>
             </div>
             <div class="row-auto">
                 <input class="form-control" type="text" placeholder="Ingrese correo electronico" aria-label="default input example"@bind-value="usuarioVM.CorreoElectronico">
@@ -32,7 +32,7 @@
         @if(alert)
         {
          <Alert Color="AlertColor.Danger">
-            <h4 class="alert-heading">Ups ocurrio un error</h4>
+            <h4 class="alert-heading">Ups ocurrió un error</h4>
             <p>@MensajeError</p>
             <hr>
          </Alert>
@@ -40,7 +40,7 @@
          @if(alert2)
         {
          <Alert Color="AlertColor.Success">
-            <h4 class="alert-heading">Se logueo correctamente</h4>
+            <h4 class="alert-heading">Se logueó correctamente</h4>
             <p>:)</p>
             <hr>
          </Alert>
@@ -49,7 +49,7 @@
 
     <FooterTemplate>
         @if(!isRegistro){
-        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Cerrar</Button>
         <Button Color="ButtonColor.Secondary" @onclick="IsRegistro">Registrar</Button>
         <Button Color="ButtonColor.Primary"@onclick="Loggear">Login</Button>
         }
@@ -84,7 +84,6 @@
                 StateHasChanged(); 
             }
         }
-        
     }
 
    private void Loggear()
@@ -99,17 +98,13 @@
         {
             login.Ejecutar(usuario);
             alert2 = true;
-
         }
         catch (Exception ex)
         {
             // Manejo de la excepción
             alert= true;
             MensajeError = ex.Message;
-
         }
-
-       
    }
     private void  IsRegistro()
     {
@@ -118,10 +113,10 @@
     }
     private async Task OnShowModalClick()
     {
-         isRegistro = false;
-         alert = false;
-         alert2 = false;
-         if(modal!= null)
+        isRegistro = false;
+        alert = false;
+        alert2 = false;
+        if(modal!= null)
             await modal.ShowAsync();
     }
 
