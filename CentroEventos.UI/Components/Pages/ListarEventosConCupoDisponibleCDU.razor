@@ -28,10 +28,6 @@ else
                 <th>Fecha y hora de Inicio</th>
                 <th>Duración de horas</th>
                 <th>Cupo máximo</th>
-                @if (esAdmin)
-                {
-                  <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
-                }
             </tr>
         </thead>
         <tbody>
@@ -44,10 +40,6 @@ else
                     <td>@e.FechaHoraInicio.ToString("dd/MM/yyyy")</td>
                     <td>@e.DuracionHoras</td> <!--- Va así? Porque es un double -->
                     <td>@e.CupoMaximo</td>
-                    @if (esAdmin)
-                    {
-                      <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
-                    }   
                 </tr>
             }
         </tbody>
