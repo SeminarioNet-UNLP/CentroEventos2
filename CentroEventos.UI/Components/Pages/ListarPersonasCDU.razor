@@ -1,14 +1,19 @@
 @page "/listadopersonas"
 @rendermode InteractiveServer
-@inject ListarPersonasUseCase ListarPersonasUseCase
+@inject ListarPersonasUseCase listarPersonasUseCase
 @inject IServicioAutorizacion autorizacion
+
+@inject BajaPersonaUseCase bajaPersona
 @inject ISesion sesion
 
 
 <h3>Listado de personas</h3>
-<button class="btn btn-primary">
-    <span class="bi bi-plus " aria-hidden="true"></span> 
-</button> 
+@if(esAdmin)
+{
+    <button class="btn btn-primary">
+        <span class="bi bi-plus" aria-hidden="true" @onclick="OnShowModalClick"></span> 
+    </button> 
+}
 
 <table class= "table">
     <thead>
@@ -35,28 +40,141 @@
                 <td>@p.Telefono</td>
                 @if (esAdmin)
                 {
-                    <td>  
-                        <button class="btn btn-primary">
+                   <td>  
+                      <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(p)">
                             <span class="bi bi-pencil" aria-hidden="true"></span> 
-                        </button>
-                        <button class="btn btn-danger">
-                            <span class="bi bi-trash" aria-hidden="true"></span>
-                        </button>
-                    </td>
+                      </button>
+                      <button class="btn btn-danger">
+                            <span class="bi bi-trash" aria-hidden="true" @onclick="()=>ShowSaveConfirmationAsync(p.Id)"></span>
+                      </button>
+                  </td>
                 }
             </tr>
         }
     </tbody>
 </table>
+<Modal @ref="modal" Title="Agregar persona" IsVerticallyCentered="true" UseStaticBackdrop="true"  >
+    <BodyTemplate>
+            <AltaPersonaCDU/>
+            <div style="display: flex; justify-content: flex-end;">
+                <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Cerrar</Button>
+            </div>
+    </BodyTemplate>
+</Modal>
+<Modal @ref="modal2" Title="Editar persona" IsVerticallyCentered="true" UseStaticBackdrop="true">
+    <BodyTemplate>
+        <ModificarPersonaCDU PersonaEditar="@editar"  />
+       
+        <div style="display: flex; justify-content: flex-end;">
+            <Button Color="ButtonColor.Danger" @onclick="OnHideModalClickEdit">Cerrar</Button>
+        </div>
+    </BodyTemplate>
+</Modal>
+<ConfirmDialog @ref="dialog" />
 
 @code {
+        
     bool esAdmin=false;
+    private bool AlertError = false;
+    private bool AlertSucces = false;
+    string? errorMessage;
+    private Modal? modal;
+    private Modal? modal2;
+    public int idSeleccionado;
+    public Persona? editar;
     List<Persona> _lista = new List<Persona>();
+        
     protected override void OnInitialized()
     {
-        _lista = ListarPersonasUseCase.Ejecutar();
+        AlertError = false;
+        AlertSucces= false;
+        _lista = listarPersonasUseCase.Ejecutar(); 
         var usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
+    private ConfirmDialog? dialog;
+
+    private  void Eliminar(int idPersona)
+    {   
+        Usuario? usu = sesion.ObtenerUsuarioActivo();
+
+       if(usu != null&& autorizacion.PoseeElPermiso(usu, Permiso.Administrador))
+        {
+            try
+            {
+               bajaPersona.Ejecutar(idPersona, usu);
+               AlertSucces = true;
+               OnInitialized();
+
+            }catch(Exception ex)
+            {   
+                AlertError=true;
+                errorMessage = $"Error: {ex}";
+            }
+        }
+       
+
+    }
+    private async Task ShowSaveConfirmationAsync(int idPersona)
+    {
+        var options = new ConfirmDialogOptions
+            {
+                YesButtonText = "Si",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "CANCEL",
+                NoButtonColor = ButtonColor.Danger
+            };
+
+        if(dialog!= null)
+        {
+            var confirmation = await dialog.ShowAsync(
+            title: "Eliminar",
+            message1: "¿Estas seguro que queres eliminar la persona?",
+            confirmDialogOptions: options);
+            if (confirmation)
+            {
+                Eliminar(idPersona);
+            }
+        }
+        
+    }
+    private async Task OnShowModalClick()
+    {
+        if (modal != null)
+        {
+            await modal.ShowAsync();
+        }
+    }
+     
+    private async Task OnShowModalClickEdit(Persona p)
+    {
+        editar =p;
+        if (modal2 != null)
+        {
+            await modal2.ShowAsync();
+        }
+        OnInitialized();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        if (modal != null)
+        {
+            await modal.HideAsync();
+        }
+        OnInitialized(); 
+    }
+    private async Task OnHideModalClickEdit()
+    {
+        
+        if(modal2!= null)
+        {
+            await modal2.HideAsync();
+        }
+        
+       
+        OnInitialized(); 
+    }
+    
 
 }
