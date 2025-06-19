@@ -1,0 +1,106 @@
+@page "/bajareservas"
+@inject ListarReservaUseCase ListarReservaUseCase
+@inject BajaReservaUseCase BajaReservaUseCase
+@inject IServicioAutorizacion ServicioAutorizacion
+@inject IRepositorioPersona RepoPersona
+@inject IRepositorioEventoDeportivo RepoEvento
+
+@rendermode InteractiveServer
+
+<h3>Baja Reservas</h3>
+
+@if (_error != null)
+{
+    <div class="alert alert-danger">@_error</div>
+}
+@if (_mensajeExito != null)
+{
+    <div class="alert alert-success">@_mensajeExito</div>
+}
+
+@if (_reservas == null)
+{
+    <p>Cargando lista...</p>
+}
+else if (_reservas.Count == 0)
+{
+    <p>No hay reservas registradas aún.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Persona</th>
+                <th>Evento</th>
+                <th>Fecha de Reserva</th>
+                <th>Asistencia</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reserva in _reservas)
+            {
+                var persona = _personas.FirstOrDefault(p => p.Id == reserva.PersonaId);
+                var evento = _eventos.FirstOrDefault(e => e.Id == reserva.EventoDeportivoId);
+
+                <tr>
+                    <td>@(persona?.Nombre ?? "Desconocido") @(persona?.Apellido ?? "")</td>
+                    <td>@(evento?.Nombre ?? "Desconocido")</td>
+                    <td>@reserva.FechaAltaReserva.ToShortDateString()</td>
+                    <td>@reserva.EstadoAsistencia</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarReserva(reserva.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Reserva>? _reservas;
+    private List<Persona> _personas = new();
+    private List<EventoDeportivo> _eventos = new();
+    private string? _error;
+    private string? _mensajeExito;
+
+    protected override void OnInitialized()
+    {
+        _reservas = ListarReservaUseCase.Ejecutar();
+        _personas = RepoPersona.ListadoPersona();
+        _eventos = RepoEvento.ListadoEventoDeportivo();
+    }
+
+    private void EliminarReserva(int id)
+    {
+        _error = null;
+        _mensajeExito = null;
+
+        var usuarioActual = ServicioAutorizacion.ObtenerUsuarioActivo();
+        if (usuarioActual == null)
+        {
+            _error = "No hay una sesión iniciada.";
+            return;
+        }
+
+        try
+        {
+            BajaReservaUseCase.Ejecutar(id, usuarioActual);
+            _reservas = ListarReservaUseCase.Ejecutar();
+            _mensajeExito = "Reserva eliminada correctamente.";
+        }
+        catch (FalloAutorizacionException)
+        {
+            _error = "No tiene permisos para eliminar la reserva.";
+        }
+        catch (OperacionInvalidaException ex)
+        {
+            _error = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            _error = "Error inesperado: " + ex.Message;
+        }
+    }
+}
