@@ -127,13 +127,14 @@ else
         AlertError = false;
         AlertSucces= false;
         _personas = listarPersonasUseCase.Ejecutar(); 
-        crearLista (_personas);
+        listaPersona= crearLista (_personas);
         var usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
     
-    public void crearLista (List<Persona> personas)
+    public List<personaViewModel> crearLista (List<Persona> personas)
     {
+        List<personaViewModel> lista=new();
         var Personas = listarPersonasUseCase.Ejecutar(); 
         if (_personas != null)
         {
@@ -148,9 +149,15 @@ else
                     Email = p.Email,
                     Telefono = p.Telefono,
                 };
-                listaPersona.Add(personaView);
+                lista.Add(personaView);
             }
+            return lista;
         }
+        else
+        {
+             return lista;
+        }
+        
     }
 
     private ConfirmDialog? dialog;
