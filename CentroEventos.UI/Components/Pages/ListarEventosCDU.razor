@@ -8,12 +8,9 @@
 
 
 <h3>Listado de Eventos Deportivos</h3>
-@if(esAdmin)
-{
-    <button class="btn btn-primary">
-        <span class="bi bi-plus " aria-hidden="true"  @onclick="OnShowModalClick"></span> 
-    </button> 
-}
+<button class="btn btn-primary">
+    <span class="bi bi-plus " aria-hidden="true"></span> 
+</button> 
 
 @if (_eventos is null)
 {
@@ -30,10 +27,10 @@ else
             <tr>
                 <th>Responsable</th>
                 <th>Nombre</th>
-                <th>Descripcion</th>
-                <th>Fecha y Hora de Inicio</th>
-                <th>Duracion de horas</th>
-                <th>Cupo maximo</th>
+                <th>Descripción</th>
+                <th>Fecha y hora de Inicio</th>
+                <th>Duración de horas</th>
+                <th>Cupo máximo</th>
                 @if (esAdmin)
                 {
                   <th>Acciones</th>
@@ -67,14 +64,6 @@ else
         </tbody>
     </table>
 }
-<Modal @ref="modal" Title="Agregar Evento" IsVerticallyCentered="true" UseStaticBackdrop="true"  >
-    <BodyTemplate>
-            <AltaEventoCDU/>
-            <div style="display: flex; justify-content: flex-end;">
-                <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Close</Button>
-            </div>
-    </BodyTemplate>
-</Modal>
 
 @code{
     bool esAdmin=false;
@@ -90,7 +79,7 @@ else
         public int? ResponsableId { get; set; }
         public Persona? persona  { get; set; }
     }
-    private Modal? modal;
+
     private eventoViewModel eventoView = new ();
     private List<eventoViewModel> listaEvento = new ();
    
@@ -125,20 +114,5 @@ else
                 listaEvento.Add(eventoView);
             }
         }
-    }
-     private async Task OnShowModalClick()
-    {
-        if (modal != null)
-        {
-            await modal.ShowAsync();
-        }
-    }
-      private async Task OnHideModalClick()
-    {
-        if (modal != null)
-        {
-            await modal.HideAsync();
-        }
-        OnInitialized(); 
     }
 }
