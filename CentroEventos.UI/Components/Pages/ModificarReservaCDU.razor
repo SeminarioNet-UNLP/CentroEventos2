@@ -6,50 +6,57 @@
 @inject IRepositorioEventoDeportivo RepoEvento
 
 <div class="row g-3 align-items-center body-custom">
-    <div class="row-auto">
-        <label class="col-form-label">Persona</label>
-    </div>
-    <div class="row-auto">
-        <select class="form-control" @bind="reservaView.PersonaId">
-            <option disabled selected value="0">Seleccione una persona</option>
-            @foreach (var persona in responsablesDisponibles)
-            {
-                <option value="@persona.Id">@persona.Nombre @persona.Apellido</option>
-            }
-        </select>
-    </div>
+    @if (reservaEditar != null)
+    {
+        <div class="row-auto">
+            <label class="col-form-label">Persona</label>
+        </div>
+        <div class="row-auto">
+            <select class="form-control" @bind="reservaEditar.personaId">
+                <option disabled selected value="0">Seleccione una persona</option>
+                @foreach (var persona in responsablesDisponibles)
+                {
+                    <option value="@persona.Id">@persona.Nombre @persona.Apellido</option>
+                }
+            </select>
+        </div>
 
-    <div class="row-auto">
-        <label class="col-form-label">Evento deportivo</label>
-    </div>
-    <div class="row-auto">
-        <select class="form-control" @bind="reservaView.EventoDeportivoId">
-            <option disabled selected value="0">Seleccione un evento</option>
-            @foreach (var evento in eventosDisponibles)
-            {
-                <option value="@evento.Id">@evento.Nombre (@evento.FechaHoraInicio.ToShortDateString())</option>
-            }
-        </select>
-    </div>
+        <div class="row-auto">
+            <label class="col-form-label">Evento deportivo</label>
+        </div>
+        <div class="row-auto">
+            <select class="form-control" @bind="reservaEditar.eventoDeportivoId">
+                <option disabled selected value="0">Seleccione un evento</option>
+                @foreach (var evento in eventosDisponibles)
+                {
+                    <option value="@evento.Id">@evento.Nombre (@evento.FechaHoraInicio.ToShortDateString())</option>
+                }
+            </select>
+        </div>
 
-    <div class="row-auto">
-        <label class="col-form-label">Fecha de reserva</label>
-    </div>
-    <div class="row-auto">
-        <input class="form-control" type="date" @bind-value="reservaEditar.FechaAltaReserva" />
-    </div>
+        <div class="row-auto">
+            <label class="col-form-label">Fecha de reserva</label>
+        </div>
+        <div class="row-auto">
+            <input class="form-control" type="date" @bind-value="reservaEditar.FechaAltaReserva" />
+        </div>
 
-    <div class="row-auto">
-        <label class="col-form-label">Estado de asistencia</label>
-    </div>
-    <div class="row-auto">
-        <select class="form-control" @bind="reservaEditar.estadoAsistencia">
-            @foreach (EstadosAsistencia estado in Enum.GetValues(typeof(EstadosAsistencia)))
-            {
-                <option value="@estado">@estado</option>
-            }
-        </select>
-    </div>
+        <div class="row-auto">
+            <label class="col-form-label">Estado de asistencia</label>
+        </div>
+        <div class="row-auto">
+            <select class="form-control" @bind="reservaEditar.estadoAsistencia">
+                @foreach (EstadosAsistencia estado in Enum.GetValues(typeof(EstadosAsistencia)))
+                {
+                    <option value="@estado">@estado</option>
+                }
+            </select>
+        </div>
+    }
+    else
+    {
+        <p>No hay datos</p>
+    }
 
     <Button Color="ButtonColor.Secondary" @onclick="Modificar">Guardar Cambios</Button>
 
@@ -63,7 +70,8 @@
             </Alert>
         }
     </div>
-      <div>
+
+    <div>
         @if (alert2)
         {
             <Alert Color="AlertColor.Danger">
@@ -82,9 +90,8 @@
     List<Persona> responsablesDisponibles = new();
     List<EventoDeportivo> eventosDisponibles = new();
     bool alert = false;
-
     bool alert2 = false;
-    string? error ;
+    string? error;
 
     protected override void OnInitialized()
     {
@@ -94,26 +101,31 @@
 
     private void Modificar()
     {
-        Usuario? usuario = sesion.ObtenerUsuarioActivo(); 
+        Usuario? usuario = sesion.ObtenerUsuarioActivo();
+
         try
         {
             if (usuario == null)
             {
                 throw new Exception("Inicie sesión para modificar la reserva.");
             }
-            if (reservaEditar.PersonaId > 0 &&
-                reservaEditar.EventoDeportivoId > 0 &&
-                reservaEditar.FechaAltaReserva != DateTime.Now &&
-                reservaEditar.estadoAsistencia!= EstadosAsistencia.Ausente)
-            {
-                Reserva reserva= new Reserva(                   
-                        reservaEditar.PersonaId,
-                        reservaEditar.EventoDeportivoId,
-                        reservaEditar.FechaAltaReserva,
-                        reservaEditar.estadoAsistencia);
 
-                reserva.Id=reservaEditar.Id;
-                modificarReserva.Ejecutar(reserva,usuario);
+            if (reservaEditar != null &&
+                reservaEditar.personaId > 0 &&
+                reservaEditar.eventoDeportivoId > 0 &&
+                reservaEditar.FechaAltaReserva.Date != DateTime.Now.Date &&
+                reservaEditar.estadoAsistencia != EstadosAsistencia.Ausente)
+            {
+                var reserva = new Reserva(
+                    reservaEditar.personaId,
+                    reservaEditar.eventoDeportivoId,
+                    reservaEditar.FechaAltaReserva,
+                    reservaEditar.estadoAsistencia)
+                {
+                    Id = reservaEditar.Id
+                };
+
+                modificarReserva.Ejecutar(reserva, usuario);
                 alert = true;
             }
         }

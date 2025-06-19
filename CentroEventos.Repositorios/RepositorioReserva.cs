@@ -43,7 +43,11 @@ public class RepositorioReserva : IRepositorioReserva
             var query = context.Reservas.SingleOrDefault(r => r.Id == reserva.Id);
             if (query != null)
             {
-                query = reserva;
+                query.PersonaId = reserva.PersonaId;
+                query.EventoDeportivoId = reserva.EventoDeportivoId;
+                query.FechaAltaReserva = reserva.FechaAltaReserva;
+                query.EstadoAsistencia = reserva.EstadoAsistencia;
+
                 context.SaveChanges();
             }
             else

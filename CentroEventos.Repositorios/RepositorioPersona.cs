@@ -61,7 +61,12 @@ public class RepositorioPersona : IRepositorioPersona
             var PersonaModificar = context.Personas.FirstOrDefault(p => p.Id == persona.Id);
             if (PersonaModificar != null)
             {
-                PersonaModificar = persona;
+                PersonaModificar.Nombre = persona.Nombre;
+                PersonaModificar.Apellido = persona.Apellido;
+                PersonaModificar.Dni = persona.Dni;
+                PersonaModificar.Telefono = persona.Telefono;
+                PersonaModificar.Email = persona.Email;
+
                 context.SaveChanges();
             }
             else

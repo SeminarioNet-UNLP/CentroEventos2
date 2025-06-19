@@ -64,6 +64,22 @@ else
         </tbody>
     </table>
 }
+    @if (alert)
+    {
+        <Alert Color="AlertColor.Success">
+            <h4 class="alert-heading">Modificación completada</h4>
+            <p>La reserva fue actualizada correctamente.</p>
+            <hr />
+        </Alert>
+    }
+    @if (alert2)
+    {
+        <Alert Color="AlertColor.Danger">
+            <h4 class="alert-heading">Error: @error</h4>
+            <hr />
+        </Alert>
+    }
+ 
     <Modal @ref="modalAgregar" Title="Agregar reserva" IsVerticallyCentered="true" UseStaticBackdrop="true">
     <BodyTemplate>
         <AltaReservaCDU />
@@ -87,8 +103,9 @@ else
 @code {
     bool esAdmin=false;
 
-    private bool AlertError = false;
-    private bool AlertSucces= false;
+    bool alert = false;
+    bool alert2 = false;
+    string? error;
     private Modal? modalAgregar;
     private Modal? modalEditar;
     private ConfirmDialog? dialog;
@@ -98,9 +115,9 @@ else
     
     {
         public int Id { get; set; }
-        public int PersonaId { get; set; }
+        public int personaId { get; set; }
         public Persona? persona  { get; set; }
-        public int EventoDeportivoId { get; set; }
+        public int eventoDeportivoId { get; set; }
         public EventoDeportivo? eventoDeportivo { get; set; }
         public DateTime FechaAltaReserva { get; set; }
         public EstadosAsistencia estadoAsistencia { get; set; }
@@ -121,6 +138,8 @@ else
                     Id= r.Id,
                     FechaAltaReserva = r.FechaAltaReserva,
                     estadoAsistencia = r.EstadoAsistencia,
+                    personaId =r.Id,
+                    eventoDeportivoId = r.EventoDeportivoId,
                     persona = Personas.FirstOrDefault(p=>p.Id == r.PersonaId),
                     eventoDeportivo = repoEventos.FirstOrDefault(e=>e.Id == r.EventoDeportivoId)
                 };
@@ -171,6 +190,7 @@ else
         {
             await modalEditar.HideAsync();
         }
+       Refrescar();
     }
 
     private async Task ShowSaveConfirmationAsync(int id)
@@ -178,9 +198,9 @@ else
         var options = new ConfirmDialogOptions
         {
             YesButtonText = "SI",
-            YesButtonColor = ButtonColor.Success,
+            YesButtonColor = ButtonColor.Danger,
             NoButtonText = "CANCEL",
-            NoButtonColor = ButtonColor.Secondary
+            NoButtonColor = ButtonColor.Primary
         };
 
         if (dialog != null)
@@ -201,21 +221,24 @@ else
             try
             {
                 bajaReservaUseCase.Ejecutar(id, usuario);
+                alert = true;
                 Refrescar();
             }
             catch (Exception ex)
             {
+                error = ex.Message;
+                alert2 = true;
                 Console.WriteLine("Error: " + ex.Message);
             }
         }
     
     }
 
-private void Refrescar()
-{
-    listaReserva.Clear();
-    reservas = listarReservaUseCase.Ejecutar();
-    cargarReservas(reservas);
-}
+    private void Refrescar()
+    {
+        listaReserva.Clear();
+        reservas = listarReservaUseCase.Ejecutar();
+        cargarReservas(reservas);
+    }
     
 }

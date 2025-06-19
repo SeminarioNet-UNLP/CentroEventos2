@@ -43,7 +43,12 @@ public class RepositorioEventoDeportivo : IRepositorioEventoDeportivo
             var query = context.EventoDeportivos.SingleOrDefault(r => r.Id == eventoDeportivo.Id);
             if (query != null)
             {
-                query = eventoDeportivo;
+                query.Nombre = eventoDeportivo.Nombre;
+                query.Descripcion = eventoDeportivo.Descripcion;
+                query.FechaHoraInicio = eventoDeportivo.FechaHoraInicio;
+                query.CupoMaximo = eventoDeportivo.CupoMaximo;
+                query.ResponsableId = eventoDeportivo.Id;
+
                 context.SaveChanges();
             }
             else
