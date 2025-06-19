@@ -1,5 +1,5 @@
-@page "/modificarusuario/{idUsuario:int}"
-@inject ModificarUsuarioUseCase modificarUsuario
+@page "/modificarpersona/{idUsuario:int}"
+@inject ModificarUsuarioUseCase modificarPersona
 @inject ServicioAutorizacion permisos
 
 <div class="row g-3 align-items-center body-custom">
@@ -79,7 +79,7 @@
                         HashingUtil.ConvertirCadena(usuarioView.Clave), permisos);
 
                 idUsuario = usuario.Id;
-                modificarUsuario.Ejecutar(usuario, usuarioActivo);
+                modificarPersona.Ejecutar(usuario, usuarioActivo);
                 alert = true;
             }
         }
