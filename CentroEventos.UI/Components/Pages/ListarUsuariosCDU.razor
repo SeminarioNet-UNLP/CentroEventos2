@@ -18,6 +18,7 @@
 <table class= "table">
     <thead>
         <tr>
+<<<<<<< HEAD
             <th class="text-center">Nombre</th>
             <th class="text-center">Apellido</th>
             <th class="text-center">Correo Electrónico</th>
@@ -26,6 +27,15 @@
             {
                 <th class="text-center">Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
             }
+=======
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Correo Electrónico</th>
+            <th>Permisos</th>
+             
+                <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+            
+>>>>>>> db401df0cddd8094752e4dd626ce17e10080ba12
         </tr>
     </thead>
     <tbody>
@@ -48,7 +58,7 @@
                         </Dropdown>
                     }
                 </td>
-                @if (esAdmin)
+                @if (esAdmin ||(usuarioActual!= null && u.Id == usuarioActual.Id))
                 {
                   <td class="text-center">  
                       <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(u)">
@@ -59,6 +69,10 @@
                       </button>
                       
                   </td>
+                }
+                else
+                {
+                    <td> </td>
                 }
             </tr>
         }
@@ -106,13 +120,13 @@
     private Modal? modal2;
     public Usuario? editar;
     List<Usuario> _lista = new List<Usuario>();
-        
+    Usuario? usuarioActual;
     protected override void OnInitialized()
     {
         AlertError = false;
         AlertSucces= false;
         _lista = listarUsuariosUseCase.Ejecutar(); 
-        var usuarioActual = sesion.ObtenerUsuarioActivo();
+        usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
     private ConfirmDialog? dialog;
