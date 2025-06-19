@@ -1,129 +1,119 @@
+@using static CentroEventos.UI.Components.Pages.ListarPersonasCDU
+@rendermode InteractiveServer
 @inject ModificarPersonaUseCase modificarPersona
-@inject ServicioSesion sesion
+@inject ISesion sesion
 
 <div class="row g-3 align-items-center body-custom">
-    <div class="row-auto">
-        <label for="inputDni" class="col-form-label">DNI</label>
-    </div>
-    <div class="row-auto">
-        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example" @bind-value= "personaView.Dni"> 
-    </div>
-    <div class="row-auto">
-        <label for="inputNombre" class="col-form-label">Nombre</label>
-    </div>
-    <div class="row-auto">
-        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value= "personaView.Nombre">
-    </div>
-    <div class="row-auto">
-        <label for="inputApellido" class="col-form-label">Apellido</label>
-    </div>
-    <div class="row-auto">
-        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value="personaView.Apellido">
+    @if (personaVM != null)
+    {
+        <div class="row-auto">
+            <label class="col-form-label">Nombre</label>
+        </div>
+        <div class="row-auto">
+            <input class="form-control" type="text" @bind-value="personaVM.Nombre" />
+        </div>
 
-    </div>
-    <div class="row-auto">
-        <label for="inputEmail" class="col-form-label">Email</label>
-    </div>
-    <div class="row-auto"> 
-        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value= "personaView.Email">
-    </div>
-    <div class="row-auto">
-        <label for="inputTelefono" class="col-form-label">Telefono</label>
-    </div>
-    <div class="row-auto"> 
-        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value= "personaView.Telefono">
-    </div>
-    <Button Color="ButtonColor.Primary" @onclick="Modificar">Guardar Cambios</Button>
-    <div>
-    @if(alert)
-    {
-     <Alert Color="AlertColor.Success">
-        <h4 class="alert-heading">Modificacion completada</h4>
-        <hr>
-     </Alert>
+        <div class="row-auto">
+            <label class="col-form-label">Apellido</label>
+        </div>
+        <div class="row-auto">
+            <input class="form-control" type="text" @bind-value="personaVM.Apellido" />
+        </div>
+
+        <div class="row-auto">
+            <label class="col-form-label">DNI</label>
+        </div>
+        <div class="row-auto">
+            <input class="form-control" type="text" @bind-value="personaVM.Dni" />
+        </div>
+
+        <div class="row-auto">
+            <label class="col-form-label">Email</label>
+        </div>
+        <div class="row-auto">
+            <input class="form-control" type="email" @bind-value="personaVM.Email" />
+        </div>
+
+        <div class="row-auto">
+            <label class="col-form-label">Teléfono</label>
+        </div>
+        <div class="row-auto">
+            <input class="form-control" type="text" @bind-value="personaVM.Telefono" />
+        </div>
+
+        <div class="row-auto">
+            <Button Color="ButtonColor.Secondary" @onclick="Modificar">Guardar Cambios</Button>
+        </div>
+
+        <div>
+            @if (alert)
+            {
+                <Alert Color="AlertColor.Success">
+                    <h4 class="alert-heading">Modificación completada</h4>
+                    <p>La persona fue actualizada correctamente.</p>
+                    <hr />
+                </Alert>
+            }
+            @if (alert2)
+            {
+                <Alert Color="AlertColor.Danger">
+                    <h4 class="alert-heading">Error: @mensajeError</h4>
+                    <hr />
+                </Alert>
+            }
+        </div>
     }
-    @if(alertDanger)
-    {
-     <Alert Color="AlertColor.Danger">
-        <h4 class="alert-heading">Error:@mensajeError </h4>
-        <hr>
-     </Alert>
-    }
-    
-    </div>
 </div>
 
 @code {
-
     [Parameter]
-    public int idUsuario {get; set;}
-    public Persona? personaEditar{get; set;}
-    
-    private class personaViewModel
-    {
-        public string? Dni { get; set; }
-        public string? Nombre { get; set; }
-        public string? Apellido { get; set; }
-        public string? Email { get; set; }
-        public string? Telefono { get; set; }
-    }
-    
-    personaViewModel personaView = new();
-    string? mensajeError;
-    bool alert = false;
-    bool alertDanger = false;
-    protected override void OnInitialized()
-    {
-        if(personaEditar!= null)
-        {
-            personaView.Dni=personaEditar.Dni;
-            personaView.Nombre = personaEditar.Nombre;
-            personaView.Apellido =personaEditar.Apellido;
-            personaView.Email =personaEditar.Email;
-            personaView.Telefono=personaEditar.Telefono;
-        }
-      
-    }
-    private void Modificar()
-    {   
-        Usuario? usuarioActual = sesion.ObtenerUsuarioActivo();
-        
-        try 
-        {
-            if (usuarioActual == null)
-            {
-                throw new Exception ($"Error en la modificacion de la persona: Inicie sesion.");
-            }
-            if (!string.IsNullOrEmpty(personaView.Dni) && 
-                !string.IsNullOrEmpty(personaView.Nombre) && 
-                !string.IsNullOrEmpty(personaView.Apellido) && 
-                !string.IsNullOrEmpty(personaView.Email) &&
-                !string.IsNullOrEmpty(personaView.Telefono)) 
-            {
-                List<Permiso> permisos = new List<Permiso> { Permiso.Usuario };
-                Persona persona = new Persona(      
-                        personaView.Dni,             
-                        personaView.Nombre,
-                        personaView.Apellido,
-                        personaView.Email,
-                        personaView.Telefono);
+    public personaViewModel? personaVM { get; set; }
 
-                persona.Id = idUsuario;
-                try
+    bool alert = false;
+    bool alert2 = false;
+    string? mensajeError;
+
+    public void Modificar()
+    {   
+        try
+        {
+            Usuario? usuarioActual = sesion.ObtenerUsuarioActivo();
+
+            if (usuarioActual == null)
+                throw new Exception("Debe iniciar sesión para modificar.");
+
+            if (!string.IsNullOrEmpty(personaVM?.Dni) &&
+                !string.IsNullOrEmpty(personaVM.Nombre) &&
+                !string.IsNullOrEmpty(personaVM.Apellido) &&
+                !string.IsNullOrEmpty(personaVM.Email) &&
+                !string.IsNullOrEmpty(personaVM.Telefono))
+            {
+                var persona = new Persona(
+                    personaVM.Dni,
+                    personaVM.Nombre,
+                    personaVM.Apellido,
+                    personaVM.Email,
+                    personaVM.Telefono
+                )
                 {
-                    modificarPersona.Ejecutar(persona, usuarioActual);
-                    alert = true;
-                }
-                catch(Exception ex)
-                {
-                    alertDanger = true;
-                    mensajeError = ex.Message;
-                }
+                    Id = personaVM.Id
+                };
+
+                modificarPersona.Ejecutar(persona, usuarioActual);
+                alert = true;
+                alert2 = false;
+            }
+            else
+            {
+                throw new Exception("Todos los campos son obligatorios.");
             }
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
-            Console.WriteLine($"Error en la modificacion de la persona: {ex.Message}");
+            mensajeError = ex.Message;
+            alert2 = true;
+            alert = false;
         }
     }
 }
+

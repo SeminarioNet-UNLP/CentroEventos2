@@ -1,6 +1,8 @@
 @page "/listadopersonas"
+
 @rendermode InteractiveServer
 @inject ListarPersonasUseCase listarPersonasUseCase
+@inject AsignarPermisosUseCase asignarPermisos
 @inject IServicioAutorizacion autorizacion
 
 @inject BajaPersonaUseCase bajaPersona
@@ -15,44 +17,69 @@
     </button> 
 }
 
-<table class= "table">
-    <thead>
-        <tr>
-            <th>DNI</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Email</th>
-            <th>Teléfono</th>
-            @if (esAdmin)
-            {
-                <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var p in _lista)
-        {
+@if (_personas is null)
+{
+    <p>Cargando personas...</p>
+}
+else if (_personas.Count == 0)
+{
+    <p>No hay personas registradas.</p>
+}
+else
+{
+    <table class= "table">
+        <thead>
             <tr>
-                <td>@p.Dni</td>
-                <td>@p.Nombre</td>
-                <td>@p.Apellido</td>
-                <td>@p.Email</td>
-                <td>@p.Telefono</td>
+                <th>DNI</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Telefono</th>
                 @if (esAdmin)
                 {
-                   <td>  
-                      <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(p)">
-                            <span class="bi bi-pencil" aria-hidden="true"></span> 
-                      </button>
-                      <button class="btn btn-danger">
-                            <span class="bi bi-trash" aria-hidden="true" @onclick="()=>ShowSaveConfirmationAsync(p.Id)"></span>
-                      </button>
-                  </td>
+                    <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
                 }
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var p in listaPersona)
+            {
+                <tr>
+                    <td>@p.Dni</td>
+                    <td>@p.Nombre</td>
+                    <td>@p.Apellido</td>
+                    <td>@p.Email</td>
+                    <td>@p.Telefono</td>
+                    @if(esAdmin) 
+                    {
+                        <td>  
+                            <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(p)">
+                                <span class="bi bi-pencil " aria-hidden="true"></span> 
+                            </button>
+                            <button class="btn btn-danger">
+                                <span class="bi bi-trash" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                    }
+                </tr>
+            }
+            
+            @if(AlertError)
+            {
+                <Alert Color="AlertColor.Danger"> @errorMessage </Alert>
+            }
+
+            @if(AlertSucces)
+            {
+                <div>
+                    <Alert Color="AlertColor.Success"> <h4>Se borró con éxito!</h4></Alert> 
+                </div>
+            }
+        </tbody>
+    </table>
+}
+
+
 <Modal @ref="modal" Title="Agregar persona" IsVerticallyCentered="true" UseStaticBackdrop="true"  >
     <BodyTemplate>
             <AltaPersonaCDU/>
@@ -63,7 +90,7 @@
 </Modal>
 <Modal @ref="modal2" Title="Editar persona" IsVerticallyCentered="true" UseStaticBackdrop="true">
     <BodyTemplate>
-        <ModificarPersonaCDU PersonaEditar="@editar"  />
+        <ModificarPersonaCDU personaVM="@editar"  />
        
         <div style="display: flex; justify-content: flex-end;">
             <Button Color="ButtonColor.Danger" @onclick="OnHideModalClickEdit">Cerrar</Button>
@@ -80,29 +107,63 @@
     string? errorMessage;
     private Modal? modal;
     private Modal? modal2;
-    public int idSeleccionado;
-    public Persona? editar;
-    List<Persona> _lista = new List<Persona>();
-        
+    public personaViewModel? editar;
+    private List<Persona>? _personas;
+    private personaViewModel personaView = new ();
+    private List<personaViewModel> listaPersona = new ();
+    
+    public class personaViewModel
+    {
+        public int Id { get; set; }
+        public string? Dni { get; set; }
+        public string? Nombre { get; set; }
+        public string? Apellido { get; set; }
+        public string? Email { get; set; }
+        public string? Telefono { get; set; }
+    }
+  
     protected override void OnInitialized()
     {
         AlertError = false;
         AlertSucces= false;
-        _lista = listarPersonasUseCase.Ejecutar(); 
+        _personas = listarPersonasUseCase.Ejecutar(); 
+        crearLista (_personas);
         var usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
+    
+    public void crearLista (List<Persona> personas)
+    {
+        var Personas = listarPersonasUseCase.Ejecutar(); 
+        if (_personas != null)
+        {
+            foreach (var p in _personas)
+            {
+               personaViewModel personaView = new()
+                {
+                    Id = p.Id,
+                    Dni = p.Dni,
+                    Nombre = p.Nombre,
+                    Apellido = p.Apellido,
+                    Email = p.Email,
+                    Telefono = p.Telefono,
+                };
+                listaPersona.Add(personaView);
+            }
+        }
+    }
+
     private ConfirmDialog? dialog;
 
     private  void Eliminar(int idPersona)
     {   
-        Usuario? usu = sesion.ObtenerUsuarioActivo();
+        Usuario? usuarioActual = sesion.ObtenerUsuarioActivo();
 
-       if(usu != null&& autorizacion.PoseeElPermiso(usu, Permiso.Administrador))
+       if(usuarioActual != null&& autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador))
         {
             try
             {
-               bajaPersona.Ejecutar(idPersona, usu);
+               bajaPersona.Ejecutar(idPersona, usuarioActual);
                AlertSucces = true;
                OnInitialized();
 
@@ -115,29 +176,6 @@
        
 
     }
-    private async Task ShowSaveConfirmationAsync(int idPersona)
-    {
-        var options = new ConfirmDialogOptions
-            {
-                YesButtonText = "Si",
-                YesButtonColor = ButtonColor.Success,
-                NoButtonText = "CANCEL",
-                NoButtonColor = ButtonColor.Danger
-            };
-
-        if(dialog!= null)
-        {
-            var confirmation = await dialog.ShowAsync(
-            title: "Eliminar",
-            message1: "¿Estas seguro que queres eliminar la persona?",
-            confirmDialogOptions: options);
-            if (confirmation)
-            {
-                Eliminar(idPersona);
-            }
-        }
-        
-    }
     private async Task OnShowModalClick()
     {
         if (modal != null)
@@ -146,7 +184,7 @@
         }
     }
      
-    private async Task OnShowModalClickEdit(Persona p)
+    private async Task OnShowModalClickEdit(personaViewModel p)
     {
         editar =p;
         if (modal2 != null)
@@ -171,7 +209,7 @@
         {
             await modal2.HideAsync();
         }
-        
+     
        
         OnInitialized(); 
     }
