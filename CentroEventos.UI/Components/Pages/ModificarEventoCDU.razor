@@ -1,8 +1,7 @@
 @using static CentroEventos.UI.Components.Pages.ListarEventosCDU
 @rendermode InteractiveServer
-
 @inject ModificarEventoUseCase modificarEvento
-@inject ServicioSesion sesion
+@inject ISesion sesion
 @inject IRepositorioPersona RepoPersona
 
 <div class="row g-3 align-items-center body-custom">
@@ -57,17 +56,23 @@
         </div>
 
         <Button Color="ButtonColor.Secondary" @onclick="Modificar">Guardar Cambios</Button>
-
-        <div>
-            @if (alert)
-            {
-                <Alert Color="AlertColor.Success">
-                    <h4 class="alert-heading">Modificación completada</h4>
-                    <p>El evento fue actualizado correctamente.</p>
-                    <hr />
-                </Alert>
-            }
-        </div>
+        @if (alert)
+        {
+            <Alert Color="AlertColor.Success">
+                <h4 class="alert-heading">Modificación completada</h4>
+                <p>El evento fue actualizado correctamente.</p>
+                <hr />
+            </Alert>
+        }
+         @if (alert2)
+        {
+            <Alert Color="AlertColor.Danger">
+                <h4 class="alert-heading">Error:@mensajeError </h4>
+                
+                <hr />
+            </Alert>
+        }
+    
     }
 </div>
 
@@ -76,11 +81,14 @@
     public eventoViewModel? eventoVM { get; set; }
     List<Persona> responsablesDisponibles = new();
     bool alert = false;
+    bool alert2 = false;
+    string? mensajeError;
 
     protected override void OnInitialized()
     {
         responsablesDisponibles = RepoPersona.ListadoPersona();
     }
+   
 
     public void Modificar()
     {
@@ -106,7 +114,6 @@
                     eventoVM.CupoMaximo,
                     eventoVM.ResponsableId
                 );
-
                 evento.Id = eventoVM.Id;
                 modificarEvento.Ejecutar(evento, usuarioActual);
                 alert = true;
@@ -114,7 +121,8 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error en la modificación del evento: {ex.Message}");
+            mensajeError = ex.Message;
+            alert2 = true;
         }
     }
 }
