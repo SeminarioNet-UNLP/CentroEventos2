@@ -79,7 +79,6 @@ else
     protected override void OnInitialized()
     {
         _reservas = ListarReservaUseCase.Ejecutar();
-        hacer(_reservas);
         var usuarioActual = autorizacion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
         hacer(_reservas);
