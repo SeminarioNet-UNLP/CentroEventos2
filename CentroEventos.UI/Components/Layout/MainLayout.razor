@@ -33,7 +33,7 @@
     protected override void OnInitialized()
     {
         usActivo = serviAuth.ObtenerUsuarioActivo();
-        disableButton = usActivo!= null;
+        disableButton = usActivo== null;
     }
     private void CerrarSesion()
     {

@@ -4,7 +4,7 @@
 @inject IServicioAutorizacion autorizacion
 <h3>Listado de usuarios</h3>
 <button class="btn btn-primary">
-    <span class="bi bi-plus " aria-hidden="true"></span> 
+    <span class="bi bi-plus " aria-hidden="true" @onclick="OnShowModalClick"></span> 
 </button> 
 <table class= "table">
     <thead>
@@ -30,21 +30,37 @@
                 @if (esAdmin)
                 {
                   <td>  
-                      <button class="btn btn-primary">
+                      <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(u.Id)">
                             <span class="bi bi-pencil " aria-hidden="true"></span> 
                         </button>
                         <button class="btn btn-danger">
                           <span class="bi bi-trash" aria-hidden="true"></span>
                          </button>
+                        
                   </td>
                 }
             </tr>
         }
+         
     </tbody>
 </table>
+<Modal @ref="modal" Title="Agregar usuario" IsVerticallyCentered="true" UseStaticBackdrop="true">
+    <BodyTemplate>
+            <AltaUsuarioCDU/>
+    </BodyTemplate>
+</Modal>
+<Modal @ref="modal2" Title="Editar usuario" IsVerticallyCentered="true" UseStaticBackdrop="true">
+    <BodyTemplate>
+            <ModificarUsuarioCDU idUsuario="@idSeleccionado" />
+    </BodyTemplate>
+</Modal>
+
 
 @code {
     bool esAdmin=false;
+    private Modal? modal;
+    private Modal? modal2;
+    public int idSeleccionado;
     List<Usuario> _lista = new List<Usuario>();
     protected override void OnInitialized()
     {
@@ -52,5 +68,22 @@
         var usuarioActual = autorizacion.ObtenerUsuarioActivo();
        esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
+     private async Task OnShowModalClick()
+    {
+        
+        await modal?.ShowAsync();
+    }
+    private async Task OnShowModalClickEdit(int id)
+    {
+        idSeleccionado = id;
+        await modal2?.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal?.HideAsync();
+        
+    }
+    
 
 }
