@@ -86,7 +86,7 @@
         var usuarioActual = autorizacion.ObtenerUsuarioActivo();
        esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
-  
+   
     private  void Eliminar(int idUsuario)
     {   
         Usuario? usu = autorizacion.ObtenerUsuarioActivo();

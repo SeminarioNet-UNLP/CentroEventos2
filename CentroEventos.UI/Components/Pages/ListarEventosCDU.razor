@@ -1,7 +1,7 @@
 @page "/listadoeventos"
 @rendermode InteractiveServer
 
-@inject ListarEventosUseCase ListarEventosUseCase
+@inject ListarEventosUseCase listarEventosUseCase
 @inject ListarPersonasUseCase repoPersona
 @inject IServicioAutorizacion autorizacion
 
@@ -79,12 +79,13 @@ else
         public Persona? persona  { get; set; }
     }
 
-    List<eventoViewModel> listaEvento = new ();
-    eventoViewModel eventoView = new ();
+    private eventoViewModel eventoView = new ();
+    private List<eventoViewModel> listaEvento = new ();
+   
 
     protected override void OnInitialized()
     {
-        _eventos = ListarEventosUseCase.Ejecutar();
+        _eventos = listarEventosUseCase.Ejecutar();
         hacer(_eventos);
         var usuarioActual = autorizacion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
@@ -98,14 +99,17 @@ else
         {
             foreach (var e in _eventos)
             {
-                eventoView.Id= e.Id;
-                eventoView.Nombre = e.Nombre; 
-                eventoView.Descripcion = e.Descripcion;
-                eventoView.FechaHoraInicio = e.FechaHoraInicio;
-                eventoView.DuracionHoras = e.DuracionHoras;
-                eventoView.CupoMaximo = e.CupoMaximo;
-                eventoView.ResponsableId = e.ResponsableId;
-                eventoView.persona = Personas.FirstOrDefault(p => p.Id == e.ResponsableId);
+               eventoViewModel eventoView = new()
+                {
+                    Id = e.Id,
+                    Nombre = e.Nombre,
+                    Descripcion = e.Descripcion,
+                    FechaHoraInicio = e.FechaHoraInicio,
+                    DuracionHoras = e.DuracionHoras,
+                    CupoMaximo = e.CupoMaximo,
+                    ResponsableId = e.ResponsableId,
+                    persona = Personas.FirstOrDefault(p => p.Id == e.ResponsableId)
+                };
                 listaEvento.Add(eventoView);
             }
         }
