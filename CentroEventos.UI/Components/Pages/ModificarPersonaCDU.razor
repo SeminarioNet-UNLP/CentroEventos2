@@ -1,7 +1,7 @@
 @inject ModificarPersonaUseCase modificarPersona
-@inject ServicioAutorizacion serviAuth
 
-<p>@idUsuario</p>
+@inject ServicioSesion sesion
+
 <div class="row g-3 align-items-center body-custom">
     <div class="row-auto">
         <label class="col-form-label">Dni</label>
@@ -70,7 +70,7 @@
     bool alert = false;
     private void Modificar()
     {   
-        Usuario? usuarioActual = serviAuth.ObtenerUsuarioActivo();
+        Usuario? usuarioActual = sesion.ObtenerUsuarioActivo();
         
         try 
         {

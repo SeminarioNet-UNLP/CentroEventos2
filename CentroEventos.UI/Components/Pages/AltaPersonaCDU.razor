@@ -1,7 +1,8 @@
 @page "/agregarpersona"
 @rendermode InteractiveServer
 @inject AltaPersonaUseCase altaPersona
-@inject ServicioAutorizacion permisos
+
+@inject ServicioSesion sesion
 
 <div class="row g-3 align-items-center body-custom">
     <div class="row-auto">
@@ -61,7 +62,7 @@
     bool alert = false;
     private void Registrar()
     {
-        Usuario? usuario = permisos.ObtenerUsuarioActivo();
+        Usuario? usuario = sesion.ObtenerUsuarioActivo();
         
         try
         {   

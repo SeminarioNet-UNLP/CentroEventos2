@@ -1,7 +1,7 @@
 @page "/modificarreserva/{idUsuario:int}"
 @rendermode InteractiveServer
 @inject ModificarReservaUseCase modificarReserva
-@inject ServicioAutorizacion permisos
+@inject ServicioSesion sesion
 @inject IRepositorioPersona RepoPersona
 @inject IRepositorioEventoDeportivo RepoEvento
 
@@ -90,7 +90,7 @@
 
     private void Modificar()
     {
-        Usuario? usuario = permisos.ObtenerUsuarioActivo(); 
+        Usuario? usuario = sesion.ObtenerUsuarioActivo(); 
         try
         {
             if (usuario == null)

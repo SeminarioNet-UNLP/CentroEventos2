@@ -1,7 +1,7 @@
 @page "/agregarreserva"
 @rendermode InteractiveServer
 @inject AltaReservaUseCase altaReserva
-@inject ServicioAutorizacion permisos
+@inject ServicioSesion sesion
 @inject IRepositorioPersona RepoPersona
 @inject IRepositorioEventoDeportivo RepoEvento
 
@@ -88,7 +88,7 @@
 
     private void Registrar()
     {
-        Usuario? usuario = permisos.ObtenerUsuarioActivo();
+        Usuario? usuario = sesion.ObtenerUsuarioActivo();
 
         try
         {
