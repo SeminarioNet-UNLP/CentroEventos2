@@ -33,6 +33,10 @@ builder.Services.AddScoped<IRepositorioReserva, RepositorioReserva>();
 builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuario>();
 builder.Services.AddScoped<IRepositorioPersona, RepositorioPersona>();
 
+builder.Services.AddSingleton<IServicioAutorizacion, ServicioAutorizacion>();
+builder.Services.AddScoped<ListarPersonasUseCase>();
+builder.Services.AddScoped<BajaPersonaUseCase>();
+
 
 
 builder.Services.AddBlazorBootstrap();

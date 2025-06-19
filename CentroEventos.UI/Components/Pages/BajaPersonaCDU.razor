@@ -1,0 +1,97 @@
+@page "/bajaPersonas"
+@inject ListarPersonasUseCase ListarPersonasUseCase
+@inject BajaPersonaUseCase BajaPersonaUseCase
+@inject IServicioAutorizacion ServicioAutorizacion
+
+@rendermode InteractiveServer
+
+<h3>Baja Personas</h3>
+
+@if (_error != null)
+{
+    <div class="alert alert-danger">@_error</div>
+}
+@if (_mensajeExito != null)
+{
+    <div class="alert alert-success">@_mensajeExito</div>
+}
+
+@if (_personas == null)
+{
+    <p>Cargando lista :)</p>
+}
+else if (_personas.Count == 0)
+{
+    <p>No hay personas registradas aun.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>DNI</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var persona in _personas)
+            {
+                <tr>
+                    <td>@persona.Id</td>
+                    <td>@persona.Dni</td>
+                    <td>@persona.Nombre</td>
+                    <td>@persona.Apellido</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarPersona(persona.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Persona>? _personas;
+    private string? _error;
+    private string? _mensajeExito;
+
+    protected override void OnInitialized()
+    {
+        _personas = ListarPersonasUseCase.Ejecutar();
+    }
+
+    private void EliminarPersona(int id)
+    {
+        _error = null;
+        _mensajeExito = null;
+
+        var usuarioActual = ServicioAutorizacion.ObtenerUsuarioActivo();
+        if (usuarioActual == null)
+        {
+            _error = "No hay una sesion iniciada";
+            return;
+        }
+
+        try
+        {
+            BajaPersonaUseCase.Ejecutar(id, usuarioActual);
+            _personas = ListarPersonasUseCase.Ejecutar();
+            _mensajeExito = "Persona/usuario eliminado/a correctamente.";
+        }
+        catch (FalloAutorizacionException)
+        {
+            _error = "No tiene permisos para eliminar.";
+        }
+        catch (OperacionInvalidaException ex)
+        {
+            _error = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            _error = "Error inesperado: " + ex.Message;
+        }
+    }
+}
