@@ -1,7 +1,7 @@
-@page "/modificarusuario/{idUsuario:int}"
 @inject ModificarUsuarioUseCase modiUs
-@inject ServicioAutorizacion permisos
+@inject IServicioAutorizacion serviAuth
 
+<p>@idUsuario</p>
 <div class="row g-3 align-items-center body-custom">
     <div class="row-auto">
         <label for="inputUsuario" class="col-form-label">Nombre</label>
@@ -24,7 +24,7 @@
     <div class="row-auto">
         <label for="inputPassword6" class="col-form-label">Clave</label>
     </div>
-    <div class="row-auto">
+    <div class="row-auto"> <!-- En caso de que se necesite cambiar la contraseña el admin necesita poder cambiarla por eso lo dejamos-->
         <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline"@bind-value= "usuarioView.Clave">
     </div>
     <Button Color="ButtonColor.Secondary" @onclick="Modificar">Guardar Cambios</Button>
@@ -33,7 +33,6 @@
     {
      <Alert Color="AlertColor.Success">
         <h4 class="alert-heading">Modificacion completada</h4>
-        <p>Bienvenido al sistema</p>
         <hr>
      </Alert>
     }
@@ -46,6 +45,7 @@
 
     [Parameter]
     public int idUsuario {get; set;}
+    
     private class usuarioViewModel
     {
         public string? Nombre { get; set; }
@@ -58,7 +58,7 @@
     bool alert = false;
     private void Modificar()
     {   
-        Usuario? usu = permisos.ObtenerUsuarioActivo();
+        Usuario? usu = serviAuth.ObtenerUsuarioActivo();
         
         try 
         {
@@ -78,8 +78,9 @@
                         usuarioView.CorreoElectronico,
                         HashingUtil.ConvertirCadena(usuarioView.Clave), permisos);
 
-                idUsuario = usuario.Id;
+                usuario.Id = idUsuario;
                 modiUs.Ejecutar(usuario,usu);
+                OnInitializedAsync();
                 alert = true;
             }
         }

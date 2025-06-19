@@ -61,11 +61,14 @@ public class RepositorioUsuario : IRepositorioUsuario
 
     public void ModificarUsuario(Usuario usuario)
     {
-        var usMod = _context.Usuarios.FirstOrDefault(u => u.Id == usuario.Id);
+        var usMod = _context.Usuarios.SingleOrDefault(u => u.Id == usuario.Id);
             if (usMod != null)
             {
-                usMod = usuario;
-                _context.SaveChanges();
+               usMod.Nombre = usuario.Nombre;
+               usMod.Apellido = usuario.Apellido;
+               usMod.CorreoElectronico = usuario.CorreoElectronico;
+               usMod.Permisos = usuario.Permisos;
+               _context.SaveChanges();
             }
             else
             {

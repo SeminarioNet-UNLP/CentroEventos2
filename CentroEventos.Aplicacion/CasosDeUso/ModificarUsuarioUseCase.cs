@@ -23,7 +23,7 @@ public class ModificarUsuarioUseCase
 
         if (!_autorizador.PoseeElPermiso(UsQueSolicita, Permiso.Administrador))
         {
-            throw new FalloAutorizacionException("No tiene permiso para crear usuarios.");
+            throw new FalloAutorizacionException("No tiene permiso para modificar usuarios.");
         }
 
         if (!_validador.CamposVacios(usuario, out mensajeError))
@@ -33,7 +33,7 @@ public class ModificarUsuarioUseCase
 
         try
         {
-            _repoUsuario.AltaUsuario(usuario);
+            _repoUsuario.ModificarUsuario(usuario);
         }
         catch
         {
