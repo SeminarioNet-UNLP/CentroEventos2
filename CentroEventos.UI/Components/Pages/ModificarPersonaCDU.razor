@@ -40,10 +40,8 @@
         <div class="row-auto">
             <input class="form-control" type="text" @bind-value="personaVM.Telefono" />
         </div>
-
-        <div class="row-auto">
-            <Button Color="ButtonColor.Secondary" @onclick="Modificar">Guardar Cambios</Button>
-        </div>
+        <Button Color="ButtonColor.Primary" @onclick="Modificar">Guardar Cambios</Button>
+        
 
         <div>
             @if (alert)

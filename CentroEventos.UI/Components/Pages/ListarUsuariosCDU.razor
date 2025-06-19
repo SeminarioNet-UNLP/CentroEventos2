@@ -18,10 +18,6 @@
 <table class= "table">
     <thead>
         <tr>
-             @if (esAdmin)
-            {
-                <th class="text-center">Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
-            }
             <th class="text-center">Nombre</th>
             <th class="text-center">Apellido</th>
             <th class="text-center">Correo Electrónico</th>
@@ -41,7 +37,7 @@
                     @string.Join(", ", u.Permisos.Select(p => p.ToString()))
                     @if(esAdmin) 
                     {
-                        <Dropdown Class="btn-sm" Color="DropdownColor.Secondary" Split="true">
+                        <Dropdown Class="btn-sm" Color="DropdownColor.Success" Split="true">
                             <DropdownToggleButton>Otorgar permiso</DropdownToggleButton>
                             <DropdownMenu>
                                 <DropdownItem To="#" Type="DropdownItemType.Button"@onclick="@(() => AsignarPermiso(u,Permiso.Administrador))">@Permiso.Administrador</DropdownItem>
@@ -50,16 +46,18 @@
                         </Dropdown>
                     }
                 </td>
-                @if (esAdmin ||(usuarioActual!= null && u.Id == usuarioActual.Id))
+                @if (esAdmin)
                 {
                   <td class="text-center">  
-                      <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(u)">
+                    @if(esAdmin || usuarioActual!= null && u.Id == usuarioActual.Id)
+                    {
+                       <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(u)">
                             <span class="bi bi-pencil" aria-hidden="true"></span> 
                       </button>
+                    }
                       <button class="btn btn-danger">
                             <span class="bi bi-trash" aria-hidden="true" @onclick="()=>ShowSaveConfirmationAsync(u.Id)"></span>
                       </button>
-                      
                   </td>
                 }
                 else

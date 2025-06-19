@@ -22,8 +22,8 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th class="text-center">Evento ID</th>
-                <th class="text-center">Nombre</th>
+                <th class="text-center">Nombre responsable</th>
+                <th class="text-center">Nombre evento</th>
                 <th class="text-center">Descripción</th>
                 <th class="text-center">Fecha y hora de Inicio</th>
                 <th class="text-center">Duración de horas</th>
@@ -35,7 +35,7 @@ else
             {
                 <tr>
                     <td class="text-center">@($"{e.persona?.Nombre} {e.persona?.Apellido}")</td>
-                    <td class="text-center">@e.Id</td>
+                    <td class="text-center">@e.Nombre</td>
                     <td class="text-center">@e.Descripcion</td>
                     <td class="text-center">@e.FechaHoraInicio.ToString("dd/MM/yyyy")</td>
                     <td class="text-center">@e.DuracionHoras</td> <!--- Va así? Porque es un double -->
