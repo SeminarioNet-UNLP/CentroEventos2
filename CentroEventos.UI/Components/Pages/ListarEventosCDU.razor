@@ -3,15 +3,18 @@
 
 @inject ListarEventosUseCase listarEventosUseCase
 @inject ListarPersonasUseCase repoPersona
+@inject BajaEventoUseCase bajaEvento
+@inject IRepositorioReserva repoReservas
 @inject IServicioAutorizacion autorizacion
 @inject ISesion sesion
 
 
 <h3>Listado de Eventos Deportivos</h3>
+
 @if(esAdmin)
 {
     <button class="btn btn-primary">
-        <span class="bi bi-plus " aria-hidden="true"  @onclick="OnShowModalClick"></span> 
+        <span class="bi bi-plus " aria-hidden="true" @onclick="OnShowModalClick"></span> 
     </button> 
 }
 
@@ -30,10 +33,10 @@ else
             <tr>
                 <th>Responsable</th>
                 <th>Nombre</th>
-                <th>Descripcion</th>
-                <th>Fecha y Hora de Inicio</th>
-                <th>Duracion de horas</th>
-                <th>Cupo maximo</th>
+                <th>Descripción</th>
+                <th>Fecha y hora de Inicio</th>
+                <th>Duración de horas</th>
+                <th>Cupo máximo</th>
                 @if (esAdmin)
                 {
                   <th>Acciones</th>
@@ -49,12 +52,12 @@ else
                     <td>@e.Nombre</td>
                     <td>@e.Descripcion</td>
                     <td>@e.FechaHoraInicio.ToString("dd/MM/yyyy")</td>
-                    <td>@e.DuracionHoras</td> <!--- Va así? Porque es un double -->
+                    <td>@e.DuracionHoras</td>
                     <td>@e.CupoMaximo</td>
                     @if (esAdmin)
                     {
                       <td>  
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(e)">
                             <span class="bi bi-pencil " aria-hidden="true"></span> 
                         </button>
                         <button class="btn btn-danger">
@@ -64,21 +67,52 @@ else
                     }   
                 </tr>
             }
+            @if(AlertError)
+            {
+                <Alert Color="AlertColor.Danger"> @errorMessage </Alert>
+            }
+
+            @if(AlertSucces)
+            {
+                <div>
+                    <Alert Color="AlertColor.Success"> <h4>Se borró con éxito!</h4></Alert> 
+                </div>
+            }
         </tbody>
     </table>
 }
-<Modal @ref="modal" Title="Agregar Evento" IsVerticallyCentered="true" UseStaticBackdrop="true"  >
+
+<Modal @ref="modal" Title="Agregar evento" IsVerticallyCentered="true" UseStaticBackdrop="true"  >
     <BodyTemplate>
             <AltaEventoCDU/>
             <div style="display: flex; justify-content: flex-end;">
-                <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Close</Button>
+                <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Cerrar</Button>
             </div>
     </BodyTemplate>
 </Modal>
 
+<Modal @ref="modal2" Title="Editar evento" IsVerticallyCentered="true" UseStaticBackdrop="true">
+    <BodyTemplate>
+        <ModificarEventoCDU eventoVM="@editar"  />
+        <div style="display: flex; justify-content: flex-end;">
+            <Button Color="ButtonColor.Danger" @onclick="OnHideModalClickEdit">Cerrar</Button>
+        </div>
+    </BodyTemplate>
+</Modal>
+<ConfirmDialog @ref="dialog" />
+
 @code{
     bool esAdmin=false;
+    private bool AlertError = false;
+    private bool AlertSucces = false;
+    string? errorMessage;
+    private Modal? modal;
+    private Modal? modal2;
+    public eventoViewModel? editar;
     private List<EventoDeportivo>? _eventos;
+    private eventoViewModel eventoView = new ();
+    private List<eventoViewModel> listaEvento = new ();
+    
     public class eventoViewModel
     {
         public int Id { get; set; }
@@ -87,26 +121,23 @@ else
         public DateTime FechaHoraInicio { get; set; }
         public double DuracionHoras { get; set; }
         public int CupoMaximo { get; set; }
-        public int? ResponsableId { get; set; }
+        public int ResponsableId { get; set; }
         public Persona? persona  { get; set; }
     }
-    private Modal? modal;
-    private eventoViewModel eventoView = new ();
-    private List<eventoViewModel> listaEvento = new ();
-   
 
     protected override void OnInitialized()
     {
+        AlertError = false;
+        AlertSucces= false;
         _eventos = listarEventosUseCase.Ejecutar();
-        hacer(_eventos);
+        crearLista(_eventos);
         var usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
 
-    public void hacer (List<EventoDeportivo> eventos)
+    public void crearLista (List<EventoDeportivo> eventos)
     {
         var Personas = repoPersona.Ejecutar(); 
-        var RepoEventos = repoPersona.Ejecutar();
         if (_eventos != null)
         {
             foreach (var e in _eventos)
@@ -126,6 +157,29 @@ else
             }
         }
     }
+
+    private ConfirmDialog? dialog;
+
+    private void Eliminar(int idEvento)
+    {   
+        Usuario? usuarioActual = sesion.ObtenerUsuarioActivo();
+
+        if(usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador))
+        {
+            try
+            {
+                bajaEvento.Ejecutar(repoReservas, idEvento, usuarioActual);
+                AlertSucces = true;
+                OnInitialized();
+            }
+            catch(Exception ex)
+            {   
+                AlertError=true;
+                errorMessage = $"Error: {ex}";
+            }
+        }
+    }
+
      private async Task OnShowModalClick()
     {
         if (modal != null)
@@ -133,11 +187,32 @@ else
             await modal.ShowAsync();
         }
     }
-      private async Task OnHideModalClick()
+
+    private async Task OnShowModalClickEdit (eventoViewModel e)
+    {
+        editar = e;
+        if (modal2 != null)
+        {
+            await modal2.ShowAsync();
+        }
+        OnInitialized();
+    }
+
+    private async Task OnHideModalClick()
     {
         if (modal != null)
         {
             await modal.HideAsync();
+        }
+        OnInitialized(); 
+    }
+
+    private async Task OnHideModalClickEdit()
+    {
+        
+        if(modal2!= null)
+        {
+            await modal2.HideAsync();
         }
         OnInitialized(); 
     }

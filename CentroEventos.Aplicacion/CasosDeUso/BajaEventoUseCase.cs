@@ -31,7 +31,7 @@ using CentroEventos.Aplicaciones.Validaciones;
             {
                 if (reservas[i].EventoDeportivoId == IdEliminar)
                 {
-                    throw new OperacionInvalidaException("el evento tiene  reservas asignadas");
+                    throw new OperacionInvalidaException("El evento tiene reservas asignadas");
                 }
             }   
         }    

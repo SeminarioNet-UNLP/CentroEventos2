@@ -1,124 +1,114 @@
-@page "/modificarevento/{idUsuario:int}"
+@using static CentroEventos.UI.Components.Pages.ListarEventosCDU
 @rendermode InteractiveServer
 
 @inject ModificarEventoUseCase modificarEvento
-
 @inject ServicioSesion sesion
 @inject IRepositorioPersona RepoPersona
 
 <div class="row g-3 align-items-center body-custom">
-    <div class="row-auto">
-        <label class="col-form-label">Nombre</label>
-    </div>
-    <div class="row-auto">
-        <input class="form-control" type="text" @bind-value="eventoView.Nombre" />
-    </div>
+    @if (eventoVM != null)
+    {
+        <div class="row-auto">
+            <label class="col-form-label">Nombre</label>
+        </div>
+        <div class="row-auto">
+            <input class="form-control" type="text" @bind-value="eventoVM.Nombre" />
+        </div>
 
-    <div class="row-auto">
-        <label class="col-form-label">Descripción</label>
-    </div>
-    <div class="row-auto">
-        <input class="form-control" type="text" @bind-value="eventoView.Descripcion" />
-    </div>
+        <div class="row-auto">
+            <label class="col-form-label">Descripción</label>
+        </div>
+        <div class="row-auto">
+            <input class="form-control" type="text" @bind-value="eventoVM.Descripcion" />
+        </div>
 
-    <div class="row-auto">
-        <label class="col-form-label">Fecha de inicio</label>
-    </div>
-    <div class="row-auto">
-        <input class="form-control" type="datetime-local" @bind-value="eventoView.FechaHoraInicio" />
-    </div>
+        <div class="row-auto">
+            <label class="col-form-label">Fecha de inicio</label>
+        </div>
+        <div class="row-auto">
+            <input class="form-control" type="datetime-local" @bind-value="eventoVM.FechaHoraInicio" />
+        </div>
 
-    <div class="row-auto">
-        <label class="col-form-label">Duración (horas)</label>
-    </div>
-    <div class="row-auto">
-        <input class="form-control" type="number" step="0.1" @bind-value="eventoView.DuracionHoras" />
-    </div>
+        <div class="row-auto">
+            <label class="col-form-label">Duración (horas)</label>
+        </div>
+        <div class="row-auto">
+            <input class="form-control" type="number" step="0.1" @bind-value="eventoVM.DuracionHoras" />
+        </div>
 
-    <div class="row-auto">
-        <label class="col-form-label">Cupo máximo</label>
-    </div>
-    <div class="row-auto">
-        <input class="form-control" type="number" @bind-value="eventoView.CupoMaximo" />
-    </div>
+        <div class="row-auto">
+            <label class="col-form-label">Cupo máximo</label>
+        </div>
+        <div class="row-auto">
+            <input class="form-control" type="number" @bind-value="eventoVM.CupoMaximo" />
+        </div>
 
-    <div class="row-auto">
-        <label class="col-form-label">Responsable</label>
-    </div>
-    <div class="row-auto">
-        <select class="form-control" @bind="eventoView.ResponsableId">
-            <option disabled selected value="0">Seleccione un responsable</option>
-            @foreach (var persona in responsablesDisponibles)
+        <div class="row-auto">
+            <label class="col-form-label">Responsable</label>
+        </div>
+        <div class="row-auto">
+            <select class="form-control" @bind="eventoVM.ResponsableId">
+                <option disabled selected value="0">Seleccione un responsable</option>
+                @foreach (var persona in responsablesDisponibles)
+                {
+                    <option value="@persona.Id">@persona.Nombre @persona.Apellido</option>
+                }
+            </select>
+        </div>
+
+        <Button Color="ButtonColor.Secondary" @onclick="Modificar">Guardar Cambios</Button>
+
+        <div>
+            @if (alert)
             {
-                <option value="@persona.Id">@persona.Nombre @persona.Apellido</option>
+                <Alert Color="AlertColor.Success">
+                    <h4 class="alert-heading">Modificación completada</h4>
+                    <p>El evento fue actualizado correctamente.</p>
+                    <hr />
+                </Alert>
             }
-        </select>
-    </div>
-
-    <Button Color="ButtonColor.Secondary" @onclick="Modificar">Guardar Cambios</Button>
-
-    <div>
-        @if (alert)
-        {
-            <Alert Color="AlertColor.Success">
-                <h4 class="alert-heading">Modificación completada</h4>
-                <p>El evento fue actualizado correctamente.</p>
-                <hr />
-            </Alert>
-        }
-    </div>
+        </div>
+    }
 </div>
 
 @code {
     [Parameter]
-    public int idUsuario { get; set; }
-
-    private class EventoViewModel
-    {
-        public string? Nombre { get; set; }
-        public string? Descripcion { get; set; }
-        public DateTime FechaHoraInicio { get; set; }
-        public double DuracionHoras { get; set; }
-        public int CupoMaximo { get; set; }
-        public int ResponsableId { get; set; }
-    }
-
-    EventoViewModel eventoView = new();
+    public eventoViewModel? eventoVM { get; set; }
     List<Persona> responsablesDisponibles = new();
     bool alert = false;
 
     protected override void OnInitialized()
     {
         responsablesDisponibles = RepoPersona.ListadoPersona();
-
     }
 
-    private void Modificar()
+    public void Modificar()
     {
-        Usuario? usu = sesion.ObtenerUsuarioActivo(); 
+        Usuario? usuarioActual = sesion.ObtenerUsuarioActivo(); 
         try
         {
-            if (usu == null)
+            if (usuarioActual == null)
             {
                 throw new Exception("Inicie sesión para modificar el evento.");
             }
-            if (!string.IsNullOrEmpty(eventoView.Nombre) &&
-                !string.IsNullOrEmpty(eventoView.Descripcion) &&
-                eventoView.FechaHoraInicio != default &&
-                eventoView.DuracionHoras > 0 &&
-                eventoView.CupoMaximo > 0 &&
-                eventoView.ResponsableId > 0)
+            if (!string.IsNullOrEmpty(eventoVM?.Nombre) &&
+                !string.IsNullOrEmpty(eventoVM.Descripcion) &&
+                eventoVM.FechaHoraInicio != default &&
+                eventoVM.DuracionHoras > 0 &&
+                eventoVM.CupoMaximo > 0 &&
+                eventoVM.ResponsableId > 0)
             {
                 EventoDeportivo evento = new EventoDeportivo(
-                    eventoView.Nombre,
-                    eventoView.Descripcion,
-                    eventoView.FechaHoraInicio,
-                    eventoView.DuracionHoras,
-                    eventoView.CupoMaximo,
-                    eventoView.ResponsableId
+                    eventoVM.Nombre,
+                    eventoVM.Descripcion,
+                    eventoVM.FechaHoraInicio,
+                    eventoVM.DuracionHoras,
+                    eventoVM.CupoMaximo,
+                    eventoVM.ResponsableId
                 );
 
-                modificarEvento.Ejecutar(evento, usu);
+                evento.Id = eventoVM.Id;
+                modificarEvento.Ejecutar(evento, usuarioActual);
                 alert = true;
             }
         }
