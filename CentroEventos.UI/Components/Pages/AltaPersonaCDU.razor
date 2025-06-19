@@ -1,6 +1,5 @@
-@page "/agregarpersona"
 @inject AltaPersonaUseCase altaPersona
-@inject ServicioSesion sesion
+@inject ISesion sesion
 
 <div class="row g-3 align-items-center body-custom">
     <div class="row-auto">
@@ -47,7 +46,8 @@
     </div>
 </div>
 
-@code {
+@code
+{
     private class personaViewModel
     {
         public string? Dni { get; set; }
@@ -56,6 +56,7 @@
         public string? Email { get; set; }
         public string? Telefono { get; set; }
     }
+
     personaViewModel personaView = new();
     bool alert = false;
     private void Registrar()
