@@ -30,13 +30,13 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Quién reservó</th>
-                <th>Evento</th>
-                <th>Fecha de Alta</th>
-                <th>Estado de Asistencia</th>
+                <th class="text-center">Quién reservó</th>
+                <th class="text-center">Evento</th>
+                <th class="text-center">Fecha de Alta</th>
+                <th class="text-center">Estado de Asistencia</th>
                 @if (esAdmin)
                 {
-                  <th>Acciones</th>
+                  <th class="text-center">Acciones</th>
                 }
             </tr>
         </thead>
@@ -44,13 +44,13 @@ else
             @foreach (var r in listaReserva)
             {
                 <tr>
-                    <td>@($"{r.persona?.Nombre} {r.persona?.Apellido}")</td>
-                    <td>@r.eventoDeportivo?.Nombre</td>
-                    <td>@r.FechaAltaReserva.ToString("dd/MM/yyyy")</td>
-                    <td>@r.estadoAsistencia.ToString()</td>
+                    <td class="text-center">@($"{r.persona?.Nombre} {r.persona?.Apellido}")</td>
+                    <td class="text-center">@r.eventoDeportivo?.Nombre</td>
+                    <td class="text-center">@r.FechaAltaReserva.ToString("dd/MM/yyyy")</td>
+                    <td class="text-center">@r.estadoAsistencia.ToString()</td>
                     @if (esAdmin)
                     {
-                        <td>  
+                        <td class="text-center">  
                             <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(r)">
                                  <span class="bi bi-pencil" aria-hidden="true"></span> 
                             </button>

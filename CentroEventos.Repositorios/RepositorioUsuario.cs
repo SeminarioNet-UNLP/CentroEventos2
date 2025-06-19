@@ -11,8 +11,13 @@ public class RepositorioUsuario : IRepositorioUsuario
     }
     public void AltaUsuario(Usuario usuario)
     {
-        if (usuario != null)
+        var usuarios = _context.Usuarios.ToList();
+        if (usuario != null )
         {
+            if (usuarios.Count() ==0)
+            {
+                usuario.Permisos.Add(Permiso.Administrador);
+            } 
             _context.Usuarios.Add(usuario);
             _context.SaveChanges();
         }

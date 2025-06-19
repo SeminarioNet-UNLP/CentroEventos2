@@ -18,24 +18,26 @@
 <table class= "table">
     <thead>
         <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Correo Electrónico</th>
-            <th>Permisos</th>
              @if (esAdmin)
             {
-                <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+                <th class="text-center">Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
             }
+            <th class="text-center">Nombre</th>
+            <th class="text-center">Apellido</th>
+            <th class="text-center">Correo Electrónico</th>
+            <th class="text-center">Permisos</th> 
+            <th class="text-center">Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+            
         </tr>
     </thead>
     <tbody>
         @foreach (var u in _lista)
         {
             <tr>
-                <td>@u.Nombre</td>
-                <td>@u.Apellido</td>
-                <td>@u.CorreoElectronico</td>
-                <td>
+                <td class="text-center">@u.Nombre</td>
+                <td class="text-center">@u.Apellido</td>
+                <td class="text-center">@u.CorreoElectronico</td>
+                <td class="text-center">
                     @string.Join(", ", u.Permisos.Select(p => p.ToString()))
                     @if(esAdmin) 
                     {
@@ -48,9 +50,9 @@
                         </Dropdown>
                     }
                 </td>
-                @if (esAdmin)
+                @if (esAdmin ||(usuarioActual!= null && u.Id == usuarioActual.Id))
                 {
-                  <td>  
+                  <td class="text-center">  
                       <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(u)">
                             <span class="bi bi-pencil" aria-hidden="true"></span> 
                       </button>
@@ -59,6 +61,10 @@
                       </button>
                       
                   </td>
+                }
+                else
+                {
+                    <td> </td>
                 }
             </tr>
         }
@@ -106,13 +112,13 @@
     private Modal? modal2;
     public Usuario? editar;
     List<Usuario> _lista = new List<Usuario>();
-        
+    Usuario? usuarioActual;
     protected override void OnInitialized()
     {
         AlertError = false;
         AlertSucces= false;
         _lista = listarUsuariosUseCase.Ejecutar(); 
-        var usuarioActual = sesion.ObtenerUsuarioActivo();
+        usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
     private ConfirmDialog? dialog;

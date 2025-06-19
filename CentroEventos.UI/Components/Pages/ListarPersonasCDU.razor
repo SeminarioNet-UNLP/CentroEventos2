@@ -30,14 +30,14 @@ else
     <table class= "table">
         <thead>
             <tr>
-                <th>DNI</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Email</th>
-                <th>Telefono</th>
+                <th class="text-center">DNI</th>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Apellido</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Telefono</th>
                 @if (esAdmin)
                 {
-                    <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+                    <th class="text-center">Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
                 }
             </tr>
         </thead>
@@ -45,14 +45,14 @@ else
             @foreach (var p in listaPersona)
             {
                 <tr>
-                    <td>@p.Dni</td>
-                    <td>@p.Nombre</td>
-                    <td>@p.Apellido</td>
-                    <td>@p.Email</td>
-                    <td>@p.Telefono</td>
+                    <td class="text-center">@p.Dni</td>
+                    <td class="text-center">@p.Nombre</td>
+                    <td class="text-center">@p.Apellido</td>
+                    <td class="text-center">@p.Email</td>
+                    <td class="text-center">@p.Telefono</td>
                     @if(esAdmin) 
                     {
-                        <td>  
+                        <td class="text-center">  
                             <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(p)">
                                 <span class="bi bi-pencil " aria-hidden="true"></span> 
                             </button>
@@ -127,14 +127,13 @@ else
         AlertError = false;
         AlertSucces= false;
         _personas = listarPersonasUseCase.Ejecutar(); 
-        listaPersona= crearLista (_personas);
+        crearLista (_personas);
         var usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
     
-    public List<personaViewModel> crearLista (List<Persona> personas)
+    public void crearLista (List<Persona> personas)
     {
-        List<personaViewModel> lista=new();
         var Personas = listarPersonasUseCase.Ejecutar(); 
         if (_personas != null)
         {
@@ -149,15 +148,9 @@ else
                     Email = p.Email,
                     Telefono = p.Telefono,
                 };
-                lista.Add(personaView);
+                listaPersona.Add(personaView);
             }
-            return lista;
         }
-        else
-        {
-             return lista;
-        }
-        
     }
 
     private ConfirmDialog? dialog;

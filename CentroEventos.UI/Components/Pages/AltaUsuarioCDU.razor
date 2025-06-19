@@ -35,6 +35,13 @@
         <hr>
      </Alert>
     }
+    @if(alert2)
+    {
+     <Alert Color="AlertColor.Danger">
+        <h4 class="alert-heading">error:@mensaje </h4>
+        <hr>
+     </Alert>
+    }
     
     </div>
 </div>
@@ -55,6 +62,8 @@
     usuarioViewModel usuarioView = new();
     
     bool alert = false;
+    bool alert2 = false;
+    string? mensaje;
     private void Registrar()
 {   
     try 
@@ -69,15 +78,14 @@
                                           HashingUtil.ConvertirCadena(usuarioView.Clave), permisos);
             
             altaUs.Ejecutar(usuario);
-
             alert = true;
             
         }
     }
     catch (Exception ex) // Maneja cualquier excepción inesperada
     {
-        Console.WriteLine($"Error en el registro: {ex.Message}");
-        // Aquí podrías loguear el error o notificar al usuario
+        mensaje =  ex.Message;
+        alert2 = true;
     }
     
 }
