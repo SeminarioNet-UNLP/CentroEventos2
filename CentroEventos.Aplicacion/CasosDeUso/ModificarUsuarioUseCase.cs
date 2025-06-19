@@ -21,7 +21,7 @@ public class ModificarUsuarioUseCase
     {
         string mensajeError;
 
-        if (!_autorizador.PoseeElPermiso(UsQueSolicita, Permiso.Administrador))
+       if (!(_autorizador.PoseeElPermiso(UsQueSolicita, Permiso.Administrador) || usuario.Id == UsQueSolicita.Id))
         {
             throw new FalloAutorizacionException("No tiene permiso para modificar usuarios.");
         }

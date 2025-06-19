@@ -6,45 +6,52 @@
 @inject IServicioAutorizacion autorizacion
 @inject ISesion sesion
 
-
-<h3>Listado de Eventos Deportivos con cupo disponible</h3>
-
-@if (_eventos is null)
+@if(esAdmin )
 {
-    <p>Cargando eventos...</p>
-}
-else if (_eventos.Count == 0)
-{
-    <p>No hay eventos registrados.</p>
+    <h3>Listado de Eventos Deportivos con cupo disponible</h3>
+
+    @if (_eventos is null)
+    {
+        <p>Cargando eventos...</p>
+    }
+    else if (_eventos.Count == 0)
+    {
+        <p>No hay eventos registrados.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-center">Nombre responsable</th>
+                    <th class="text-center">Nombre evento</th>
+                    <th class="text-center">Descripción</th>
+                    <th class="text-center">Fecha y hora de Inicio</th>
+                    <th class="text-center">Duración de horas</th>
+                    <th class="text-center">Cupo máximo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var e in listaEvento)
+                {
+                    <tr>
+                        <td class="text-center">@($"{e.persona?.Nombre} {e.persona?.Apellido}")</td>
+                        <td class="text-center">@e.Nombre</td>
+                        <td class="text-center">@e.Descripcion</td>
+                        <td class="text-center">@e.FechaHoraInicio.ToString("dd/MM/yyyy")</td>
+                        <td class="text-center">@e.DuracionHoras</td> <!--- Va así? Porque es un double -->
+                        <td class="text-center">@e.CupoMaximo</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th class="text-center">Nombre responsable</th>
-                <th class="text-center">Nombre evento</th>
-                <th class="text-center">Descripción</th>
-                <th class="text-center">Fecha y hora de Inicio</th>
-                <th class="text-center">Duración de horas</th>
-                <th class="text-center">Cupo máximo</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var e in listaEvento)
-            {
-                <tr>
-                    <td class="text-center">@($"{e.persona?.Nombre} {e.persona?.Apellido}")</td>
-                    <td class="text-center">@e.Nombre</td>
-                    <td class="text-center">@e.Descripcion</td>
-                    <td class="text-center">@e.FechaHoraInicio.ToString("dd/MM/yyyy")</td>
-                    <td class="text-center">@e.DuracionHoras</td> <!--- Va así? Porque es un double -->
-                    <td class="text-center">@e.CupoMaximo</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <h4>No tenés permisos para ver esta sección.</h4>
 }
+
 
 @code{
     bool esAdmin=false;
@@ -61,12 +68,12 @@ else
         public Persona? persona  { get; set; }
     }
     List<eventoViewModel> listaEvento = new ();
-    
+    Usuario? usuarioActual = new();
     protected override void OnInitialized()
     {
         _eventos = ListarEventosConCupoDisponible.Ejecutar();
         hacer(_eventos);
-        var usuarioActual = sesion.ObtenerUsuarioActivo();
+        usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
 

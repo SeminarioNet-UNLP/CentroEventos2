@@ -1,6 +1,7 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject ISesion sesion
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">CentroEventos.UI</a>
+        <a class="navbar-brand" href="">Centro Eventos</a>
     </div>
 </div>
 
@@ -13,12 +14,14 @@
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Inicio
             </NavLink>
         </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="listadousuarios">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Listado usuarios
-            </NavLink>
-        </div>
+        
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="listadousuarios">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Listado usuarios
+                </NavLink>
+            </div>
+        
+       
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="listadopersonas">
@@ -31,13 +34,12 @@
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Listado de eventos
             </NavLink>
         </div>
-
-        <div class="nav-item px-3"
+        <div class="nav-item px-3">
             <NavLink class="nav-link" href="listadoeventosconcupodisponible">
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Listado de eventos con cupo
             </NavLink>
         </div>
-
+        
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="listadoreservas">
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Listado de reservas
@@ -45,4 +47,6 @@
         </div>
     </nav>
 </div>
+
+
 

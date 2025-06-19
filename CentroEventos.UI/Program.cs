@@ -18,7 +18,7 @@ CentroEventosSQLite.Inicializar();
 builder.Services.AddScoped<ISesion,ServicioSesion>();
 builder.Services.AddSingleton<IServicioAutorizacion, ServicioAutorizacion>();
 builder.Services.AddTransient<LoginUseCase>();
-
+    
 //modicacion
 builder.Services.AddTransient<ModificarPersonaUseCase>();
 builder.Services.AddTransient<ModificarEventoUseCase>();

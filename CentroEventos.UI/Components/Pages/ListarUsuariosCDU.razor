@@ -15,6 +15,15 @@
     </button> 
 }
 
+@if(!esAdmin)
+{
+    if(usuarioActual!=null)
+    {
+     _lista= _lista.Where(u=> u.Id == usuarioActual.Id).ToList();
+    }
+}
+
+
 <table class= "table">
     <thead>
         <tr>
@@ -46,24 +55,27 @@
                         </Dropdown>
                     }
                 </td>
-                @if (esAdmin)
-                {
+                
                   <td class="text-center">  
-                    @if(esAdmin || usuarioActual!= null && u.Id == usuarioActual.Id)
+                    @if(esAdmin || (usuarioActual!= null && u.Id == usuarioActual.Id))
                     {
                        <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(u)">
                             <span class="bi bi-pencil" aria-hidden="true"></span> 
                       </button>
                     }
+                    @if (esAdmin)
+                    {
                       <button class="btn btn-danger">
                             <span class="bi bi-trash" aria-hidden="true" @onclick="()=>ShowSaveConfirmationAsync(u.Id)"></span>
                       </button>
+                    }
+                    else
+                    {
+                        <td> </td>
+                    }
                   </td>
-                }
-                else
-                {
-                    <td> </td>
-                }
+                
+                
             </tr>
         }
        
