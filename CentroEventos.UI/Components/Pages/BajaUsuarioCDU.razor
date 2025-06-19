@@ -1,8 +1,8 @@
 @inject BajaUsuarioUseCase bajaUsuario
 @inject ServicioAutorizacion permisos
 @inject ISesion sesion
-
 @inject IServicioAutorizacion autorizacion
+
 @if(AlertError)
 {
     <div>
@@ -13,7 +13,7 @@
 @if(AlertSucces)
 {
     <div>
-        <Alert Color="AlertColor.Success"> Se a borrado con exito!</Alert>
+        <Alert Color="AlertColor.Success"> Se ha borrado con exito!</Alert>
     </div>
 }
 
@@ -40,7 +40,7 @@
             }catch(Exception ex)
             {   
                 AlertError=true;
-                errorMessage = $"Erro: {ex}";
+                errorMessage = $"Error: {ex}";
             }
         }
 

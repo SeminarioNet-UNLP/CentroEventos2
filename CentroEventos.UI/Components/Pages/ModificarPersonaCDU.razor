@@ -1,61 +1,63 @@
 @inject ModificarPersonaUseCase modificarPersona
-
 @inject ServicioSesion sesion
 
 <div class="row g-3 align-items-center body-custom">
     <div class="row-auto">
-        <label class="col-form-label">Dni</label>
+        <label for="inputDni" class="col-form-label">DNI</label>
     </div>
     <div class="row-auto">
-        <input class="form-control" type="text" @bind-value="personaView.Dni" />
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example" @bind-value= "personaView.Dni"> 
     </div>
+    <div class="row-auto">
+        <label for="inputNombre" class="col-form-label">Nombre</label>
+    </div>
+    <div class="row-auto">
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value= "personaView.Nombre">
+    </div>
+    <div class="row-auto">
+        <label for="inputApellido" class="col-form-label">Apellido</label>
+    </div>
+    <div class="row-auto">
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value="personaView.Apellido">
 
-    <div class="row-auto">
-        <label class="col-form-label">Nombre</label>
     </div>
     <div class="row-auto">
-        <input class="form-control" type="text" @bind-value="personaView.Nombre" />
+        <label for="inputEmail" class="col-form-label">Email</label>
     </div>
-
-    <div class="row-auto">
-        <label class="col-form-label">Apellido</label>
-    </div>
-    <div class="row-auto">
-        <input class="form-control" type="text" @bind-value="personaView.Apellido" />
-    </div>
-
-    <div class="row-auto">
-        <label class="col-form-label">Email</label>
+    <div class="row-auto"> 
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value= "personaView.Email">
     </div>
     <div class="row-auto">
-        <input class="form-control" type="text" step="0.1" @bind-value="personaView.Email" />
+        <label for="inputTelefono" class="col-form-label">Telefono</label>
     </div>
-
-    <div class="row-auto">
-        <label class="col-form-label">Teléfono</label>
+    <div class="row-auto"> 
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value= "personaView.Telefono">
     </div>
-    <div class="row-auto">
-        <input class="form-control" type="text" @bind-value="personaView.Telefono" />
-    </div>
-    <Button Color="ButtonColor.Secondary" @onclick="Modificar">Guardar Cambios</Button>
-
+    <Button Color="ButtonColor.Primary" @onclick="Modificar">Guardar Cambios</Button>
     <div>
-        @if (alert)
-        {
-            <Alert Color="AlertColor.Success">
-                <h4 class="alert-heading">Modificación completada</h4>
-                <p>La persona fue actualizada correctamente.</p>
-                <hr />
-            </Alert>
-        }
+    @if(alert)
+    {
+     <Alert Color="AlertColor.Success">
+        <h4 class="alert-heading">Modificacion completada</h4>
+        <hr>
+     </Alert>
+    }
+    @if(alertDanger)
+    {
+     <Alert Color="AlertColor.Danger">
+        <h4 class="alert-heading">Error:@mensajeError </h4>
+        <hr>
+     </Alert>
+    }
+    
     </div>
 </div>
-
 
 @code {
 
     [Parameter]
     public int idUsuario {get; set;}
+    public Persona? personaEditar{get; set;}
     
     private class personaViewModel
     {
@@ -67,7 +69,21 @@
     }
     
     personaViewModel personaView = new();
+    string? mensajeError;
     bool alert = false;
+    bool alertDanger = false;
+    protected override void OnInitialized()
+    {
+        if(personaEditar!= null)
+        {
+            personaView.Dni=personaEditar.Dni;
+            personaView.Nombre = personaEditar.Nombre;
+            personaView.Apellido =personaEditar.Apellido;
+            personaView.Email =personaEditar.Email;
+            personaView.Telefono=personaEditar.Telefono;
+        }
+      
+    }
     private void Modificar()
     {   
         Usuario? usuarioActual = sesion.ObtenerUsuarioActivo();
@@ -76,7 +92,7 @@
         {
             if (usuarioActual == null)
             {
-                throw new Exception ($"Error en la modificacion de usuario: Inicie sesion.");
+                throw new Exception ($"Error en la modificacion de la persona: Inicie sesion.");
             }
             if (!string.IsNullOrEmpty(personaView.Dni) && 
                 !string.IsNullOrEmpty(personaView.Nombre) && 
@@ -93,14 +109,21 @@
                         personaView.Telefono);
 
                 persona.Id = idUsuario;
-                modificarPersona.Ejecutar(persona, usuarioActual);
-                OnInitializedAsync();
-                alert = true;
+                try
+                {
+                    modificarPersona.Ejecutar(persona, usuarioActual);
+                    alert = true;
+                }
+                catch(Exception ex)
+                {
+                    alertDanger = true;
+                    mensajeError = ex.Message;
+                }
             }
         }
         catch (Exception ex) 
         {
-            Console.WriteLine($"Error en la modificacion de usuario: {ex.Message}");
+            Console.WriteLine($"Error en la modificacion de la persona: {ex.Message}");
         }
     }
 }
