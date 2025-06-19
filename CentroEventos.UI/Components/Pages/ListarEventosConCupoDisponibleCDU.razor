@@ -22,24 +22,24 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Evento ID</th>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Fecha y hora de Inicio</th>
-                <th>Duración de horas</th>
-                <th>Cupo máximo</th>
+                <th class="text-center">Evento ID</th>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Descripción</th>
+                <th class="text-center">Fecha y hora de Inicio</th>
+                <th class="text-center">Duración de horas</th>
+                <th class="text-center">Cupo máximo</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var e in listaEvento)
             {
                 <tr>
-                    <td>@($"{e.persona?.Nombre} {e.persona?.Apellido}")</td>
-                    <td>@e.Id</td>
-                    <td>@e.Descripcion</td>
-                    <td>@e.FechaHoraInicio.ToString("dd/MM/yyyy")</td>
-                    <td>@e.DuracionHoras</td> <!--- Va así? Porque es un double -->
-                    <td>@e.CupoMaximo</td>
+                    <td class="text-center">@($"{e.persona?.Nombre} {e.persona?.Apellido}")</td>
+                    <td class="text-center">@e.Id</td>
+                    <td class="text-center">@e.Descripcion</td>
+                    <td class="text-center">@e.FechaHoraInicio.ToString("dd/MM/yyyy")</td>
+                    <td class="text-center">@e.DuracionHoras</td> <!--- Va así? Porque es un double -->
+                    <td class="text-center">@e.CupoMaximo</td>
                 </tr>
             }
         </tbody>

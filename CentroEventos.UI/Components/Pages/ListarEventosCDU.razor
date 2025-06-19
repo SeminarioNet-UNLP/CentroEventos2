@@ -31,15 +31,15 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Responsable</th>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Fecha y hora de Inicio</th>
-                <th>Duración de horas</th>
-                <th>Cupo máximo</th>
+                <th class="text-center">Responsable</th>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Descripción</th>
+                <th class="text-center">Fecha y hora de Inicio</th>
+                <th class="text-center">Duración de horas</th>
+                <th class="text-center">Cupo máximo</th>
                 @if (esAdmin)
                 {
-                  <th>Acciones</th>
+                  <th class="text-center">Acciones</th>
                   <!--- Solo se ve si tengo el permiso (soy administrador) --->
                 }
             </tr>
@@ -48,15 +48,15 @@ else
             @foreach (var e in listaEvento)
             {
                 <tr>
-                    <td>@($"{e.persona?.Nombre} {e.persona?.Apellido}")</td>
-                    <td>@e.Nombre</td>
-                    <td>@e.Descripcion</td>
-                    <td>@e.FechaHoraInicio.ToString("dd/MM/yyyy")</td>
-                    <td>@e.DuracionHoras</td>
-                    <td>@e.CupoMaximo</td>
+                    <td class="text-center">@($"{e.persona?.Nombre} {e.persona?.Apellido}")</td>
+                    <td class="text-center">@e.Nombre</td>
+                    <td class="text-center">@e.Descripcion</td>
+                    <td class="text-center">@e.FechaHoraInicio.ToString("dd/MM/yyyy")</td>
+                    <td class="text-center">@e.DuracionHoras</td>
+                    <td class="text-center">@e.CupoMaximo</td>
                     @if (esAdmin)
                     {
-                      <td>  
+                      <td class="text-center">  
                         <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(e)">
                             <span class="bi bi-pencil " aria-hidden="true"></span> 
                         </button>

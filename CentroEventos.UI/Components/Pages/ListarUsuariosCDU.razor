@@ -18,13 +18,13 @@
 <table class= "table">
     <thead>
         <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Correo Electrónico</th>
-            <th>Permisos</th>
+            <th class="text-center">Nombre</th>
+            <th class="text-center">Apellido</th>
+            <th class="text-center">Correo Electrónico</th>
+            <th class="text-center">Permisos</th>
              @if (esAdmin)
             {
-                <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+                <th class="text-center">Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
             }
         </tr>
     </thead>
@@ -32,10 +32,10 @@
         @foreach (var u in _lista)
         {
             <tr>
-                <td>@u.Nombre</td>
-                <td>@u.Apellido</td>
-                <td>@u.CorreoElectronico</td>
-                <td>
+                <td class="text-center">@u.Nombre</td>
+                <td class="text-center">@u.Apellido</td>
+                <td class="text-center">@u.CorreoElectronico</td>
+                <td class="text-center">
                     @string.Join(", ", u.Permisos.Select(p => p.ToString()))
                     @if(esAdmin) 
                     {
@@ -50,7 +50,7 @@
                 </td>
                 @if (esAdmin)
                 {
-                  <td>  
+                  <td class="text-center">  
                       <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(u)">
                             <span class="bi bi-pencil" aria-hidden="true"></span> 
                       </button>
