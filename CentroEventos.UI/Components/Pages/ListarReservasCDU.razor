@@ -3,22 +3,25 @@
 @inject ListarReservaUseCase listarReservaUseCase
 @inject ListarPersonasUseCase RepoPersona
 @inject ListarEventosUseCase RepoEvento
+@inject BajaReservaUseCase bajaReservaUseCase
 
 @inject IServicioAutorizacion autorizacion
 @inject ISesion sesion
 
 
 <h3>Listado de Reservas</h3>
+@if(esAdmin)
+{
+    <button class="btn btn-primary" @onclick="OnShowModalClick">
+        <span class="bi bi-plus" aria-hidden="true"></span>  
+    </button>
+}
 
-<button class="btn btn-primary">
-    <span class="bi bi-plus " aria-hidden="true"></span> 
-</button>
-
-@if (_reservas is null)
+@if (reservas is null)
 {
     <p>Cargando reservas...</p>
 }
-else if (_reservas.Count == 0)
+else if (reservas.Count == 0)
 {
     <p>No hay reservas registradas.</p>
 }
@@ -33,7 +36,7 @@ else
                 <th>Estado de Asistencia</th>
                 @if (esAdmin)
                 {
-                  <th>Acciones</th> <!--- Solo se ve si tengo el permiso (soy administrador) --->
+                  <th>Acciones</th>
                 }
             </tr>
         </thead>
@@ -48,24 +51,51 @@ else
                     @if (esAdmin)
                     {
                         <td>  
-                            <button class="btn btn-primary">
-                                <span class="bi bi-pencil" aria-hidden="true"></span> 
+                            <button class="btn btn-primary" @onclick="()=>OnShowModalClickEdit(r)">
+                                 <span class="bi bi-pencil" aria-hidden="true"></span> 
                             </button>
-                            <button class="btn btn-danger">
+                            <button class="btn btn-danger" @onclick="()=>ShowSaveConfirmationAsync(r.Id)">
                                 <span class="bi bi-trash" aria-hidden="true"></span>
                             </button>
-                        </td><!--- Solo se ve si tengo el permiso (soy administrador) --->
+                        </td>
                     }
                 </tr>
             }
         </tbody>
     </table>
 }
+    <Modal @ref="modalAgregar" Title="Agregar reserva" IsVerticallyCentered="true" UseStaticBackdrop="true">
+    <BodyTemplate>
+        <AltaReservaCDU />
+        <div style="display: flex; justify-content: flex-end;">
+            <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Cerrar</Button>
+        </div>
+    </BodyTemplate>
+</Modal>
+
+<Modal @ref="modalEditar" Title="Editar reserva" IsVerticallyCentered="true" UseStaticBackdrop="true">
+    <BodyTemplate>
+        <ModificarReservaCDU reservaEditar="@reservaEditar" />
+        <div style="display: flex; justify-content: flex-end;">
+            <Button Color="ButtonColor.Danger" @onclick="OnHideModalClickEdit">Cerrar</Button>
+        </div>
+    </BodyTemplate>
+</Modal>
+
+<ConfirmDialog @ref="dialog" />
 
 @code {
     bool esAdmin=false;
-    private List<Reserva>? _reservas;
+
+    private bool AlertError = false;
+    private bool AlertSucces= false;
+    private Modal? modalAgregar;
+    private Modal? modalEditar;
+    private ConfirmDialog? dialog;
+    private List<Reserva>? reservas;
+    public reservaViewModel? reservaEditar;
     public class reservaViewModel
+    
     {
         public int Id { get; set; }
         public int PersonaId { get; set; }
@@ -77,22 +107,14 @@ else
     }
 
     List<reservaViewModel> listaReserva = new ();
-
-    protected override void OnInitialized()
-    {
-        _reservas = listarReservaUseCase.Ejecutar();
-        hacer(_reservas);
-        var usuarioActual = sesion.ObtenerUsuarioActivo();
-        esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
-    }
-
-    public void hacer (List<Reserva>reservas)
+    public void cargarReservas (List<Reserva>reservas)
     {
         var Personas = RepoPersona.Ejecutar();
         var repoEventos = RepoEvento.Ejecutar();
-        if (_reservas != null)
+        listaReserva.Clear(); 
+        if (reservas != null)
         {
-            foreach (var r in _reservas)
+            foreach (var r in reservas)
             {
                 reservaViewModel reservaView = new ()
                 {
@@ -106,4 +128,94 @@ else
             }
         }
     }
+
+    protected override void OnInitialized()
+    {
+        reservas = listarReservaUseCase.Ejecutar();
+        cargarReservas(reservas);
+        var usuarioActual = sesion.ObtenerUsuarioActivo();
+        esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
+    }
+    
+    
+    private async Task OnShowModalClick()
+    {
+        if (modalAgregar != null)
+        {
+            await modalAgregar.ShowAsync();
+        }
+    }
+
+    private async Task OnHideModalClick()
+    {
+        if (modalAgregar != null)
+        {
+            await modalAgregar.HideAsync();
+        }
+        Refrescar();
+    }
+
+    private async Task OnShowModalClickEdit(reservaViewModel r)
+    {
+        reservaEditar = r;
+        if (modalEditar != null)
+        {
+            await modalEditar.ShowAsync();
+        }
+        Refrescar();
+    }
+
+    private async Task OnHideModalClickEdit()
+    {
+        if (modalEditar != null)
+        {
+            await modalEditar.HideAsync();
+        }
+    }
+
+    private async Task ShowSaveConfirmationAsync(int id)
+    {
+        var options = new ConfirmDialogOptions
+        {
+            YesButtonText = "SI",
+            YesButtonColor = ButtonColor.Success,
+            NoButtonText = "CANCEL",
+            NoButtonColor = ButtonColor.Secondary
+        };
+
+        if (dialog != null)
+        {
+            var confirm = await dialog.ShowAsync("Eliminar reserva", "¿Confirmar?", options);
+            if (confirm)
+            {
+                Eliminar(id);
+            }
+        }
+    }
+
+    private void Eliminar(int id)
+    {
+        var usuario = sesion.ObtenerUsuarioActivo();
+        if (usuario != null && autorizacion.PoseeElPermiso(usuario, Permiso.Administrador))
+        {
+            try
+            {
+                bajaReservaUseCase.Ejecutar(id, usuario);
+                Refrescar();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+    
+    }
+
+private void Refrescar()
+{
+    listaReserva.Clear();
+    reservas = listarReservaUseCase.Ejecutar();
+    cargarReservas(reservas);
+}
+    
 }
