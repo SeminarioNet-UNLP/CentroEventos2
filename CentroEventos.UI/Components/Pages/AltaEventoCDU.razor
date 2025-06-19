@@ -1,4 +1,3 @@
-@page "/agregarevento"
 @rendermode InteractiveServer
 @inject AltaEventoUseCase altaEvento
 @inject ISesion sesion
@@ -8,7 +7,7 @@
         <label for="inputUsuario" class="col-form-label">Nombre</label>
     </div>
     <div class="row-auto">
-        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example" @bind-value= "eventoView.Nombre">
+        <input class="form-control" type="text"  aria-label="default input example" @bind-value= "eventoView.Nombre">
     </div>
     <div class="row-auto">
         <label for="inputUsuario" class="col-form-label">Descripcion</label>
@@ -20,7 +19,7 @@
         <label for="inputUsuario" class="col-form-label">Fecha de inicio</label>
     </div>
     <div class="row-auto">
-        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example"@bind-value= "eventoView.FechaHoraInicio">
+        <DateInput TValue="DateTime" @bind-Value="@eventoView.FechaHoraInicio" Placeholder="Enter Date" />
     </div>
     <div class="row-auto">
         <label for="inputPassword6" class="col-form-label">Duracion en horas del evento</label>
@@ -56,6 +55,13 @@
         <hr>
      </Alert>
     }
+    @if(alert2)
+    {
+     <Alert Color="AlertColor.Danger">
+        <h4 class="alert-heading">Error: @mensajeError</h4>
+        <hr>
+     </Alert>
+    }
     
     </div>
 </div>
@@ -76,7 +82,10 @@
     
     EventoViewModel eventoView = new();
     List<Persona> responsablesDisponibles = new();
+    string? mensajeError;
     bool alert = false;
+    bool alert2 = false;
+
 
      protected override void OnInitialized()
     {
@@ -91,24 +100,19 @@
             {
                 throw new Exception($"Error en el registro: Inicie sesion para poder registrar un evento.");
             }
-            if (!string.IsNullOrEmpty(eventoView.Nombre) && 
-                !string.IsNullOrEmpty(eventoView.Descripcion) && 
-                eventoView.FechaHoraInicio != default && 
-                eventoView.DuracionHoras > 0 &&
-                eventoView.CupoMaximo > 0   &&
-                eventoView.ResponsableId > 0)  
-            {
-                List<EventoDeportivo> permisos = new List<EventoDeportivo>();
-                EventoDeportivo evento = new EventoDeportivo(eventoView.Nombre, eventoView.Descripcion, eventoView.FechaHoraInicio, 
-                                            eventoView.DuracionHoras,eventoView.CupoMaximo,eventoView.ResponsableId);
-                
-                altaEvento.Ejecutar(evento,usuario);
-                alert = true;
-            }
+           
+             List<EventoDeportivo> permisos = new List<EventoDeportivo>();
+             EventoDeportivo evento = new EventoDeportivo(eventoView.Nombre, eventoView.Descripcion, eventoView.FechaHoraInicio, 
+                                         eventoView.DuracionHoras,eventoView.CupoMaximo,eventoView.ResponsableId);
+             
+             altaEvento.Ejecutar(evento,usuario);
+             alert = true;
+            
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error en el registro: {ex.Message}");
+            mensajeError =ex.Message;
+            alert2=true;
         }
     }
 
