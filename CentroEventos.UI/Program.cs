@@ -17,16 +17,14 @@ CentroEventosSQLite.Inicializar();
 builder.Services.AddTransient<LoginUseCase>();
 builder.Services.AddSingleton<IServicioAutorizacion, ServicioAutorizacion>();
 
-
+builder.Services.AddTransient<ListarUsuariosUseCase>();
 builder.Services.AddTransient<ListarPersonasUseCase>();
 builder.Services.AddTransient<ListarEventosUseCase>();
-builder.Services.AddTransient<ListarUsuariosUseCase>();
 builder.Services.AddTransient<ListarReservaUseCase>();
+builder.Services.AddTransient<ListarEventosConCupoDisponibleUseCase>();
 builder.Services.AddTransient<ValidarUsuario>();
 builder.Services.AddTransient<AltaUsuarioUseCase>();
 builder.Services.AddTransient<BajaUsuarioUseCase>();
-
-
 
 
 builder.Services.AddScoped<IRepositorioEventoDeportivo, RepositorioEventoDeportivo>();
