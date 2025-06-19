@@ -1,6 +1,8 @@
 @page "/listadousuarios"
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @rendermode InteractiveServer
 @inject ListarUsuariosUseCase listarUsuariosUseCase
+@inject BajaUsuarioUseCase bajaUsuario
 @inject IServicioAutorizacion autorizacion
 <h3>Listado de usuarios</h3>
 <button class="btn btn-primary">
@@ -34,12 +36,23 @@
                             <span class="bi bi-pencil " aria-hidden="true"></span> 
                         </button>
                         <button class="btn btn-danger">
-                          <span class="bi bi-trash" aria-hidden="true"></span>
+                          <span class="bi bi-trash" aria-hidden="true"  @onclick="()=>Eliminar(u.Id)"></span>
                          </button>
                         
                   </td>
                 }
             </tr>
+        }
+        @if(AlertError)
+        {
+            <Alert Color="AlertColor.Danger"> @errorMessage </Alert>
+        }
+
+        @if(AlertSucces)
+        {
+            <div>
+                <Alert Color="AlertColor.Success"> <h4>Se a borrado con exito!</h4></Alert>
+            </div>
         }
          
     </tbody>
@@ -58,20 +71,48 @@
 
 @code {
     bool esAdmin=false;
+    private bool AlertError = false;
+    private bool AlertSucces = false;
+    string? errorMessage;
     private Modal? modal;
     private Modal? modal2;
     public int idSeleccionado;
     List<Usuario> _lista = new List<Usuario>();
     protected override void OnInitialized()
     {
+        AlertError = false;
+        AlertSucces= false;
         _lista = listarUsuariosUseCase.Ejecutar();
         var usuarioActual = autorizacion.ObtenerUsuarioActivo();
        esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
+    }
+  
+    private  void Eliminar(int idUsuario)
+    {   
+        Usuario? usu = autorizacion.ObtenerUsuarioActivo();
+
+       if(usu != null&& autorizacion.PoseeElPermiso(usu, Permiso.Administrador))
+        {
+            try
+            {
+               bajaUsuario.Ejecutar(idUsuario, usu);
+               AlertSucces = true;
+               OnInitialized();
+
+            }catch(Exception ex)
+            {   
+                AlertError=true;
+                errorMessage = $"Erro: {ex}";
+            }
+        }
+       
+
     }
      private async Task OnShowModalClick()
     {
         
         await modal?.ShowAsync();
+        OnInitialized();
     }
     private async Task OnShowModalClickEdit(int id)
     {
@@ -81,7 +122,9 @@
 
     private async Task OnHideModalClick()
     {
+        
         await modal?.HideAsync();
+        OnInitialized();
         
     }
     

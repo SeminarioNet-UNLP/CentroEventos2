@@ -1,6 +1,6 @@
 @page "/listadoreservas"
 @rendermode InteractiveServer
-@inject ListarReservaUseCase ListarReservaUseCase
+@inject ListarReservaUseCase listarReservaUseCase
 @inject ListarPersonasUseCase RepoPersona
 @inject ListarEventosUseCase RepoEvento
 
@@ -74,14 +74,14 @@ else
     }
 
     List<reservaViewModel> listaReserva = new ();
-    reservaViewModel reservaView = new ();
 
     protected override void OnInitialized()
     {
-        _reservas = ListarReservaUseCase.Ejecutar();
+        _reservas = listarReservaUseCase.Ejecutar();
+        hacer(_reservas);
         var usuarioActual = autorizacion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
-        hacer(_reservas);
+       
 
     }
 
@@ -93,11 +93,14 @@ else
         {
             foreach (var r in _reservas)
             {
-                reservaView.Id= r.Id;
-                reservaView.FechaAltaReserva = r.FechaAltaReserva; 
-                reservaView.estadoAsistencia = r.EstadoAsistencia;
-                reservaView.persona = Personas.FirstOrDefault(p=>p.Id == r.PersonaId);
-                reservaView.eventoDeportivo = repoEventos.FirstOrDefault(e=>e.Id == r.EventoDeportivoId);
+                reservaViewModel reservaView = new ()
+                {
+                    Id= r.Id,
+                    FechaAltaReserva = r.FechaAltaReserva,
+                    estadoAsistencia = r.EstadoAsistencia,
+                    persona = Personas.FirstOrDefault(p=>p.Id == r.PersonaId),
+                    eventoDeportivo = repoEventos.FirstOrDefault(e=>e.Id == r.EventoDeportivoId)
+                };
                 listaReserva.Add(reservaView);
             }
         }
