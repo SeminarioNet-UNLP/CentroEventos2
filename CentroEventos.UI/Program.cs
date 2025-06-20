@@ -19,7 +19,7 @@ builder.Services.AddScoped<ISesion,ServicioSesion>();
 builder.Services.AddSingleton<IServicioAutorizacion, ServicioAutorizacion>();
 builder.Services.AddTransient<LoginUseCase>();
     
-//modicacion
+//editar
 builder.Services.AddTransient<ModificarPersonaUseCase>();
 builder.Services.AddTransient<ModificarEventoUseCase>();
 builder.Services.AddTransient<ModificarReservaUseCase>();
