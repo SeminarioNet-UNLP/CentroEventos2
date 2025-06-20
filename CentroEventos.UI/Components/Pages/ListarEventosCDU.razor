@@ -67,19 +67,20 @@ else
                     }   
                 </tr>
             }
-            @if(AlertError)
-            {
-                <Alert Color="AlertColor.Danger"> @errorMessage </Alert>
-            }
-
-            @if(AlertSucces)
-            {
-                <div>
-                    <Alert Color="AlertColor.Success"> <h4>Se borró con éxito!</h4></Alert> 
-                </div>
-            }
+           
         </tbody>
     </table>
+}
+ @if(AlertError)
+{
+    <Alert Color="AlertColor.Danger"> @errorMessage </Alert>
+}
+
+@if(AlertSucces)
+{
+    <div>
+        <Alert Color="AlertColor.Success"> <h4>Se borró con éxito!</h4></Alert> 
+    </div>
 }
 
 <Modal @ref="modal" Title="Agregar evento" IsVerticallyCentered="true" UseStaticBackdrop="true"  >

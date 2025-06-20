@@ -1,4 +1,4 @@
-@page "/listarasistenciaaevento"
+@page "/asistenciaevento"
 @rendermode InteractiveServer
 
 @inject ListarAsistenciaAEventoUseCase ListarAsistenciaAEventoUseCase
@@ -6,95 +6,115 @@
 @inject IServicioAutorizacion autorizacion
 @inject ISesion sesion
 
-<h3>Listado de Asistencia a Evento</h3>
 
-<div class="row mb-3">
-    <div class="col-md-6">
-        <label for="eventoSelect" class="form-label">Seleccionar Evento:</label>
-        <select id="eventoSelect" class="form-select" @bind="eventoSeleccionadoId" @bind:after="CargarAsistencia">
-            <option value="0">Seleccione un evento</option>
-            @foreach (var evento in eventosDisponibles)
-            {
-                <option value="@evento.Id">@evento.Nombre - @evento.FechaHoraInicio.ToString("dd/MM/yyyy")</option>
-            }
-        </select>
+@if(esAdmin)
+{
+    <h3>Listado de Asistencia a Evento</h3>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="eventoSelect" class="form-label">Seleccionar Evento:</label>
+            <select id="eventoSelect" class="form-select" @bind="eventoSeleccionadoId" @bind:after="CargarAsistencia">
+                <option value="0">Seleccione un evento</option>
+                @foreach (var evento in eventosDisponibles)
+                {
+                    <option value="@evento.Id">@evento.Nombre - @evento.FechaHoraInicio.ToString("dd/MM/yyyy")</option>
+                }
+            </select>
+        </div>
     </div>
-</div>
 
-@if (eventoSeleccionadoId == 0)
-{
-    <p>Seleccione un evento para ver la lista de asistentes.</p>
-}
-else if (_asistentes is null)
-{
-    <p>Cargando asistentes...</p>
-}
-else if (_asistentes.Count == 0)
-{
-    <p>No hay asistentes registrados para este evento.</p>
+    @if (eventoSeleccionadoId == 0)
+    {
+        <p>Seleccione un evento para ver la lista de asistentes.</p>
+    }
+    else if (_asistentes is null)
+    {
+        <p>Cargando asistentes...</p>
+    }
+    else if (_asistentes.Count == 0)
+    {
+        <p>No hay asistentes registrados para este evento.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var asistente in _asistentes)
+                {
+                    <tr>
+                        <td>@asistente.Nombre</td>
+                        <td>@asistente.Apellido</td>
+                        <td>@asistente.Email</td>
+                        <td>@asistente.Telefono</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    @if(alert)
+    {
+        <Alert Color="AlertColor.Danger">
+            <h4 class="alert-heading">error: @errorMensaje</h4>
+            <hr>
+        </Alert>
+    }
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Email</th>
-                <th>Teléfono</th>
-                @if (esAdmin)
-                {
-                    <th>Acciones</th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var asistente in _asistentes)
-            {
-                <tr>
-                    <td>@asistente.Nombre</td>
-                    <td>@asistente.Apellido</td>
-                    <td>@asistente.Email</td>
-                    <td>@asistente.Telefono</td>
-                    @if (esAdmin)
-                    {
-                        <td>
-                            <button class="btn btn-primary">
-                                <span class="bi bi-pencil" aria-hidden="true"></span>
-                            </button>
-                            <button class="btn btn-danger">
-                                <span class="bi bi-trash" aria-hidden="true"></span>
-                            </button>
-                        </td>
-                    }
-                </tr>
-            }
-        </tbody>
-    </table>
+    <h4>No tenés permisos para ver esta sección.</h4>
 }
+
 
 @code {
     bool esAdmin = false;
+    bool alert = false;
+    string? errorMensaje;
+
+
     private List<Persona>? _asistentes;
     private List<EventoDeportivo> eventosDisponibles = new();
     private int eventoSeleccionadoId = 0;
 
     protected override void OnInitialized()
     {
+         alert = false;
         eventosDisponibles = ListarEventosUseCase.Ejecutar();
         var usuarioActual = sesion.ObtenerUsuarioActivo();
         esAdmin = usuarioActual != null && autorizacion.PoseeElPermiso(usuarioActual, Permiso.Administrador);
     }
 
-    private void CargarAsistencia()
+    private async Task CargarAsistencia()
+{
+    if (eventoSeleccionadoId > 0)
     {
-        if (eventoSeleccionadoId > 0)
+        try
         {
             _asistentes = ListarAsistenciaAEventoUseCase.Ejecutar(eventoSeleccionadoId);
         }
-        else
+        catch(Exception ex)
         {
-            _asistentes = null;
+            errorMensaje = ex.Message;
+            await MostrarMensajeTemporal();
         }
+    }
+    else
+    {
+        _asistentes = null;
+    }
+}
+
+    private async Task MostrarMensajeTemporal()
+    {
+        alert = true;
+        await Task.Delay(3000); // espera 3 segundos
+        alert= false;
     }
 }
